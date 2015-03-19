@@ -1,0 +1,1203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[小曹哥的博客]]></title>
+  
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://www.xiaocaoge.com/"/>
+  <updated>2015-03-19T14:58:09.701Z</updated>
+  <id>http://www.xiaocaoge.com/</id>
+  
+  <author>
+    <name><![CDATA[Alex Chao]]></name>
+    <email><![CDATA[alexchao1990@gmail.com]]></email>
+  </author>
+  
+  <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <link href="http://www.xiaocaoge.com/hello-world/"/>
+    <id>http://www.xiaocaoge.com/hello-world/</id>
+    <published>2015-03-15T03:34:48.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick_Start">Quick Start</h2>
+<h3 id="Create_a_new_post">Create a new post</h3>
+<pre><code>$ hexo <span class="keyword">new</span> <span class="string">"My New Post"</span>
+</code></pre><p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run_server">Run server</h3>
+<pre><code><span class="variable">$ </span>hexo server
+</code></pre><p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate_static_files">Generate static files</h3>
+<pre><code><span class="variable">$ </span>hexo generate
+</code></pre><p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3>
+<pre><code><span class="variable">$ </span>hexo deploy
+</code></pre><p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[修复 grub 及相关工具]]></title>
+    <link href="http://www.xiaocaoge.com/repair-grub-and-some-useful-tools/"/>
+    <id>http://www.xiaocaoge.com/repair-grub-and-some-useful-tools/</id>
+    <published>2014-08-13T13:49:17.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是“crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows7 要靠 grub 引导，自然也进不去了。</p>
+<p>想着先利用分区工具修复 Windows7 的 MBR（到最后发现这个思路走远了），然后从网上或同事那里弄一个 crypto.mod 放进去试试。但是，发现U盘启动盘不见了，应该没带，只好向同事借了一个，里面还没有我需要的工具，只是一个 CentOS 安装盘。由于我不会在 Linux 下面制作启动盘，只好借了一位同事的 Windows 电脑，是利用U启动这款软件来制作的，功能挺全，就是有点大，300多M。很快我就制作好了，并利用里面的图形分区工具 DiskGenius 重新安装了 MBR，从而可以进入 Windows7 系统了。</p>
+<p>我一开始是想从网上下载 crypto.mod 的，但是只有源代码，我想下载一个 minGW 来编译一下，但是我怕编译后的文件不能用于 Linux 系统下（话说到底能用吗），然后从同事那里复制了一个。哦，说明一下，上周我装双系统 Windows7 时，已经知道了 Ext2Fsd 这款工具可以让 Windows 系统读写 Linux 的 Ext2/3/4 分区，通过设置就可以像操作 Windows 分区那样操作 Linux 下的分区（另外一款相似工具 Ext2explore 在我的电脑上只能读，不能写，而且界面类似于很多 FTP 工具那样的，我是不大喜欢）。这样我就可以把 crypto.mod 拷贝到 Ubuntu 中了。</p>
+<p>重启电脑，这次倒是没有进入 grub rescue 模式，反而进入了 grub4dos，当时我就晕了，这个 grub4dos 是什么工具呢？这个当然百度一下就知道了，grub4dos 是一个系统引导软件，grub 的分支，这个看名字也能猜出和 grub 有关系。然后我就根据网上查到的在 grub4dos 里面设置 root、kernel、initrd，然后执行 boot 命令，我没有期望这样就能进入 Ubuntu，当然它确实也没进去。因为某种原因失败了，然后进入到了 busybox 里面，并且提示可以执行几十个常见的 Linux 命令。经搜索知道了 busybox 是一个集成了一百多个常用 Linux 命令及一些常用工具的迷你版 Linux，在嵌入式开发中很常用。当然我也试着搜索“ubuntu busybox”，“busybox 引导 Ubuntu”，“busybox 安装 grub”，但是打开几个网页没有找到想要的结果，试了几个 StackOverflow 上面的回答，但是因为问题不完全一样中途失败了。</p>
+<p>另外 SO 上面也说了第一选择是利用 Ubuntu 的 Live CD 版来修复该问题，而我考虑到本地硬盘没有，Ubuntu 体积大，公司网络下载慢，所以就把这个作为最后的尝试了。当然经过上面的一系列折腾、失败，时间也从早上九点到了下午三点左右了，我这一天啥都没干呢，就为了修复 grub 升级失败。更悲催的是下载 Ubuntu 的速度慢的超出我的预料，我是从官网下的，无论是直接下，还是通过 goagent 代理下，都只有 20KB 的均速，经常下了快 100M 时就变成 0 了。看来还是自己电脑里有才是王道，网络不可靠，我只好下载 1.5G 的 Ubuntu Kylin 了，经过一个多小时下载好了。</p>
+<p>然后就是做一个 Ubuntu Kylin 的 Live USB 版，毕竟这年头光盘少啊。经过查询有好几款工具都可以制作：LinuxLive USB Creator，Unetbootin，grub4dos 等，见此文<a href="http://www.360doc.com/content/12/1109/10/5698935_246765552.shtml" target="_blank" rel="external">U盘启动 Ubuntu 的 Live USB</a>。原来 grub4dos 也可以制作啊，但是操作可能复杂，最后我选择了简单的 LinuxLive USB Creator。从官网下载软件后，按照软件操作步骤即可，非常简单，需要注意的是有一步是要选择固定系统模式的大小，这一步保持默认的 0 就可以了，结果我选择了2040M，这样最后一步应该是对这个 2040M 的空间特殊处理了，费了较长时间。U盘毕竟不是 USB 3.0 的，写入1.5G 也要好长时间呢，还好顺利地制作了 Ubuntu Kylin 的 Live USB 版。</p>
+<p>现在可以重启电脑，进入 Live Ubuntu Kylin 系统中了，加载确实比硬盘安装慢多了。进入系统之后，需要重新安装 grub，详请可参考 <a href="http://blog.csdn.net/haoyunsheng_1201/article/details/7266941" target="_blank" rel="external">LiveCD 安装 Ubuntu 开机引导 grub</a>。关键的步骤：</p>
+<pre><code>sudo -i
+mkdir <span class="regexp">/media/</span>tempdir
+mount <span class="regexp">/dev/</span>sda2 <span class="regexp">/media/</span>tempdir
+grub-install --root-directory=<span class="regexp">/media/</span>tempdir <span class="regexp">/dev/</span>sda
+</code></pre><p>然后，重启就可以进入到 grub 启动菜单了，如果启动菜单里面没有 windows，则需要进入到 Ubuntu 中，并执行下面命令就可以了。</p>
+<pre><code><span class="built_in">sudo</span> update-grub2
+</code></pre><p>修复完之后，已经快下班了，用了半天多时间，最后发现其实只要有 LiveCD 或 LiveUSB 版的 Ubuntu 就可以在十分钟内搞定了，而我偏偏绕了很大一个圈子。看来修复系统这事，必须准备齐全工具才行，可以节省非常多的时间。比如这次的问题，我最理想的情况是有个 LiveUSB 版的 Ubuntu，次一点自己或别人硬盘里面存着 Ubuntu ISO 文件，再次一点针对 Windows 系统的 U盘启动盘得有个吧。就当这些都没有，网速够快也可以吧，偏偏所有这些都没有，而我当时也不知道 Live 版是最简单直接的修复方式，所有这些结合就导致我今天花费近一天时间。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是“crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows]]>
+    </summary>
+    
+      <category term="grub" scheme="http://www.xiaocaoge.com/tags/grub/"/>
+    
+      <category term="Ubuntu" scheme="http://www.xiaocaoge.com/tags/Ubuntu/"/>
+    
+      <category term="系统引导" scheme="http://www.xiaocaoge.com/tags/%E7%B3%BB%E7%BB%9F%E5%BC%95%E5%AF%BC/"/>
+    
+      <category term="后端" scheme="http://www.xiaocaoge.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Ubuntu 下安装 Windows 7]]></title>
+    <link href="http://www.xiaocaoge.com/install-windows7-in-ubuntu/"/>
+    <id>http://www.xiaocaoge.com/install-windows7-in-ubuntu/</id>
+    <published>2014-08-13T13:30:41.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 grub 给覆盖。</p>
+<p>系统现状：Debian 与 Ubuntu 14.04 双系统，Debian 是前一位离职人员使用的，我安装 Ubuntu 时没有把它删除。</p>
+<p>由于没有删除 Debian，所以 boot 分区是它所在的分区（/sda1），然后我怎么改 Ubuntu 里面的 grub 配置，都没办法使 Ubuntu 成为开机启动项的第一项，我觉得和 boot 分区是 Debian 所在分区有关。当然，这是我在直接格式化 Debian 所在的分区之后才反应过来的，因为删除之后，重启直接进入了 grub rescue 模式。至于我为什么去格式化 Debian 分区，因为我要装 Win7，我一直修改 Ubuntu 里面的 grub，总是无法让 Ubuntu 成为启动项第一，心里烦了，反正 Debian 里面有什么与我无关，反正我也不知道删除它会怎么样。</p>
+<p>至于如何从 grub rescue 模式正常进入系统，并修复 grub 引导，先把 Win7 装好再说，毕竟这是主要目的来着。</p>
+<p>用光盘或 U 盘启动盘安装 Win7，就像刚组装好机器安装 Win7 那样。首先应该建立 NTFS 分区，现在我该庆幸当初留着 Debian 了，这样就可以把 Win7 装到它所占的分区了，当然应该先利用分区工具把 ext4 格式分区删除，然后重新建立 Win7 要用的 NTFS 主分区。如果我当初删了 Debian 的话，估计安装 Ubuntu 时会占满这个硬盘，而且能不分区尽量不分区，现在我到觉得应该分几个区比较好，而且分区不一定非要把整个硬盘用完，反正不弄视频之类的也用不了多大容量。建立 NTFS 分区时会重写 MBR，因此就不能再进入到 grub 了。</p>
+<p>既然已经建立了 NTFS 分区，剩下就好办了，直接把 Win7 安装到里面就行了。安装完 Win7 之后使用 EasyBCD 工具给 Win7 的启动管理器（就是启动项菜单），添加进入到 Ubuntu 的选项，该工具很好用，直接“添加项目”，并选择 Linux 类型，找到 Ubuntu 所在的分区就可以了。然后重启，就会在 Win7 的启动项菜单里面看到新添加的进入到 Ubuntu 的条目，选择进入，然后就回到了 grub rescue 模式。</p>
+<p>如何从 grub rescue 模式进入到 Ubuntu 呢？详细可参考此文：<a href="http://blog.chinaunix.net/uid-22915173-id-229241.html" target="_blank" rel="external">grub rescue 救援模式的处理</a>。</p>
+<p>grub rescue 模式下，只有几个命令可用：<code>ls</code>、<code>set</code>、<code>insmod</code>、<code>root</code>、<code>prefix</code>。</p>
+<p>执行以下命令：</p>
+<pre><code>grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> root<span class="subst">=</span>(hd0,msdos2) <span class="comment">// 设定 grub 启动分区，Ubuntu 所在分区</span>
+grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> prefix<span class="subst">=</span>(hd0,msdos2)/boot/grub <span class="comment">// 设定 grub 启动路径</span>
+grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> <span class="comment">// 查看设置情况</span>
+grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;insmod /boot/grub/i386<span class="attribute">-pc</span>/normal<span class="built_in">.</span>mod <span class="comment">// 加载基本模块</span>
+grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;normal <span class="comment">// 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入</span>
+</code></pre><p>上面需要注意 normal.mod 模块位置，我的 Ubuntu 14.04 在 <code>grub/i386-pc/</code> 目录下，有些就在 <code>grub/</code> 目录下。</p>
+<p>进入到 Ubuntu 之后，还要重新安装 grub 引导，更新 grub 配置才可以。执行以下命令：</p>
+<pre><code>grub-<span class="operator"><span class="keyword">install</span> /dev/sda
+<span class="keyword">update</span>-grub</span>
+</code></pre><p>OK，再次开机时 grub 启动项就会多一个 Windows 7 的选项了。有趣的是 grub 启动菜单选择 windows 7 进入到 Windows 启动菜单，而 Windows 启动菜单里面有前面添加的 Ubuntu 选项，然后可以回到 grub 启动菜单，然会无限轮回。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 gru]]>
+    </summary>
+    
+      <category term="grub rescue" scheme="http://www.xiaocaoge.com/tags/grub-rescue/"/>
+    
+      <category term="Ubuntu" scheme="http://www.xiaocaoge.com/tags/Ubuntu/"/>
+    
+      <category term="windows7" scheme="http://www.xiaocaoge.com/tags/windows7/"/>
+    
+      <category term="后端" scheme="http://www.xiaocaoge.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[重新定义清除浮动]]></title>
+    <link href="http://www.xiaocaoge.com/redefine-clearfix-float/"/>
+    <id>http://www.xiaocaoge.com/redefine-clearfix-float/</id>
+    <published>2014-05-25T07:16:09.000Z</published>
+    <updated>2015-03-15T03:34:51.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="经典">经典</h2>
+<p>以前最经典的清除浮动方法是利用<code>:after</code>伪元素，代码如下：</p>
+<pre><code><span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
+   <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>; <span class="comment">/* 元素内容后面，即元素闭合标签前面加个点 */</span>
+   <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>; <span class="comment">/* 伪元素高度为0 */</span>
+   <span class="rule"><span class="attribute">visibility</span>:<span class="value"> hidden</span></span>; <span class="comment">/* 隐藏伪元素内容 */</span>
+   <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>; <span class="comment">/* 默认是inline，所以默认clear不起作用 */</span>
+   <span class="rule"><span class="attribute">clear</span>:<span class="value"> both</span></span>; <span class="comment">/* 清除浮动 */</span>
+<span class="rule">}</span></span>
+<span class="class">.clearfix</span> <span class="rules">{
+   <span class="rule"><span class="attribute">zoom</span>:<span class="value"> <span class="number">1</span></span></span>; <span class="comment">/* 针对IE6/7，触发hasLayout */</span>
+<span class="rule">}</span></span>
+</code></pre><p>这种方法可兼容几乎所有浏览器，使用方便，不用在HTML代码中增加一个空标签，因此仍然被很多人使用。</p>
+<p>但是，实际上针对IE6/7的方法与针对现代浏览器增加<code>:after</code>伪元素的方法本质上是不同的。针对IE6/7的<code>zoom:1;</code>使得元素触发了<a href="http://satzansatz.de/cssd/onhavinglayout.html" target="_blank" rel="external">hasLayout</a>这个IE专有特性，从而使得元素表现得如同现代浏览器里的<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context" target="_blank" rel="external">BFC</a> (Block Formatting Context)一样，比如阻止与子元素垂直方向的<a href="http://www.w3school.com.cn/css/css_margin_collapsing.asp" target="_blank" rel="external">外边距叠加</a>、包裹内部的浮动元素、不与浮动元素重叠。而针对现代浏览器的<code>:after</code>伪元素方法具有了“包裹内部的浮动元素”这一功能，因此在特别的布局中会产生问题，比如被清除浮动元素与浮动元素并排时，又比如被清除浮动元素内部第一个元素具有垂直方向的外边距时，关于可能产生的问题详见这篇文章：<a href="http://www.cssmojo.com/clearfix_block-formatting-context_and_hasLayout/" target="_blank" rel="external">Everything you Know about Clearfix is Wrong</a>。</p>
+<h2 id="增强">增强</h2>
+<p>鉴于以上问题，上面文章的作者后来在<a href="http://www.yuiblog.com/blog/2010/09/27/clearfix-reloaded-overflowhidden-demystified/" target="_blank" rel="external">clearfix Reloaded + overflow:hidden Demystified</a>一文中介绍了一种技术，利用<code>:before</code>伪元素在被清除浮动元素的内容前面插入伪元素，并设置<code>overflow:hidden</code>使该伪元素具有BFC，因此可以阻止与内部元素垂直方向的外边距叠加。代码如下：</p>
+<pre><code><span class="class">.clearfix</span><span class="pseudo">:before</span>,
+<span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>;
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">overflow</span>:<span class="value"> hidden</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
+    <span class="rule"><span class="attribute">clear</span>:<span class="value"> both</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.clearfix</span> <span class="rules">{
+    <span class="rule"><span class="attribute">zoom</span>:<span class="value"> <span class="number">1</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><h2 id="精简">精简</h2>
+<p>此后，来自Twitter的Nicolas Gallagher，也是normalize.css的作者，提出了一个更精简的实现方法，被他称为“micro clearfix”，此方法讲解可参考其写的一篇文章：<a href="http://nicolasgallagher.com/micro-clearfix-hack/" target="_blank" rel="external">A new micro clearfix hack</a>。其代码如下：</p>
+<pre><code><span class="class">.cf</span><span class="pseudo">:before</span>,
+<span class="class">.cf</span><span class="pseudo">:after</span> <span class="rules">{
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> “ ”</span></span>;
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.cf</span><span class="pseudo">:after</span> <span class="rules">{
+    <span class="rule"><span class="attribute">clear</span>:<span class="value"> both</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.cf</span> <span class="rules">{
+    <span class="rule"><span class="attribute">zoom</span>:<span class="value"> <span class="number">1</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>该技术关键之处：一是空格默认不会显示，二是利用<code>display:table;</code>可以产生一个<code>display:table-cell;</code>的匿名元素，而<code>display:table-cell;</code>可以使元素成为Block Formatting Context，从而避免了外边距叠加问题，从而和针对IE6/7的<code>zoom: 1;</code>设置表现一致。</p>
+<p>另外，如果不打算兼容IE6/7，则可以去掉<code>zoom:1;</code>，也不用<code>:before</code>伪元素，而<code>content:” ”</code>;加一个空格是为了避免Opera里面的一个bug，但是在国内Opera的份额可以忽略不计。</p>
+<p>另外的另外，我在<a href="http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best#answer-9932508" target="_blank" rel="external">这里</a>看到一个更精简的方法，兼容IE6+，代码只有三行：</p>
+<pre><code><span class="class">.cf</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> inline-block</span></span>;
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">100%</span></span></span>;
+    <span class="rule"><span class="attribute">zoom</span>:<span class="value"> <span class="number">1</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><h2 id="参考资源">参考资源</h2>
+<ul>
+<li>CSS 101: Block Formatting Context: <a href="http://www.yuiblog.com/blog/2010/05/19/css-101-block-formatting-contexts/" target="_blank" rel="external">http://www.yuiblog.com/blog/2010/05/19/css-101-block-formatting-contexts/</a></li>
+<li>How To Clear Floats Without Structural Markup: <a href="http://www.positioniseverything.net/easyclearing.html" target="_blank" rel="external">http://www.positioniseverything.net/easyclearing.html</a></li>
+<li>Which method of clearfix is best?: <a href="http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best" target="_blank" rel="external">http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="经典">经典</h2>
+<p>以前最经典的清除浮动方法是利用<code>:after</code>伪元素，代码如下：</p>
+<pre><code><span class="class">.clearfix</span><span class="pseudo">:]]>
+    </summary>
+    
+      <category term="CSS" scheme="http://www.xiaocaoge.com/tags/CSS/"/>
+    
+      <category term="float" scheme="http://www.xiaocaoge.com/tags/float/"/>
+    
+      <category term="清除浮动" scheme="http://www.xiaocaoge.com/tags/%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[搭建Linux工作环境之路]]></title>
+    <link href="http://www.xiaocaoge.com/build-linux-workspace/"/>
+    <id>http://www.xiaocaoge.com/build-linux-workspace/</id>
+    <published>2014-05-18T03:37:42.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。</p>
+<p>电脑本来装着的是Debian，我以前没见过，本来也不会什么Linux，结果很抗拒它的桌面系统，呵呵。刚开始老大给了我一个Ubuntu 12.04的安装U盘，然后我在网上查了半天怎么把U盘挂载到Debian，我试了很多命令或方法，发现就是没反应。后来同事说主机前面的USB接口可能不能用，我心想：怪不得我试任何命令都没反应。于是我换到了主机后面的接口，一插上去就自动挂载了，很兴奋地可以从U盘启动了，出现了安装引导界面，但是在从U盘读取镜像文件时一直报错，我又查了半天，折腾了半天，最后说什么MD5错误。好吧就这样半天过去了，后来老大又给我下载了Ubuntu 14.04，果然只用半个多小时就安装好了。就这样半天过去，下班了。</p>
+<p><strong>第二天，我开始安装并配置我经常使用的软件：</strong></p>
+<ul>
+<li>输入法：ibus +小鹤 双拼</li>
+<li>浏览器：Chrome</li>
+<li>编辑器：Sublime Text 2</li>
+<li>翻墙工具：goagent</li>
+<li>网盘：DBank</li>
+<li>FTP：Filezilla</li>
+<li>虚拟机：Virtualbox</li>
+<li>本地服务器：NodeJS及NPM</li>
+</ul>
+<p>以及公司用到的几个软件：</p>
+<ul>
+<li>邮件客户端：Thunderbird</li>
+<li>IDE：Eclipse</li>
+<li>内部聊天：CTI</li>
+<li>本地服务器：Nginx</li>
+</ul>
+<p>我发现安装这些软件基本上很顺利，也花不了多少时间，就是配置或者遇到意外问题时会花很多很多时间，其中有些问题到现在都没有很好解决。</p>
+<p><strong>ibus小鹤双拼：</strong>我在自己电脑的Ubuntu 12.04上用得很好，到Ubuntu 14.04就发现an、en、ou等不符合小鹤的编码规则，这些变成了an-&gt;oj、en-&gt;of等。另一个问题就是只巧一个字母时，不会出现任何候选字，比如敲d，应该出现”的“，另外还要查查怎么安装鹤形辅码。ibus也没有云猜测功能，总之与Windows下的QQ、搜狗拼音差距很远，当然ibus人力财力也和他们差很远，而且已经两年没有更新了。我越来越觉得商业软件还是会占据主流，且使用方面也不一定比开源免费的差，这里商业软件指那些为实现商业价值而开发的软件，不一定收费。</p>
+<p><strong>Chrome的Flashplayer插件：</strong>我安装了Ubuntu软件管理中心里面的flashplayer但是，打开的很多网页都会出现flashplayer的问题，问我是否安装。我又查了半天，试了变天，幸而最后终于解决了。</p>
+<p><strong>Sublime：</strong>安装很顺利，就是再把Windows里面的个人配置复制到这里面时费了一段时间，首先我得知道Ubuntu下的Sublime配置文件放哪里。然后在使用Emmet时，发现不起作用，弹出一个让我安装其依赖PyV8的窗口，然后查了下，才知道PyV8不同操作系统有不同版本，还得专门下Linux的，而Windows下的当然没用了。然后在输入汉字时，发现ibus根本就没反应，网上一查属于Sublime对CJK输入支持不友好的问题，似乎Fcitx输入法可用，但ibus就只能安装一个InputHelper插件了，输入也很不方便。不支持GBK，然后下载了支持GBK的插件。</p>
+<p><strong>DBank：</strong>公司屏蔽了官网域名，我下载客户端都没法下，虽然可翻墙，但是我不想什么都翻墙，后来发现几乎所有网盘都被公司屏蔽了，这是个啥意思呢？正好我在Windows下的Dbank客户端已经一个月不能同步了，华为都没啥回应，到时搞什么企业云计算和移动端网盘很上心啊，我决定放弃华为的DBank了。再说我用它主要就是同步源码用的，我决定用github来同步源码，至于网盘我决定换一家可靠的，比如Dropbox。</p>
+<p><strong>Virtualbox：</strong>还别说这个也费了几个小时，我打算安装Windows7的，但总是出现cdrom=0 cdrom=d的问题，查了半天才反应过来是镜像有问题。于是就先安装XP了，我安装虚拟机的一个重要目的就是安装QQ，结果公司屏蔽了QQ，不知道个什么屏蔽法，使用代理可以上WebQQ，但是不可以用QQ客户端。</p>
+<p>至于Filezilla和NodeJS安装没什么大问题，到时NPM安装Grunt时，全局安装要使用root权限，而且安装源总是有问题一样，安装了三四次才成功，后来我知道可以将下载失败的包从其官网手动下载拷贝到相应目录里。</p>
+<p><strong>Thunderbird：</strong>在配置公司邮箱的时候出现了问题，应该是配置SMTP和POP时某个选项应该选择none，但是它之前总是提示我帐号和密码有问题。</p>
+<p><strong>Eclipse：</strong>这个在安装svnclipse时一直下载到一段失败，后来不知道怎么弄的终于弄好了，然后是需要从SVN下载源码，再然后是配置resin，当然这些基本都是同事帮忙弄的，要是我估计得半天才能弄好吧。</p>
+<p><strong>Nginx：</strong>安装之后要配置下本地端口，是同事帮忙弄得。</p>
+<p>才安装了以上这些软件就花了一天多，配置永远是最花时间的。还有其他不少东西都需要花时间尝试，比如字体设置、桌面设置、截图工具、查看图片工具、图片简单编辑工具、词典等等很多都需要学，而且很多软件不如Windows下的软件操作简单方便。</p>
+<p>还有Linux下文件与目录管理、权限管理、账户管理、Bash等等很多都需要学习，于是开始了我读《鸟哥的私房菜》的历程。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。</p>
+<p>电脑本来装着的是Deb]]>
+    </summary>
+    
+      <category term="Linux" scheme="http://www.xiaocaoge.com/tags/Linux/"/>
+    
+      <category term="Ubuntu" scheme="http://www.xiaocaoge.com/tags/Ubuntu/"/>
+    
+      <category term="系统搭建" scheme="http://www.xiaocaoge.com/tags/%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA/"/>
+    
+      <category term="后端" scheme="http://www.xiaocaoge.com/categories/%E5%90%8E%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[响应式图片]]></title>
+    <link href="http://www.xiaocaoge.com/responsive-images/"/>
+    <id>http://www.xiaocaoge.com/responsive-images/</id>
+    <published>2014-04-21T12:53:28.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>从定宽布局转向响应式布局的过程中，要想把PC端显示的内容显示在小屏幕的手机或平板上，首先也是最基本的就是采用流式布局，而图片的显示需要加下面一行代码：</p>
+<pre><code><span class="tag">img</span> <span class="rules">{ <span class="rule"><span class="attribute">max-width</span>:<span class="value"> <span class="number">100%</span></span></span>; <span class="rule">}</span></span>
+</code></pre><p>这样图片最大宽度就不会超过小屏幕设备浏览器的宽度，但是把大图片在小屏幕设备上显示会带来额外的带宽消耗。尤其是现今移动端网络速度慢于PC端，且速度上下浮动太大，慢的是2.5G网络，快的是4G，又会经常从WiFI切换到2.5G或3G。而且对于大部分网站，图片的流量会占一半以上，因此缩减图片大小，节省带宽成为响应式图片的一大挑战。幸而开源社区已经有了很多响应式图片解决方案，但是要注意并没有完美的方案，要根据具体需要来选择合适的方案。</p>
+<h2 id="adaptive-images">adaptive-images</h2>
+<p>官网：<a href="http://adaptive-images.com/" target="_blank" rel="external">http://adaptive-images.com/</a></p>
+<p>这是一个服务端解决方案，优点：一是不用更改现有的HTML标签结构，因此可快捷地应用于过去的项目；二是对于任何图片，包括JS添加的，都会起作用，即图片宽度不会大于浏览器宽度，三是由于其采用服务端解决方案，兼容性很广。</p>
+<p>但是，其缺点也是明显的：首先，其依赖Cookie和JS，这导致一些禁用或不能使用Cookie和JS的浏览器不能使用。然后是其对所有图片都起作用，这不适用于那些需要加载大图片的情形；再次，这是一个PHP解决方案，虽然也有Net方案，但还远不够用；最后，不适用于CDN，因为图片都是针对特定设备即时生成的（我觉得可以修改后端代码做到，但是我不会啊）。</p>
+<h2 id="picturefill">picturefill</h2>
+<p>官网：<a href="http://scottjehl.github.io/picturefill/" target="_blank" rel="external">http://scottjehl.github.io/picturefill/</a></p>
+<p>这是picture元素的一个polyfill，picture元素目前还没有任何浏览器实现。不过对于少量的图片，采用picturefill还是非常合适的。picturefill可以只应用于特定的图片，可以解决”Art Direction”问题，可以应用于CDN。同时应用picturefill也有些条件或限制，需要添加额外的标签，需要不同尺寸的图片，需要支持media query（可以采用<a href="https://github.com/paulirish/matchMedia.js" target="_blank" rel="external">matchMedia</a>）。</p>
+<h2 id="responsive-images-js">responsive-images.js</h2>
+<p>官网：<a href="https://github.com/kvendrik/responsive-images.js" target="_blank" rel="external">https://github.com/kvendrik/responsive-images.js</a></p>
+<p>这个与picturefill类似，不过它不依赖media query，而是通过JS检测浏览器的可见视口宽度来决定选择合适的图片，因此其兼容性很广，所有的主流浏览器。同时也不需要额外的标签，而是需要额外的属性，但是它不支持JS添加的图片，至少目前还不支持。</p>
+<h2 id="其他">其他</h2>
+<p>此外还有很多其他的解决方案，如拥有速度检测的foresight.js、第三方服务的src.sencha.io等等，这里有一份目前响应式图片解决方案列表：<a href="https://docs.google.com/spreadsheet/ccc?key=0Al0lI17fOl9DdDgxTFVoRzFpV3VCdHk2NTBmdVI2OXc#gid=0" target="_blank" rel="external">Responsive Images Chart</a>。</p>
+<p>相对于缩减图片大小，节省带宽的要求，我觉得Art Direction是一个更难解决或者说更麻烦的问题。Art Direction其实就是移动端与PC端是不同的图片，这增加了工作量。而且我认为响应式设计相对于为移动端专门设计网站，工作量减少的并不多，且没有专门的移动端网站要完美，毕竟屏幕大小所造成的布局以及移动与PC端网速的差别都是很大的。对于中大型互联网公司，我始终认为专门设计移动端网站才是合适的。</p>
+<h2 id="参考资源">参考资源</h2>
+<p>Choosing A Responsive Image Solution: <a href="http://www.smashingmagazine.com/2013/07/08/choosing-a-responsive-image-solution-2/" target="_blank" rel="external">http://www.smashingmagazine.com/2013/07/08/choosing-a-responsive-image-solution-2/</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>从定宽布局转向响应式布局的过程中，要想把PC端显示的内容显示在小屏幕的手机或平板上，首先也是最基本的就是采用流式布局，而图片的显示需要加下面一行代码：</p>
+<pre><code><span class="tag">img</span> <span class="rule]]>
+    </summary>
+    
+      <category term="Responsive" scheme="http://www.xiaocaoge.com/tags/Responsive/"/>
+    
+      <category term="响应式" scheme="http://www.xiaocaoge.com/tags/%E5%93%8D%E5%BA%94%E5%BC%8F/"/>
+    
+      <category term="响应式图片" scheme="http://www.xiaocaoge.com/tags/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%9B%BE%E7%89%87/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[图标解决方案: CSS Sprites, DataURI和@font-face]]></title>
+    <link href="http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face/"/>
+    <id>http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face/</id>
+    <published>2014-04-13T10:17:56.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>很多网站都需要用到小的图标，而且不止一个，会用很多个。最先接触到（也是最早出现的）的一种解决方案是CSS Sprites，把所有图标都合并成一张大图。后来又了解了DataURI这种把图片编码成字符的方法，接着是现在大行其道的@font-face方法，将常用的图标都制作成字体。三种方法的共同点是都能减少请求数，从而提高页面加载速度，同时又各有优劣：</p>
+<h2 id="CSS_Sprites">CSS Sprites</h2>
+<p>CSS Sprites历史悠久，大概在2004年之前就出现了，Dave Shea 在<a href="http://alistapart.com/article/sprites" target="_blank" rel="external">这篇文章</a>中提出了CSS Sprites这种技术。至于怎么应用这种技术，可以谷歌，也可以参考这两篇文章：<a href="http://udc.weibo.com/2012/05/%E8%B0%88%E8%B0%88css-sprites%E6%8A%80%E6%9C%AF%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/" target="_blank" rel="external">谈谈CSS Sprites技术及其优化</a>和<a href="http://css-tricks.com/css-sprites/" target="_blank" rel="external">CSS Sprites: What They Are, Why They’re Cool, And How to Use Them</a>。</p>
+<p>由于早期的浏览器并发请求数不超过2个，而减少请求数作为性能优化的第一规则，CSS Sprites也是成为了很多网站性能优化规则中的一条。由于IE6不支持PNG32透明，所以要不用GIF图片，要不就得让IE6支持PNG32透明，PNG32可以支持更丰富的色彩。除了IE6这点，其他的几乎所有平台的所有浏览器（当然不包括只能看文字的浏览器，以及非常古老的）都支持这种技术。因此色彩丰富与兼容性极佳是这种技术的突出优势。</p>
+<p>当然，由于需要把所有小图片合并成一张大图，尤其需要知道每一个小图在大图上的坐标，以便写CSS，从而使得开发时间延长。通过将小图放到固定的网格中，再加上有很多辅助或者自动化生成CSS Sprites的工具可以大大缩短开发时间。小图在大图上的位置是死的，通常都是相关的放到一起，成为一组，而到后期如果要增加图片那么只能增加到最后面，然后邻近的图片变得不相关，位置越来越混乱，增加了维护难度。另外，图片的尺寸也是固定的，要改变大小，位置又受影响，而且也不能利用background-size来调整图片大小，所以前期的规划很重要。</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>减少请求数</li>
+<li>可以是任意的图标，也即任何色彩</li>
+<li>兼容性极好，IE6+及其他现代浏览器，包括移动端</li>
+</ul>
+<p><strong>劣势：</strong></p>
+<ul>
+<li>增加开发时间</li>
+<li>增加维护成本</li>
+<li>图片尺寸固定</li>
+</ul>
+<p><strong>工具：</strong></p>
+<ul>
+<li>SpriteCow: <a href="http://www.spritecow.com/" target="_blank" rel="external">http://www.spritecow.com/</a></li>
+<li>SpritePad: <a href="http://wearekiss.com/spritepad" target="_blank" rel="external">http://wearekiss.com/spritepad</a></li>
+<li>CSS Sprite Generator: <a href="http://spritegen.website-performance.org/" target="_blank" rel="external">http://spritegen.website-performance.org/</a></li>
+</ul>
+<h2 id="DataURI">DataURI</h2>
+<p>DataURI是利用Base64编码规范将图片转换成文本字符，不仅是图片，还可以编码JS、CSS、HTML等文件。通过将图标文件编码成文本字符，从而可以直接写在HTML/CSS文件里面，不会增加任何多余的请求。</p>
+<p>但是DataURI的劣势也是很明显的，首先不支持IE6/7，这对于国内某些非要支持IE6的网站不可接受，至于IE8的32KB限制，我认为不能算劣势，通常一个小图标不会大于32KB。而采用Base64编码后的字符串大小要比原图片大5-10%左右，这还是经过Gzip压缩之后的。每次加载之后都需要浏览器将文本字符解码为图片，增加了客户端CPU消耗。由于每次都需要解码从而阻塞了CSS渲染，可以通过分离出一个专用的CSS文件，不过那就需要增加一个请求，那样与CSS Sprites相比没有了任何优势，也因此，在实践中不推荐这种方法。需要注意的是通过缓存CSS可以来达到缓存的目的。</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>不增加请求数</li>
+</ul>
+<p><strong>劣势：</strong></p>
+<ul>
+<li>通常比图片要大不到10%</li>
+<li>每次加载页面都需要解码</li>
+<li>不支持IE6/7，IE8最大支持32KB，来自<a href="http://caniuse.com/datauri" target="_blank" rel="external">Can I use Data URIs</a></li>
+<li>难于维护</li>
+</ul>
+<p><strong>工具：</strong></p>
+<ul>
+<li>Image to Dat URI Convertor: <a href="http://websemantics.co.uk/online_tools/image_to_data_uri_convertor/" target="_blank" rel="external">http://websemantics.co.uk/online_tools/image_to_data_uri_convertor/</a></li>
+<li>Convert Images to base64: <a href="http://webcodertools.com/imagetobase64converter" target="_blank" rel="external">http://webcodertools.com/imagetobase64converter</a></li>
+</ul>
+<h2 id="@font-face">@font-face</h2>
+<p>这种采用@font-face技术的的方法被称为font icons，似乎是伴随着HTML5、CSS3、Bootstrap以及扁平化设计趋势流行开来的。相对于前两种技术，最显著的优势就是大小与颜色设置非常便利，不必再用Photoshop等图片工具了，大大加快开发进程和降低门槛。但也伴随着最大的劣势，图标的颜色只能为单色，虽然可以通过CSS渐变、背景色或者font layering等技术稍微丰富下色彩，却仍旧弥补不了这天生的缺陷。好在是现在越来越注重内容，扁平化也大行其道，曾经的炫丽被不断抛弃，这很大程度上掩盖了色彩单一的缺陷，突出了其优势。</p>
+<p>至于兼容性，除了一些旧的或残的手机浏览器之外，能兼容IE6+及其他现代浏览器。哦，还有一个劣势，一般限于通用型的图标，如箭头、主页、搜索等几百个，其他要定制图标的话开发成本比较大，还不如采用CSS Sprites技术呢。</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>减少请求数</li>
+<li>可以兼容至IE6+及其他现代浏览器，几乎所有移动端浏览器，<a href="http://caniuse.com/fontface" target="_blank" rel="external">参考</a></li>
+<li>大小、颜色的设置像操作字体般简单快捷</li>
+<li>体积通常比图片小</li>
+</ul>
+<p><strong>劣势：</strong></p>
+<ul>
+<li>只能单一色彩（font layering可以多种颜色，但兼容性难以保证）</li>
+<li>一般限于通用型图标</li>
+<li>不兼容旧的手机浏览器：Opera mini，Android 2.1，Windows Phone 7.5-7.8</li>
+<li>在手机上可能与系统字体冲突</li>
+</ul>
+<p><strong>工具：</strong></p>
+<ul>
+<li>Font Awesome Icons: <a href="http://fortawesome.github.io/Font-Awesome/icons/" target="_blank" rel="external">http://fortawesome.github.io/Font-Awesome/icons/</a></li>
+<li>Fontello: <a href="http://fontello.com/" target="_blank" rel="external">http://fontello.com/</a></li>
+<li>Fontsquirrel: <a href="http://www.fontsquirrel.com/tools/webfont-generator" target="_blank" rel="external">http://www.fontsquirrel.com/tools/webfont-generator</a></li>
+</ul>
+<h2 id="其他">其他</h2>
+<p>当然还有其他的解决方案，比如SVG Sprites、HTML实体符号、纯CSS图标。只是纯CSS图标只能兼容最新的浏览器，对IE8及IE8以下不兼容。而HTML实体符号的显示效果很不理想，图标有点丑，且种类很少。至于SVG Sprites，还没有尝试过，<a href="http://ianfeather.co.uk/ten-reasons-we-switched-from-an-icon-font-to-svg/" target="_blank" rel="external">这篇文章</a>说比@font-face方法要有优势，可以尝试一下。</p>
+<h2 id="参考资源">参考资源</h2>
+<ul>
+<li>CSS Sprites Sheets: <a href="http://goo.gl/mVQ6AC" target="_blank" rel="external">http://goo.gl/mVQ6AC</a></li>
+<li>The New Bulletproof @Font-face Syntax: <a href="http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax" target="_blank" rel="external">http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax</a></li>
+<li>Bulletproof Accessible Font Icons: <a href="http://filamentgroup.com/lab/bulletproof_icon_fonts/" target="_blank" rel="external">http://filamentgroup.com/lab/bulletproof_icon_fonts/</a></li>
+<li>Image Sprites Or Data URI?…: <a href="http://benfrain.com/image-sprites-data-uris-icon-fonts-v-svgs/" target="_blank" rel="external">http://benfrain.com/image-sprites-data-uris-icon-fonts-v-svgs/</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>很多网站都需要用到小的图标，而且不止一个，会用很多个。最先接触到（也是最早出现的）的一种解决方案是CSS Sprites，把所有图标都合并成一张大图。后来又了解了DataURI这种把图片编码成字符的方法，接着是现在大行其道的@font-face方法，将常用的图标都制作成字体]]>
+    </summary>
+    
+      <category term="CSS Sprites" scheme="http://www.xiaocaoge.com/tags/CSS-Sprites/"/>
+    
+      <category term="DataURI" scheme="http://www.xiaocaoge.com/tags/DataURI/"/>
+    
+      <category term="font-face" scheme="http://www.xiaocaoge.com/tags/font-face/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[书签管理小记]]></title>
+    <link href="http://www.xiaocaoge.com/bookmark-management/"/>
+    <id>http://www.xiaocaoge.com/bookmark-management/</id>
+    <published>2014-04-11T18:56:05.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>在大学时代，电脑基本上玩游戏了，浏览的网站无非都是些QQ空间、淘宝、人人之类，一共也就那么几个，连标签栏都占不满，也就没必要管理。后来学习PPT，发现了一些相关的博客、工具、图片资源等大概几十个网址。这也很好管理，两三个文件夹，分类管理就可以了。我想这些对于大部分学生时代的人都够用了，说真的，书签还真不用怎么管理，没多少。</p>
+<p>后来学习前端后，书签开始持续增长。书签主要来自：百度或谷歌搜索、书上、博文或导航页面中的链接。书签虽然增长到了几百个，不过还是采用文件夹分组管理，大概就按技术来分：常用、手册、图片、前端、CSS、JS、博客、PHP、设计、待读等。</p>
+<p>一开始学习时，经常把书中或博文中的链接都看一下（做到这个就必须学会架fan梯qiang子和提高英语阅读水平，字典是必须随时查的），看一下具体什么内容，网站主题，是否值得收藏，可谓是人工爬虫，所以收藏了很多链接。经过一年半载之后，发现有很多链接从来不再访问，即使访问也是通过搜索引擎而不是书签访问的。而且这么多链接也太占地方了，决定筛选清理一下。</p>
+<h2 id="常用类">常用类</h2>
+<p>这个包含各类网站了，豆瓣读书、淘宝、微博、知乎、github、Stackoverflow、smashingmagazine、Gmail、dribbble等。Google排在最顶级的，所以不包含在常用类。</p>
+<h2 id="手册类">手册类</h2>
+<p>像什么HTML、CSS、JavaScript、jQuery API、MDN reference、PHP Manual等会经常用到，虽然可以全部学习一遍，但是难免有些记不住，尤其一遍也学不到某些细节，或者时间久了自然会忘记一些。</p>
+<h2 id="在线工具类">在线工具类</h2>
+<p>我常用的有Base64 encode、在线压缩JS/CSS、在线生成CSS Sprites、font icons、ajaxload等。</p>
+<h2 id="把不适合当前读的删除">把不适合当前读的删除</h2>
+<p>比如说各大UED、大牛的博客、一些图片资源网站。我自己觉得那些大公司UED并不适合一个打基础的读，知识不系统，主题又不定。而大牛的博客与之类似，世界级大神的文章往往有深度，看得话要花时间啃。所以我决定暂时移出这些网址，如果学习某个主题的过程当中搜到了他们的文章，还是会看的，这也是我习惯的学习方式，按照某个主题疯狂的搜索文章，这方面谷歌甩百度十条街不止。至于图片资源网站，我只留一个iconfinder，其他的很少用到。</p>
+<h2 id="待读链接">待读链接</h2>
+<p>这里面会存放近期要（继续）读的链接，或者是一些为了写博文而准备的链接。但是这个分类经常会存好多，发现大部分决定要读的文章后来再也没读过了，弃之可惜。</p>
+<h2 id="将链接存到其他地方">将链接存到其他地方</h2>
+<p>后来发现有很多网站属于觉得对自己可能有用，或者网站有再看的价值，但是现在没机会看，就把这些用Evernote收藏了。另外我会把我读过的所有文章都收藏到Evernote中，现在没什么价值，以后可能挖掘点儿什么数据。单纯收藏链接来说，我觉得Evernote还不太方便，还是应该用专业的delicious或者自己做一个书签管理工具。</p>
+<h2 id="资源导航类">资源导航类</h2>
+<p>有时候会突然发现一些资源导航类的链接，里面有很多相关的链接，比如<a href="https://docs.google.com/document/d/1kuhUEiIkAUHO0LBBNM4A1Enc5QgVZn3CDkuSoPZJR1U/edit" target="_blank" rel="external">HTML CSS and JavaScript resources</a>、<a href="https://github.com/dypsilon/frontend-dev-bookmarks" target="_blank" rel="external">frontend-dev-bookmarks</a>，然后一个个点开，自己觉得合适的就收藏起来，也突然增加一些陌生的链接。而实际上，我以后很长一段时间又很少会点开这些链接，这些都是一些新知识，我一时没时间去学。现在我觉得把这些资源导航类链接收藏起来，其他的收藏几个对当前有用的，所有链接都熟悉下，然后以后需要了再回头看。</p>
+<h2 id="定期筛选清理">定期筛选清理</h2>
+<p>这个是必须的，就像房间一样，必须定期整理打扫才不至于又乱又脏（好吧！我房间比较乱）。我自己大概每个3-6个月筛选清理一下，但是现在的书签管理还是不便利，经过筛选留下的链接中很多还是不会看，有些链接一个就够看个把月了。混乱啊，该怎么管理是好？</p>
+<p>最后附自己书签：<a href="http://www.xiaocaoge.com/demo/re-bookmarks_4_12_14.html" target="_blank" rel="external">bookmarks</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在大学时代，电脑基本上玩游戏了，浏览的网站无非都是些QQ空间、淘宝、人人之类，一共也就那么几个，连标签栏都占不满，也就没必要管理。后来学习PPT，发现了一些相关的博客、工具、图片资源等大概几十个网址。这也很好管理，两三个文件夹，分类管理就可以了。我想这些对于大部分学生时代的]]>
+    </summary>
+    
+      <category term="bookmark" scheme="http://www.xiaocaoge.com/tags/bookmark/"/>
+    
+      <category term="书签" scheme="http://www.xiaocaoge.com/tags/%E4%B9%A6%E7%AD%BE/"/>
+    
+      <category term="前端资源" scheme="http://www.xiaocaoge.com/tags/%E5%89%8D%E7%AB%AF%E8%B5%84%E6%BA%90/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Markdown语法学习]]></title>
+    <link href="http://www.xiaocaoge.com/markdown-syntax/"/>
+    <id>http://www.xiaocaoge.com/markdown-syntax/</id>
+    <published>2014-04-08T20:14:17.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="简介">简介</h2>
+<p><a href="http://en.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a>是一种为了提高文档易读性与易写性的纯文本格式规范，其可以转换成HTML，从而可以利用CSS定制其样式。Markdown语法非常简单，而且语法符号也是为了快速书写文本而设计。Markdown发布已经很久了，其初由John Gruber与Aaron Swartz于2004年合作发布，<a href="https://daringfireball.net/projects/markdown/basics" target="_blank" rel="external">最初的发布版本</a>。直到现在，并没有一个统一的标准规范，各个实现版本会有些不同，不过基础的语法基本是相同的。Markdown已经应用在很多地方，如Github、Stackoverflow、reddit等网站，也应用于项目的ReadMe文件、一些论坛、写邮件、博客等地方。有多种实现的语言版本，也有多个系统平台上的编辑器实现，在线编辑器也有，这些可以谷歌会得到很多结果。</p>
+<h2 id="语法">语法</h2>
+<h3 id="标题">标题</h3>
+<p>标题是以<code>#</code>开头的文本，如<code>#标题</code>，一级标题是一个<code>#</code>号，二级两个，直到六级，分别对应HTML当中的<code>h1~h6</code>标签。</p>
+<pre><code><span class="preprocessor">#一级标题</span>
+<span class="preprocessor">##二级标题</span>
+<span class="preprocessor">###三级标题</span>
+…
+<span class="preprocessor">######六级标题</span>
+</code></pre><h3 id="段落">段落</h3>
+<p>段落就是普通的文本，空行表示换一个段落。</p>
+<pre><code>这是段落一这是段落一
+这还是段落一
+
+这是段落二
+</code></pre><h3 id="引用">引用</h3>
+<p>引用是以<code>&gt;</code>开头的文本。</p>
+<pre><code><span class="input"><span class="prompt">&gt; 这是一段引用这是一段引用
+&gt;</span> 这和上面是同一段引用</span>
+&gt; 这和上面是同一段引用
+</code></pre><h3 id="代码">代码</h3>
+<p>内嵌代码用    </p>
+<pre><code>### 列表
+
+无序列表用<span class="escape">`*</span><span class="escape">`或</span><span class="escape">`+</span><span class="escape">`或</span><span class="escape">`-</span><span class="escape">`开</span>头表示：
+markdown
+</code></pre><ul>
+<li>项目一</li>
+<li>项目二</li>
+<li><p>项目三</p>
+<p>  或<br>  markdown</p>
+</li>
+</ul>
+<ul>
+<li>项目一</li>
+<li>项目二</li>
+<li><p>项目三</p>
+<p>  或<br>  markdown</p>
+</li>
+</ul>
+<ul>
+<li>项目一</li>
+<li>项目二</li>
+<li><p>项目三</p>
+<p>  有序列表用数字跟一个英文句点表示：<br>  markdown</p>
+</li>
+</ul>
+<ol>
+<li>项目一</li>
+<li>项目二</li>
+<li><p>项目三</p>
+<h3 id="强调">强调</h3>
+<p> 包括斜体与粗体，分别对应HTML中的<code>em</code>与<code>strong</code>标签。斜体为两边各一个<code>#</code>或<code>_</code>包裹，而粗体用<code>##</code>或<code>__</code>包裹，斜体可与粗体嵌套，比如：<code>##_斜粗体_##</code>。<br> markdown</p>
+<h1 id="斜体">斜体</h1>
+<p><em>斜体</em></p>
+<h2 id="粗体">粗体</h2>
+<p><strong>粗体</strong></p>
+<h2 id="斜粗体##`"><em>斜粗体</em>##`</h2>
+<h3 id="超链接">超链接</h3>
+<p> 超链接文本放在<code>[]</code>中，而超链接地址放在紧跟其后面的<code>()</code>中。<br> markdown<br><a href="http://www.baidu.com" target="_blank" rel="external">百度</a></p>
+<h3 id="图片">图片</h3>
+<p> 图片与超链接语法类似：</p>
+<ul>
+<li>一个英文感叹号<code>!</code></li>
+<li>接一个[]包裹的文本，其文本为图片无法显示时的替代文字，<code>![替代文字]</code></li>
+<li><p>接一个()包裹的图片链接，<code>![替代文字](http://www.domain.com/photo.jpg)</code></p>
+<p>在图片链接的后面还可以跟一个鼠标悬停在图片上时显示的文字：<br>markdown<br><img src="http://www.domain.com/photo.jpg “鼠标悬停显示的文字&quot;" alt="替代文字"></p>
+<h3 id="转义特殊字符">转义特殊字符</h3>
+<p>Markdown允许通过反斜杠<code>\</code>来转义下面的特殊字符：<br>txt<br>\   反斜杠<br>`   反引号</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>星号<br>_   下划线<br>{}  花括号<br>[]  方括号<br>()  括号<h1 id="井号">井号</h1>
+</li>
+</ul>
+<ul>
+<li>加号</li>
+</ul>
+<ul>
+<li>减号<br>.   英文句点<br>!   感叹号<br>```</li>
+</ul>
+<h2 id="更好的参考：">更好的参考：</h2>
+<ul>
+<li>Markdown Here Cheatsheet: <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet" target="_blank" rel="external">https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet</a></li>
+<li>Markdown语法说明：<a href="http://wowubuntu.com/markdown/" target="_blank" rel="external">http://wowubuntu.com/markdown/</a></li>
+<li>Github Markdown Basics: <a href="https://help.github.com/articles/markdown-basics" target="_blank" rel="external">https://help.github.com/articles/markdown-basics</a></li>
+<li>What is Markdown: <a href="http://whatismarkdown.com/" target="_blank" rel="external">http://whatismarkdown.com/</a></li>
+</ul>
+<h2 id="在线编辑器">在线编辑器</h2>
+<ul>
+<li>Cmd Markdown编辑阅读器：<a href="https://www.zybuluo.com/mdeditor" target="_blank" rel="external">https://www.zybuluo.com/mdeditor</a></li>
+<li>Dillinger Online Markdown Editor: <a href="http://dillinger.io/" target="_blank" rel="external">http://dillinger.io/</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="简介">简介</h2>
+<p><a href="http://en.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a>是一种为了提高文档易读性与易写性的纯文本格式规范，其]]>
+    </summary>
+    
+      <category term="Markdown" scheme="http://www.xiaocaoge.com/tags/Markdown/"/>
+    
+      <category term="Markdown语法" scheme="http://www.xiaocaoge.com/tags/Markdown%E8%AF%AD%E6%B3%95/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[理解viewport与device-width]]></title>
+    <link href="http://www.xiaocaoge.com/understanding-viewport-and-device-width/"/>
+    <id>http://www.xiaocaoge.com/understanding-viewport-and-device-width/</id>
+    <published>2014-04-08T09:39:22.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
+<pre><code>&amp;lt;meta <span class="variable">name=</span>”viewport” <span class="variable">content=</span>”<span class="variable">width=</span>device-width” &amp;gt;
+</code></pre><p>content属性还包括initial-scale，user-scalable等，不过这里不谈，它们的意思都很容易理解。这里要谈得是：viewport代表什么？device-width又是啥？</p>
+<h3 id="先来理解两个概念：device_pixels与CSS_pixels。">先来理解两个概念：device pixels与CSS pixels。</h3>
+<p>device pixels指设备的物理像素，在PC端就是你在操作系统里设置的屏幕分辨率y，其值可以通过<code>screen.width/screen.height</code>获取。在移动端下面再说。</p>
+<p>CSS pixels指在CSS文件中设置的字体大小、元素宽度等，如<code>font-size: 14px;</code> <code>width: 100px;</code> 。在PC端，浏览器缩放比例为100%，也即默认情况下，1 CSS pixel = 1 device pixel。</p>
+<p>当你放大页面到200%时，字体大小与元素宽度的像素值不会改变，是因为这些像素值是用CSS pixels表示的，实际上放大的是CSS pixels，此时 1 CSS pixel = 4 device pixels，高和宽都是200%。此时你获取<code>screen.width/screen.height</code>的值，并没有变化，而<code>window.innerWidth</code>和<code>window.innerHeight</code>的值变成了原来一半，是因为<code>window.innerWidth/window.innerHeight</code>的值也是用CSS pixels来表示的。</p>
+<p>当你进行流式布局时，会用百分比设置元素的宽度，比如一个块级元素宽度为10%，那么你也知道10%实际上是父级元素宽度的10%。但是你并没有设置父级元素的宽度啊，好吧，你也知道父级元素的宽度与其父级元素宽度一样（通过继承得来，假设这些元素都是块级元素）。然后向上到body元素的宽度，最终为html元素的宽度，其值可以通过<code>document.documentElement.clientWidth</code>获取。那这个宽度怎么来得呢？</p>
+<h3 id="Viewport">Viewport</h3>
+<p>viewport，翻译为视口，也即可视区域的大小，PC端通过<code>window.innerWidth</code>和<code>window.innerHeight</code>获取。</p>
+<p>html元素也即文档的宽度，来自于viewport的宽度，在PC端要加上滚动条的宽度才会与viewport的宽度一样。因此，文档的宽度最终来自于viewport的宽度，PC端通过<code>window.innerWidth</code>获取。</p>
+<h2 id="而在移动端，情况将变得复杂。">而在移动端，情况将变得复杂。</h2>
+<p>首先，上面提到文档的宽度来自于viewport的宽度，我们把这个viewport称为layout viewport，因为它和布局有关。在手机上面，因为手机的屏幕很小，当初iphone发布时，为了显示完整的桌面网页，就把给layout viewport设置了一个980px的值。手机上，可以通过<code>document.documentElement.clientWidth</code>来获取，我在安卓手机上测试也是980px。</p>
+<p>但是这样显示网页，那网页的字体、元素都很小，小到打开这样一个网页，首先要做的就是放大页面。为了提高可读性，Apple允许通meta标签来设置layout viewport的宽度，也即文章开头的那行代码。</p>
+<h3 id="但是，device-width又是什么呢？">但是，device-width又是什么呢？</h3>
+<p>第一代iphone的分辨率为320*480，屏幕尺寸为3.5寸。当时把layout viewport设置成与浏览器宽度一样（而手机上浏览器宽度与手机屏幕宽度一样）时，不用每次打开网页放大了，而且显示的字体与桌面上差不多，可读性很好。因此就定义了一个device-width，即是手机的屏幕分辨率，此时device翻译为“设备”还合适。</p>
+<p>但是第二代iphone发布时，屏幕的分辨率变成了480*960，而屏幕尺寸仍然为3.5寸，如果device-width仍然为手机的屏幕分辨率宽度，那么字体将会比第一代小很多。所以，维持device-width的值不变将会是个很好得选择，能与前面兼容。也因此，iphone上的device-width的值一直为320，只不过device再表示“设备”已经不合适了，实际上代表的是一个中间层。而Android也采用了这一概念，其device-width的值为360的多，360=540/1.5，360=720/2。</p>
+<h3 id="如何获取device-width的值呢？">如何获取device-width的值呢？</h3>
+<p>浏览器并没有提供一个获取device-width的属性或方法，但是通过<code>window.innerWidth</code>可以获取，需要注意的是，必须添加文章开头那行代码才可以跨浏览器获取。如果不添加那行代码，我自己在HTC G18/ Andoird OS 4.0.3中测试，自带浏览器/UC9.6/QQ5.0可以获取，而在Chrome33和Opera20中通过screen.width可以获取。iPhone与iPad我没测试。这是测试网页地址：</p>
+<p><a href="http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html" target="_blank" rel="external">http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html</a>。</p>
+<p>Chrome与Opera比较深入实现了中间层的概念，屏幕的实际分辨率与Web开发关系并不大，Chrome与Opera就将<code>screen.width</code>返回中间层的宽度。这里我也不明白哪种设计更好些。</p>
+<p>这里<a href="http://viewportsizes.com/?filter=" target="_blank" rel="external">有个链接</a>可以查看各种手机型号的device-width/device-height大小，虽然链接称为viewport size。</p>
+<h3 id="参考资源：">参考资源：</h3>
+<ul>
+<li>A tale of two viewports - part one: <a href="http://www.quirksmode.org/mobile/viewports.html" target="_blank" rel="external">http://www.quirksmode.org/mobile/viewports.html</a></li>
+<li>A tale of two viewports - part two: <a href="http://www.quirksmode.org/mobile/viewports2.html" target="_blank" rel="external">http://www.quirksmode.org/mobile/viewports2.html</a></li>
+<li>(上面译文) 两个viewport的故事 - 第一篇：<a href="http://weizhifeng.net/viewports.html" target="_blank" rel="external">http://weizhifeng.net/viewports.html</a></li>
+<li>两个viewport的故事 - 第二篇：<a href="http://weizhifeng.net/viewports2.html" target="_blank" rel="external">http://weizhifeng.net/viewports2.html</a></li>
+<li>Using the viewport meta tag to control layout on mobile browsers: <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag</a></li>
+<li>An introduction to meta viewport and viewport: <a href="http://dev.opera.com/articles/view/an-introduction-to-meta-viewport-and-viewport/" target="_blank" rel="external">http://dev.opera.com/articles/view/an-introduction-to-meta-viewport-and-viewport/</a></li>
+<li>什么是viewport，为什么需要viewport：<a href="http://zhanchaojiang.iteye.com/blog/1470586" target="_blank" rel="external">http://zhanchaojiang.iteye.com/blog/1470586</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
+<pre><code>&amp;lt;meta <span class="variable">name=</span>”viewport” <span class="variable">content=</spa]]>
+    </summary>
+    
+      <category term="device-width" scheme="http://www.xiaocaoge.com/tags/device-width/"/>
+    
+      <category term="meta viewport" scheme="http://www.xiaocaoge.com/tags/meta-viewport/"/>
+    
+      <category term="viewport" scheme="http://www.xiaocaoge.com/tags/viewport/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Transition height from 0 to auto]]></title>
+    <link href="http://www.xiaocaoge.com/transition-height-from-0-to-auto/"/>
+    <id>http://www.xiaocaoge.com/transition-height-from-0-to-auto/</id>
+    <published>2014-04-03T09:35:08.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于<code>height:auto;时</code>，浏览器会识别height值为0，因此无法直接从<code>height: 0;</code>过渡到<code>height: auto;</code>。</p>
+<p>一种简单的方法是，将过渡应用于max-height属性，通过设置一个大于元素所可能达到的最大高度值。代码如下：</p>
+<pre><code><span class="class">.elem</span> <span class="rules">{
+    <span class="rule"><span class="attribute">max-height</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">overflow</span>:<span class="value"> hidden</span></span>;
+    <span class="rule"><span class="attribute">-webkit-transform</span>:<span class="value"> <span class="function">translate3d</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)</span></span>; <span class="comment">/* 开启硬件加速 */</span>
+    <span class="rule"><span class="attribute">transform</span>:<span class="value"> <span class="function">translate3d</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)</span></span>;
+    <span class="rule"><span class="attribute">-webkit-transition</span>:<span class="value"> all .<span class="number">3s</span> ease-in</span></span>;
+    <span class="rule"><span class="attribute">transition</span>:<span class="value"> all .<span class="number">3s</span> ease-in</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.elem-show</span> <span class="rules">{ 
+    <span class="rule"><span class="attribute">max-height</span>:<span class="value"> <span class="number">200px</span></span></span>; <span class="comment">/* 假如元素的最大可能高度为200px */</span>
+<span class="rule">}</span></span>
+</code></pre><p>缺陷是，在元素最大可能高度与实际高度相差比较大时，由于过渡总是从最大可能高度过渡到0，因此会看到过渡效果有明显延迟。查看<a href="http://www.xiaocaoge.com/demo/transition-auto-delay.html" target="_blank" rel="external">DEMO</a><br>另一种方法是通过JS修正<code>height:auto;</code>不能过渡的问题，从而也避免了第一种方法的缺陷。思路是：</p>
+<ul>
+<li>先不设置最大可能高度，先在隐藏状态下获取该元素的实际高度，通过设置<code>elem.style.visibility = &#39;hidden&#39;;</code>隐藏该元素;</li>
+<li>要显示元素时，通过DOM2 Style的<code>insertRule()</code>方法将所获取的高度插入到样式表中，再添加一个class，触发过渡效果；</li>
+<li>待要隐藏元素时，再通过<code>deleteRule()</code>把刚才添加的CSS规则移除，并去掉添加的class；<br>由于改变样式表，所以导致了全局重绘，性能不如第一种。</li>
+</ul>
+<p>使用两种方法写的一个下拉菜单效果：<a href="http://www.xiaocaoge.com/demo/transition-height-from-0-to-auto.html" target="_blank" rel="external">DEMO</a>，可查看相关源码</p>
+<p><strong>参考资源：</strong></p>
+<ul>
+<li>CSS transition height: 0; to height: auto;：<a href="http://stackoverflow.com/questions/3508605/css-transition-height-0-to-height-auto" target="_blank" rel="external">http://stackoverflow.com/questions/3508605/css-transition-height-0-to-height-auto</a></li>
+<li>CSS transition from/to auto values: <a href="http://n12v.com/css-transition-to-from-auto/" target="_blank" rel="external">http://n12v.com/css-transition-to-from-auto/</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于<code>height:auto;时</code>，浏览器会识别height值为0，因此无]]>
+    </summary>
+    
+      <category term="auto" scheme="http://www.xiaocaoge.com/tags/auto/"/>
+    
+      <category term="height auto" scheme="http://www.xiaocaoge.com/tags/height-auto/"/>
+    
+      <category term="transition" scheme="http://www.xiaocaoge.com/tags/transition/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[电脑文件管理]]></title>
+    <link href="http://www.xiaocaoge.com/compute-files-management/"/>
+    <id>http://www.xiaocaoge.com/compute-files-management/</id>
+    <published>2014-04-01T08:42:17.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。</p>
+<h2 id="首先，分析文件来源">首先，分析文件来源</h2>
+<p>文件的来源无非两种：本地与外部。本地主要就是各种新建、复制、剪切等产生的文件，而外部包括下载的、传送的、其他存储器拷贝的。</p>
+<h3 id="本地">本地</h3>
+<ul>
+<li>文档 (doc/ppt/xls/pdf/txt) ：其中office三剑客几乎没用过了，pdf做简历，txt主要记录小的技术点，其他的笔记主要用evernote</li>
+<li>源码 (html/css/js/php/less) ：主要就是编辑器notepad++或sublime产生的</li>
+<li>图片 (jpg/png/gif/psd) ：来源主要是iSee图片编辑器、Photoshop、FSCapture或QQ截图工具</li>
+<li>音频：少量的HTML5测试用的多种格式音频，经过格式工厂转换得来</li>
+<li>视频：少量的HTML5测试用的多种格式视频，经过格式转换工具转换得来</li>
+<li>压缩文件：通常用在QQ传送或微云上，然后应该删除本地的</li>
+</ul>
+<h3 id="外部">外部</h3>
+<ul>
+<li>文档 (doc/ppt/xls/pdf/txt) ：主要就是百度文库、QQ传送、Slideshare或其他网站</li>
+<li>源码 (html/css/js/php) ：第一来源是github，其他主要是各开放源码官网，下载工具要么是Chrome，要么就是git之类的客户端吧</li>
+<li>图片：几乎全是浏览器下载的，网站主要有Google Image、百度图片、deviantart、站酷、dribbble、iconfinder等，另外有少量的是手机的照片、手机的截图等通过QQ文件管理器传送</li>
+<li>软件：常用的软件通过腾讯管家之类下载，Web开发相关软件通过官网下载</li>
+<li>PS资源：主要就是笔刷、形状、渐变等资源，大部分都是在deviantart或站酷下载的</li>
+<li>音频：酷狗下载的歌曲</li>
+<li>视频：几部电影和测试用的视频文件</li>
+<li>压缩文件：压缩文件只是传输用的，解压之后就删除了</li>
+<li>字体文件：暂时很少用到吧</li>
+</ul>
+<h2 id="分析文件类别">分析文件类别</h2>
+<p>突然发现文件分本地与外部意义并不大，应该以类型分更有助于管理，包括文档、图片、源码、软件等。现阶段，源码和图片急需管理：</p>
+<h3 id="源码">源码</h3>
+<p>源码清单包括：</p>
+<ul>
+<li>W3School与基础的前端书籍练习与附带源码，主要来自于入门时</li>
+<li>HTML5、CSS3、响应式设计等基础知识点练习或测试，会来自于MDN、CSS-Tricks、Stackoverflow、Google出的文章、即兴测试等</li>
+<li>类库或插件的源码，版本管理，常用类库的个别测试尽量使用公共CDN</li>
+<li>前端类库的入门学习，比如jQuery、Bootstrap、jQuery Mobile等</li>
+<li>前端小库或插件的学习，比如normalize.css、Respond.js、Modernizr、jQuery plugins、lazyload、swipe、responsive-nav、mediaelement等等，将来会达到数百个，而且考虑版本问题，其中有很多要在移动端测试，这些源码大多从github下载</li>
+<li>基础技术的兼容性测试，跨平台，跨终端</li>
+<li>自己练习写的功能组件</li>
+<li>工作或自己的项目文件</li>
+<li>各种小技术或问题点的总结，写在csstips.txt、jstips.txt、phptips.txt等文本文件中</li>
+<li>与html、css或js有关的pdf或ppt文档，集中在一起管理</li>
+<li>下载的电子版书籍，单独放文件夹即可</li>
+<li>后端源码</li>
+<li>其他语言</li>
+</ul>
+<h3 id="图片">图片</h3>
+<p>图片清单</p>
+<ul>
+<li>图标文件，来自于iconfinder、站酷、自己制作等</li>
+<li>壁纸文件，大尺寸图片，可供测试用，分PC端与移动端</li>
+<li>个人相册，博客logo、照片等</li>
+<li>截图文件，来自于QQ截图或FSCapture</li>
+<li>设计素材，纹理、各种事物素材</li>
+<li>各种类别图片，如自然美景、创意、动物、植物、人物等</li>
+<li>设计图，网站设计、UI设计、logo设计等，设计图的标注文件</li>
+<li>字体特效，最好分文件夹建，包括相应的素材文件</li>
+<li>工作项目，包含相应的icon、设计图等</li>
+<li>表情图片，虽然极少</li>
+</ul>
+<p>目测当前电脑里的文件，源码与图片文件最多，源码主要来自于编辑器或github，而图片主要来自于Google、百度、deviantart等浏览器下载。浏览器或下载软件下载的所有文件，我都放在了D盘的Downloads文件夹里，里面各种类型的文档都有，所以这是一个使用频繁的文件夹。另外三类使用频繁的文件夹为：htdocs、各技术分类对应文件夹及Pictures。htdocs为本地服务器根目录，主要用途为全栈练习、移动端测试、跨浏览器测试（在虚拟机系统中访问）。各技术分类对应文件夹包括HTML、CSS、JS、PHP、Web，为了便于访问将其直接建立在D盘下，将来可能会增加NodeJS、C等。Pictures文件夹存放图片文件。</p>
+<p>目前的存在的问题及解决方法有：</p>
+<ul>
+<li>js类库：存在于多处，Downloads、JS/jsplugin、Web、htdocs/jsplugin。应该将类库、源码等放在htdocs文件夹下，从而方便在移动端调试和集中管理。所有下载的js类库放于一处，好像本地CDN一样，并在htdocs文件夹下建一个连接到这个CDN文件夹的junction连接。而对于小的插件，不必这样，使用时直接复制一份。</li>
+<li>图片文件：既存在于D盘下Pictures文件夹，又存在于Downloads文件夹下的Pictures文件夹，应该合并成一个（通过junction连接）。</li>
+<li>同步策略：所有这些与工作或学习有关的文件夹（htdocs、Downloads、CSS、JS等）其实都是junction连接，真正的文件夹存在于DBank的同步盘中，从而可以实现这些文件夹的同步。</li>
+<li>文件的查找：可以通过everything来快速查找，很快速方便。</li>
+<li>源码文件夹结构与规划：主要是HTML、CSS、JS、PHP这些文件夹。</li>
+</ul>
+<p>现在的文件夹结构如下图，虚线框的代表junction链接</p>
+<p><a href="http://www.xiaocaoge.com/wp-content/uploads/2014/04/电脑文件管理.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2014/04/电脑文件管理.png" alt="电脑文件管理"></a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。</p>
+<h2 id="首先，分析文件来源">首先，分析文件来源</h2>
+]]>
+    </summary>
+    
+      <category term="文件管理" scheme="http://www.xiaocaoge.com/tags/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="文件结构" scheme="http://www.xiaocaoge.com/tags/%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Sublime Text 2配置与使用]]></title>
+    <link href="http://www.xiaocaoge.com/sublime-text-2-settings-and-use/"/>
+    <id>http://www.xiaocaoge.com/sublime-text-2-settings-and-use/</id>
+    <published>2014-03-28T10:45:30.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>从notepad++切换到Sublime Text 2已经有两个月了，已经不习惯notepad++了。总得来说，Sublime比notepad++有很多功能方面的改进，使用体验非常好，又有丰富的插件，活跃的开发者氛围。当然，还是有个别地方不如notepad++的，比如重命名文件，所有的配置都是json格式，难免使得习惯图形界面的人头大。当时配置与上手练习花了大概5个小时，再加上解决一些插件等使用的问题，少说也有十多个小时，这还是有notepadd++的配置与使用基础。但我还是觉得十分划算，毕竟这个是天天用，也会用个几年的东西，最开始的十小时能带来很大的效率提升。</p>
+<h2 id="下载与安装">下载与安装</h2>
+<p>直接到<a href="http://www.sublimetext.com/" target="_blank" rel="external">官网</a>选择合适的版本下载即可，Windows、Mac和Linux系统都有。虽然Sublime是收费的，且70刀的价格对于我来说还是挺贵的，但是仔细想想，与买衣服的价格比起来也不算贵，这个要天天用，可能用好几年，又是工作必须的。之所以不买许可证，大概是因为它提供了不限期限不限功能的免费试用，与收费版本比起来，就是大概每个小时都会弹出一个让你购买许可证的窗口估计这个会让不少人去破解。要是衣服能像软件一样下载破解，还不吃官司，估计不少人都会尝试免费的衣服。</p>
+<h2 id="包管理器/插件管理器">包管理器/插件管理器</h2>
+<p>Sublime没有自带包管理器，所以得自己安装。安装方法：首先打开Sublime的控制台，快捷键<code>Ctrl+\``或</code>View &gt; Show Console`，然后到此网址<a href="https://sublime.wbond.net/installation#st2" target="_blank" rel="external">https://sublime.wbond.net/installation#st2</a>复制文本框中的一段代码即可，注意复制对应版本。</p>
+<h2 id="包管理器的使用">包管理器的使用</h2>
+<p>快捷键<code>ctrl+shift+p</code>可以打开万能的命令面板，然后输入Package Control会列出相关的命令，如Install Package、List Packages、Remove Package等。输入ip/lp/rp简写可直接出现Install Package/List Packages/Remove Package命令。</p>
+<p>选择Install Package会列出<a href="https://sublime.wbond.net/" target="_blank" rel="external">https://sublime.wbond.net/</a>网站上的包列表，输入包名称，然后选择即可安装。有时候这个网站打不开，从而等好久都无法列出包列表，需要梯子翻过去。List Packages会列出目前安装的插件，Remove Package会列出当前安装的插件，选择即可删除。</p>
+<h2 id="配置">配置</h2>
+<p>Sublime的配置在<code>Preferences &gt; Settings - *</code>， 其中Default为默认配置，User为用户配置，一般不要更改Default，而将自己的配置写在User中，这样升级不会被覆盖，也方面多平台多设备同步配置。另外，对于插件的设置通常也分为Default与User。</p>
+<p>常用配置项：字体大小，tab键转换成space，tab_size，auto_indent, auto_match_enabled等。具体的解释可以见Default文件中的注释说明，基本上不用设置太多。</p>
+<h2 id="快捷键设置">快捷键设置</h2>
+<p>首先应该熟悉编辑器常用的快捷键：</p>
+<p>新建、打开、保存、另存为、复制、粘贴、剪切、全选、切换标签、关闭标签、查找、替换、块语句缩进、复制当前行、选择当前行、删除当前行等，这些都是通用的功能，快捷键大都一样，可能复制/选择/删除当前行不一样，在Sublime中分别是<code>Ctrl+Shift+D/Ctrl+L/Ctrl+Shift+L</code>。</p>
+<p>光标控制快捷键的设置，我自己不习惯默认的光标键控制光标的移动，而且常常需要移动到行首、行尾、词首、词尾，因此设置了这几个快捷键：</p>
+<ul>
+<li>上: <code>Ctrl+I</code></li>
+<li>下：<code>Ctrl+M</code></li>
+<li>左：<code>Ctrl+J</code></li>
+<li>右：<code>Ctrl+O</code> (本来想设置成K的，但是Sublime已经占用了，而且改不了，且还有其他重要的用途)</li>
+<li>行首：<code>Ctrl+A</code></li>
+<li>行尾：<code>Ctrl+E</code></li>
+<li>词首：<code>Ctrl+/</code> (这里是指英文单词)</li>
+<li>词尾：<code>Ctrl+\</code></li>
+<li>文件开头：<code>Ctrl+Home</code></li>
+<li>文件结尾：<code>Ctrl+End</code></li>
+</ul>
+<p>这里的一些快捷键我覆盖了默认的功能，将默认的快捷键改成其他的了，尤其是那些使用频率不高的，比如打开文件、全选文件等。能体现Sublime比Notepad++强大的一点就是这些光标快捷键可以在查找/替换框，智能提示，万能搜索框的提示列表，多光标点使用，非常方便。另外安装上Emmet插件之后还会附带两个可再html编辑点间移动的快捷键。</p>
+<ul>
+<li>前一个编辑点：<code>Ctrl+[</code></li>
+<li>后一个编辑点：<code>Ctrl+]</code></li>
+</ul>
+<p>其他常用的快捷键</p>
+<ul>
+<li>选择当前单词：<code>Ctrl+D</code> (重复按会添加选择下一个与当前所选相同的单词)</li>
+<li>删除当前单词：<code>Ctrl+Backspace</code></li>
+<li>光标下插入新行：<code>Ctrl+Enter</code></li>
+<li>光标上插入新行：<code>Ctrl+Shift+Enter</code></li>
+<li>选择文件内所有与当前选择单词相同的单词：<code>Alt+F3</code></li>
+<li>替换所有：<code>Ctrl+Alt+Enter</code></li>
+<li>跳转到指定行：<code>Ctrl+G</code></li>
+<li>跳转到指定的打开文件：<code>Ctrl+P</code></li>
+<li>万能命令面板：<code>Ctrl+Shift+P</code></li>
+<li>控制台：<code>Ctrl+&#39;</code></li>
+<li>选择当前缩进块：<code>Ctrl+Shift+J</code>(下面这几个是我重新设置的，与默认快捷键不同)</li>
+<li>添加注释：<code>Ctrl+U</code></li>
+<li>取消注释：<code>Ctrl+Shift+U</code></li>
+<li>新建文件：<code>Ctrl+Shift+N</code></li>
+<li>打开文件：<code>Ctrl+Alt+O</code></li>
+<li>全选：<code>Ctrl+Q</code></li>
+</ul>
+<h2 id="几个前端常用插件">几个前端常用插件</h2>
+<p>Emmet</p>
+<p>如果只让我选一个插件，就非它莫属了，它的前身是zencoding(其实我挺喜欢这个名字的),关于它的用法网上有很多，基本上与zencoding一致，可以参考<a href="http://www.qianduan.net/zen-coding-a-new-way-to-write-html-code.html" target="_blank" rel="external">这篇博文</a>。需要说明的是它的默认快捷键是<code>Ctrl+E</code>，我觉得不方便，所以换成了<code>Ctrl+N</code>。</p>
+<p><strong>Soda</strong></p>
+<p>这是一个主题插件，Sublime的主题是作为插件形式存在的，虽然我觉得默认的主题看起来比notepad++好看多了，但是这个会更好看一点</p>
+<p><strong>ConvertToUTF8</strong></p>
+<p>Sublime Text 2默认不支持GB2312/GBK编码，通过这个可以编辑这些编码的文件</p>
+<p><strong>View in Browser</strong></p>
+<p>设置快捷键在浏览器中打开当前文件。注意浏览器的路径设置正确，默认选择的浏览器是firefox，使用Chrome的童鞋记得改一下。</p>
+<p><strong>SublimeCodeIntel</strong></p>
+<p>自动补全插件，十分强大，不必严格按顺序输入每个字母，只要候选项包含你输入的字母就会出现，另外已经定义过的变量、输入过的单词就可能出现在候选列表，输入的频率越高越靠前。</p>
+<p><strong>SideBarInhancements</strong></p>
+<p>可以增强侧边栏的插件，侧边栏的打开快捷键是Ctrl+K,B。默认的侧边栏文件右键菜单只有close选项，而这个可以添加诸如重命名、复制文件路径、删除、新建文件、新建文件夹等功能，但是必须先把文件所在的文件夹添加为Project，通过<code>Project &gt; Add Folder to Project ...</code>菜单添加。这是我觉得不如notepad++的地方，notepad++在标签页上右击就会出现这些选项。</p>
+<p><strong>BracketHighlighter</strong></p>
+<p>Sublime默认的成对括号匹配显示不明显，即光标位于两个括号之间时，两个括号的位置只用下划线表示，通过这个插件就能明显看到括号位于第几行。</p>
+<p><strong>Minifier</strong></p>
+<p>压缩JS与CSS的插件，但是将来使用Grunt之后，我很怀疑是否需要这个插件。</p>
+<p>当然上面几个插件只是我自己常用的，针对不同语言，不同的需求还是有很多其他的插件，如SFTP、Git、Prefixr、HtmlTidy、CTags、SVN、gist等等，可以到<a href="https://sublime.wbond.net/" target="_blank" rel="external">https://sublime.wbond.net/</a>网站上寻找。</p>
+<h2 id="软件图标">软件图标</h2>
+<p>有人嫌默认的图标丑的可以更换一下，去dribbble上面搜索sublime text会出现一些好看的图标，我自己用的是这个<a href="http://dribbble.com/shots/872166-Sublime-Text-2-Replacement-Icon#comments" target="_blank" rel="external">http://dribbble.com/shots/872166-Sublime-Text-2-Replacement-Icon#comments</a>。也可以从这里下载<a href="http://www.xiaocaoge.com/demo/st2icon/st2.ico" target="_blank" rel="external">http://www.xiaocaoge.com/demo/st2icon/st2.ico</a></p>
+<h3 id="其他参考文章：">其他参考文章：</h3>
+<ul>
+<li>Sublime Text 2功能介绍：<a href="http://www.iplaysoft.com/sublimetext.html" target="_blank" rel="external">http://www.iplaysoft.com/sublimetext.html</a></li>
+<li>Sublime配置全攻略：<a href="http://cloudbbs.org/forum.php?mod=viewthread&amp;tid=3620" target="_blank" rel="external">http://cloudbbs.org/forum.php?mod=viewthread&amp;tid=3620</a></li>
+<li>Sublime基本快捷键：<a href="https://gist.github.com/eteanga/1736542" target="_blank" rel="external">https://gist.github.com/eteanga/1736542</a></li>
+<li>Sublime Text 2 Tutorial：<a href="http://leveluptuts.com/tutorials/sublime-text-2-tutorials" target="_blank" rel="external">http://leveluptuts.com/tutorials/sublime-text-2-tutorials</a></li>
+<li>Essential Sublime Text 2 plugins and extensions：<a href="http://code.tutsplus.com/tutorials/essential-sublime-text-2-plugins-and-extensions--net-24173" target="_blank" rel="external">http://code.tutsplus.com/tutorials/essential-sublime-text-2-plugins-and-extensions—net-24173</a></li>
+<li>Sublime Text unofficial documentation：<a href="http://sublime-text-unofficial-documentation.readthedocs.org/en/sublime-text-2/" target="_blank" rel="external">http://sublime-text-unofficial-documentation.readthedocs.org/en/sublime-text-2/</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>从notepad++切换到Sublime Text 2已经有两个月了，已经不习惯notepad++了。总得来说，Sublime比notepad++有很多功能方面的改进，使用体验非常好，又有丰富的插件，活跃的开发者氛围。当然，还是有个别地方不如notepad++的，比如重命名]]>
+    </summary>
+    
+      <category term="Sublime" scheme="http://www.xiaocaoge.com/tags/Sublime/"/>
+    
+      <category term="Sublime Text 2" scheme="http://www.xiaocaoge.com/tags/Sublime-Text-2/"/>
+    
+      <category term="编辑器" scheme="http://www.xiaocaoge.com/tags/%E7%BC%96%E8%BE%91%E5%99%A8/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[跨浏览器透明解决方案]]></title>
+    <link href="http://www.xiaocaoge.com/cross-browser-transparency/"/>
+    <id>http://www.xiaocaoge.com/cross-browser-transparency/</id>
+    <published>2013-10-20T19:55:49.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。</p>
+<h3 id="图片包含全透明像素时">图片包含全透明像素时</h3>
+<p>对于这种不包含半透明像素的图片，可以导出为GIF格式来支持IE6。但是只适用于图片包含少量颜色时，通常Logo、icons等颜色只包含几种。对于色彩丰富的图片，只能采用PNG图片，并通过一些方法解决IE6的PNG支持问题。</p>
+<h3 id="图片包含半透明像素时">图片包含半透明像素时</h3>
+<p>此时，只能使用PNG格式，IE7+及其他现代浏览器都很好地支持PNG格式，对于IE6必须采取某种方案支持，详见此篇文章总结的方案：<a href="http://www.w3cfuns.com/thread-297-1-1.html" target="_blank" rel="external">IE6 PNG透明终极解决方案</a>。由于网站常采用CSS Sprite，所以我首选的方法是<a href="http://www.cnblogs.com/blacksheep/archive/2011/04/12/2013316.html" target="_blank" rel="external">DD_belatedPNG</a>，不过此方法在某些情况下会出现bug。我在使用Slidesjs时，pagination的hover状态会失效；在使用其他js文件时也可能会失效。对于这种失效的情况，可以针对IE6放弃使用半透明像素，换用其他实色图片，或者设置元素的背景色来换一种风格。</p>
+<h3 id="背景色半透明">背景色半透明</h3>
+<p>这要分两种情况：一种是元素不包含任何内容，那么可以通过设置opacity属性，对于IE6-8可使用alpha滤镜，比如某些弹出层的半透明遮罩层；另一种是元素包含内容，由于使用opacity属性会使内容也变为半透明，因此不可行。此时，对于IE9+及其他现代浏览器可以使用RGBA或HSLA设置背景色，而对于IE6-8可以通过渐变滤镜来实现，可参考此文：<a href="http://css-tricks.com/rgba-browser-support/" target="_blank" rel="external">RGBa Browser Support</a>。当然，还可以通过PNG图片来实现，不过有点麻烦，且需要加载图片。</p>
+<h3 id="前景色和边框色的半透明">前景色和边框色的半透明</h3>
+<p>前景色半透明，也即文字的半透明，IE9+及其他现代浏览器可以通过RGBA或HSLA设置。而对于IE6-8，只能通过PNG图片的方式来实现，也就回到图片半透明的问题。边框色的半透明同前景色半透明解决方法一样。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。</p>
+<h3 id="图片包含全透明像素时">图片包含全透明像素时</h3>
+<p>对于这种不包含半透明像素的图片，可以导出为GIF格式来支持IE6。但是只适用于图片包含少量颜色时，通常Logo、icon]]>
+    </summary>
+    
+      <category term="透明图片" scheme="http://www.xiaocaoge.com/tags/%E9%80%8F%E6%98%8E%E5%9B%BE%E7%89%87/"/>
+    
+      <category term="透明背景" scheme="http://www.xiaocaoge.com/tags/%E9%80%8F%E6%98%8E%E8%83%8C%E6%99%AF/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[软件与生态系统]]></title>
+    <link href="http://www.xiaocaoge.com/software-and-ecosystem/"/>
+    <id>http://www.xiaocaoge.com/software-and-ecosystem/</id>
+    <published>2013-10-17T20:00:27.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>几乎所有人初次接触电脑时，脑子里很少有“软件”这个概念，太抽象了。自己第一次接触电脑还是在初中的电脑课程上，接触的第一批软件是金山打字、记事本、纸牌游戏之类的。至于那些经常去网吧的同学，还会接触到QQ、游戏之类的软件。除此之外如果没人教，也很少接触新的软件，本来电脑都很少接触。高中时学会玩红警与魔兽，还学会了迅雷下载。到了大学，既有了自己的电脑，也有了折腾电脑的时间，玩电脑的水平才有很大提高。</p>
+<p>刚上大学时，想不到转换格式用转换格式软件（其实还不知道格式是什么东西），不知道编辑图片用图片编辑软件，也不知道IE之外的浏览器，不知道文件或图片批量处理软件，总之有很多完全想不到。最可恶的是也不知道用百度搜一下。</p>
+<p>后来，逛软件下载站，疯狂的下载、试用、卸载软件，总算把常用类型的软件都熟悉了一下。的确，一个软件下载站就可以熟悉常用的软件，一个智商正常的人都有能力完成这个任务。再说还有大学上的计算机基础、计算机应用、计算机程序基础等课程，还有同学朋友的熏陶。这样，大部分人的计算机技能都够应付日常生活和工作了。</p>
+<p>后来自己接触到的很多软件，根据博客、问答等提到的信息去下载的。而且想要什么功能的软件，会去主动搜索相关信息。</p>
+<p>逐渐理解了操作系统提供API，用来供程序开发者开发各种功能的软件，然后所有人都可以使用这些软件。仔细理解这个过程，有三个角色：API提供者，功能开发者，功能使用者。而很多系统都是由这三种角色构成的。</p>
+<ul>
+<li><p>iOS：iOS，各种应用与游戏，使用iPhone或iPad的人；</p>
+</li>
+<li><p>FireFox：FireFox，各种扩展，FireFox的用户 ；</p>
+</li>
+<li><p>魔兽争霸：Warcraft，地图（mod）开发者，魔兽玩家；</p>
+</li>
+<li><p>JavaScript：JavaScript &amp; DOM，各种库，使用各种库的开发者；</p>
+</li>
+<li><p>jQuery：jQuery，各种插件，使用jQuery的开发者；</p>
+</li>
+<li><p>搜狗输入法：搜狗输入法，搜狗皮肤制作者，使用搜狗输入法的人；</p>
+</li>
+<li><p>Photoshop：Photoshop &amp; AIR，各种外挂滤镜、笔刷、纹理、样式、形状、扩展程序等，使用Photoshop的设计师；</p>
+</li>
+<li><p>等等</p>
+</li>
+</ul>
+<p>而且可以注意到，上面这些系统也都可以归属于更高层的系统。比如，jQuery只是JavaScript的一个库，而搜狗输入法不过只是一个软件。</p>
+<p>即使这样，哪有如何？虽未接触，但不难联想到一些3D、音频、视频编辑软件应该与Photoshop有类似的系统。而很多软件会有主题样式之类的。</p>
+<p>这些生态系统也在各自发展、进化，就如同生物界的生态系统一样从低级到高级，从简单到复杂。比如编程语言从机器语言到汇编语言，再到高级语言。再比如JavaScript经过数年的发展到各种库的诞生，再到基于jQuery的Bootstrap，而且Bootstrap又有各种风格的主题。</p>
+<p>为什么会这样？和生物生态系统一样，这些发展能够适应所处的环境，不过不是自然环境，这里的环境主要就是指用户，所以要以用户为中心，客户至上。</p>
+<p>而且，这些系统想想也挺合理的，不可能期望所有人都是程序员，所有程序员都是优秀的。是的，最终用户只需选择就可以了。</p>
+<div></div>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>几乎所有人初次接触电脑时，脑子里很少有“软件”这个概念，太抽象了。自己第一次接触电脑还是在初中的电脑课程上，接触的第一批软件是金山打字、记事本、纸牌游戏之类的。至于那些经常去网吧的同学，还会接触到QQ、游戏之类的软件。除此之外如果没人教，也很少接触新的软件，本来电脑都很少接]]>
+    </summary>
+    
+      <category term="应用" scheme="http://www.xiaocaoge.com/tags/%E5%BA%94%E7%94%A8/"/>
+    
+      <category term="生态系统" scheme="http://www.xiaocaoge.com/tags/%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F/"/>
+    
+      <category term="软件" scheme="http://www.xiaocaoge.com/tags/%E8%BD%AF%E4%BB%B6/"/>
+    
+      <category term="其他" scheme="http://www.xiaocaoge.com/categories/%E5%85%B6%E4%BB%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Photoshop入门教程]]></title>
+    <link href="http://www.xiaocaoge.com/photoshop-beginner/"/>
+    <id>http://www.xiaocaoge.com/photoshop-beginner/</id>
+    <published>2013-10-15T19:05:00.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>已经忘记什么时候开始使用Photoshop软件了，也许是当时需要处理图片，又听说了Photoshop的大名，于是便安装使用了。印象中，从Photoshop 7开始使用的，那时还没有现在这么大的体积。当然软件的第一步就是安装，安装教程网上也是一大把，得修改hosts文件来屏蔽验证。</p>
+<p>安装好软件后，首先就是自己先看一些工具的功能，试验一下。之后就是到图书馆借一两本Photoshop的教程，但是当时什么都不懂，更不知道选哪本书好，也许很多人像我当初一样，选一本充满实例的书。然后就照着书中有趣的例子一步一步做，然后发现没有素材，图书馆没借光盘，去网上找又找不到一样的（也有搜索能力低的原因）。好吧，这些我都忍了，可是做到一半，发现教程不仅不给详细的设置参数，有的还跳过了一些步骤，写得好不详细，更别提什么工具使用的精髓了。之后就把书扔到一边去了，留下了Photoshop教程都是这样列一些实例，写得又不详细的印象，害了我好久。</p>
+<p>后来，不知怎么想的，觉得应该先学会每一个工具的使用，于是就照着我要自学网上的教程举一反二。也算是会了一些基本操作，但是字体特效、图片特效等复杂的技术还是不会。</p>
+<p>当然，后来大四时找到了一本比较满意的教程，专门讲图层样式的，正好学了一下，起码各个图层样式作用原理理解了下，感觉比那些单纯的堆砌实例的强多了，更比很多入门到精通的好。提到“入门到精通”这个短语，我觉得所有书名当中，没有比包含“入门到精通”的书名更坑人的了，可能是人比较坑，怪书名什么事呢。既不能很好入门，也不能精通，当然不能精通了，一部书能精通Photoshop那就神了。</p>
+<p>而且当时觉得网上的教程都很差，和大多数书的内容一样。不过后来证明是我没能找到优秀的教程，当然国内的和国外的比差很远，还到处是转载。</p>
+<p>到今年去图书馆借书时翻到了《ADOBE PHOTOSHOP CS4标准培训教材》，顿时觉得这个入门教程真是极好的。好像心中早已有了一本合适的Photoshop入门书，但是一直没找到，也没有描述清楚究竟是什么样的，直到遇到了这本官方教材，才想，这差不多就是心目中的入门教材了。找到时，又感觉自己很傻，明明早就听说过ADOBE有专门的认证，就是没想到看下官方出的教材啊。</p>
+<p>不过随着获取网络信息能力的提升以及信息资源的积累，发现更广阔的教程资源都在网上，不幸的是大部分优秀的网络教程资源都是英文的。但是这不能阻止我们继续学习Photoshop的步伐，虽然视频教程的英语确实很难听懂，不过截图与操作还是能看懂的。至于图文教程，也许就是多记几百个专业词汇而已，弄个翻译软件就行了。</p>
+<p>既然要跟着英文教程，第一步就是把中文版的Photoshop转为英文版，幸好这一步很简单，只需要把<code>Locales\zh_CN\Support Files</code>路径下的<code>tw10428.dat</code>文件转移到别处即可。</p>
+<p>然后使用Google搜索“photoshop tutorials“，”text effects”, “Photoshop brushes”等关键词就会出现很多教程网站。下面这三个网站是很好的教程网站：</p>
+<ul>
+<li><p><a href="http://www.lynda.com" target="_blank" rel="external">www.lynda.com</a></p>
+</li>
+<li><p><a href="http://www.photoshop.com/tutorials" target="_blank" rel="external">www.photoshop.com/tutorials</a></p>
+</li>
+<li><p><a href="http://psd.tutsplus.com" target="_blank" rel="external">psd.tutsplus.com</a></p>
+</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>已经忘记什么时候开始使用Photoshop软件了，也许是当时需要处理图片，又听说了Photoshop的大名，于是便安装使用了。印象中，从Photoshop 7开始使用的，那时还没有现在这么大的体积。当然软件的第一步就是安装，安装教程网上也是一大把，得修改hosts文件来屏蔽]]>
+    </summary>
+    
+      <category term="Photoshop" scheme="http://www.xiaocaoge.com/tags/Photoshop/"/>
+    
+      <category term="入门教程" scheme="http://www.xiaocaoge.com/tags/%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/"/>
+    
+      <category term="设计" scheme="http://www.xiaocaoge.com/categories/%E8%AE%BE%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[垂直居中（Vertical-Align)]]></title>
+    <link href="http://www.xiaocaoge.com/vertical-align-methods/"/>
+    <id>http://www.xiaocaoge.com/vertical-align-methods/</id>
+    <published>2013-06-05T17:33:07.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>垂直居中包括单行文本居中、单元格（td）内容居中、块级元素居中。由于单元格的display属性为table-cell，且浏览器默认vertical-align:middle，所以就是默认垂直居中，不做考虑。要注意的就是vertical-align属性的含义是设置内联元素在行框（一行）内的垂直对齐方式，对于display:table-cell的元素也适用，但是IE8+才支持display:table-cell设置，于是就有了各种跨浏览器垂直对齐的方法。</p>
+<p><strong>DEMO：</strong><a href="http://www.xiaocaoge.com/demo/vertical-align/vertical-align.html" target="_blank" rel="external">vertical align methods</a></p>
+<h3 id="单行文本"><strong>单行文本</strong></h3>
+<p>此种情况最简单，使用line-height来控制元素的高度即可，兼容IE6+及其他现代浏览器。</p>
+<pre><code>&lt;<span class="keyword">div</span>&gt;
+     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Text here&lt;/<span class="keyword">div</span>&gt;
+ &lt;/<span class="keyword">div</span>&gt;
+.child {
+     line-height:<span class="number">50</span>px;
+ }
+</code></pre><p>而此种方法对于display为inline或inline-block的元素也适用，只不过元素要加上vertical-align:middle，而且不兼容IE6。</p>
+<pre><code>&lt;<span class="keyword">div</span>&gt;
+     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;
+         &lt;img src=<span class="string">"images/1024.jpg"</span> alt=<span class="string">""</span> /&gt;
+     &lt;/<span class="keyword">div</span>&gt;
+ &lt;/<span class="keyword">div</span>&gt;
+
+.child {
+     line-height:<span class="number">300</span>px;
+ }
+ img {
+     width:<span class="number">200</span>px;
+     vertical-align:<span class="keyword">middle</span>;
+ }
+</code></pre><h3 id="块级元素"><strong>块级元素</strong></h3>
+<p>块级元素的垂直对齐方法有很多种，但有些方法必须要求知道和统一块级元素的高度，有些不需要但是跨浏览器支持不好，最后还得需要针对个别浏览器（IE6、7）单独设置。</p>
+<p><strong>元素高度预知：</strong></p>
+<p>（两种方法兼容IE6+，Chrome，Firefox，Safari，Opera）</p>
+<p>设置相等的内边距或外边距</p>
+<pre><code>&lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"parent"</span>&gt;
+     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
+ &lt;/<span class="keyword">div</span>&gt;
+
+.parent {
+     padding:<span class="number">5</span>% <span class="number">0</span>;
+ }
+ .child {
+     height:<span class="number">50</span>px;
+ }
+</code></pre><p>绝对定位和负外边距</p>
+<pre><code>&lt;<span class="keyword">div</span> class=<span class="string">"parent"</span>&gt;
+     &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
+ &lt;/<span class="keyword">div</span>&gt;
+
+<span class="string">.parent</span> {
+<span class="label">     position:</span>relative<span class="comment">;</span>
+<span class="label">     height:</span>100px<span class="comment">;</span>
+ }
+ <span class="string">.child</span> {
+<span class="label">     position:</span><span class="built_in">absolute</span><span class="comment">;</span>
+<span class="label">     top:</span><span class="number">50</span>%<span class="comment">;</span>
+<span class="label">     height:</span>50px<span class="comment">;</span>
+     margin-top:-25px<span class="comment">;</span>
+ }
+</code></pre><p><strong>元素高度不可预知：</strong></p>
+<p>table-cell方法</p>
+<p>(不兼容IE6-7)</p>
+<pre><code>&lt;<span class="keyword">div</span>&gt;
+     &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
+ &lt;/<span class="keyword">div</span>&gt;
+
+<span class="string">.parent</span> {
+<span class="label">     display:</span> table<span class="comment">;</span>
+ }
+ <span class="string">.child</span> {
+<span class="label">     display:</span> table-cell<span class="comment">;</span>
+<span class="label">     height:</span> 200px<span class="comment">;</span>
+     vertical-<span class="preprocessor">align</span>:middle<span class="comment">;</span>
+ }
+</code></pre><p>兼容所有现在浏览器的方法</p>
+<p>DEMO: <a href="http://www.xiaocaoge.com/demo/vertical-align/multi-lined-text-vc.html" target="_blank" rel="external">multi-lined text vertical align</a></p>
+<pre><code>&lt;<span class="keyword">div</span>&gt;
+    &lt;<span class="keyword">div</span>&gt;
+       &lt;p&gt;To look best, <span class="type">text</span> should really be centered inside this bubble both vertically <span class="keyword">and</span> horizontally.&lt;/p&gt;
+    &lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+
+.area {
+display: table;
+    width: <span class="number">200</span>px;
+    height: <span class="number">150</span>px;
+    background: <span class="comment">#eee;</span>
+}
+.bubble {
+    display: table-cell;
+    vertical-align: <span class="keyword">middle</span>;
+}
+.bubble p {
+    border: <span class="number">1</span>px solid red;
+}
+</code></pre><p>兼容IE6-7，利用条件注释单独设置，而且要添加一个多余的div标签，下面针对IE6-7的代码对于其他现代浏览器并不适用。</p>
+<pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">p</span>&gt;</span>To look best, text should really be centered inside this bubble both vertically and horizontally.<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+
+<span class="comment">&lt;!--[if lt IE 8]&gt;
+&lt;style type="text/css"&gt;
+    .bubble {
+        position:relative;
+    }
+    .bubble div {
+        position:absolute;
+        top: 50%;
+        width:100%;
+        background:#aaa;
+    }
+    .bubble div p {
+        position:relative;
+        top:-50%;
+    }
+&lt;/style&gt;
+&lt;![endif]--&gt;</span>
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<p>垂直居中包括单行文本居中、单元格（td）内容居中、块级元素居中。由于单元格的display属性为table-cell，且浏览器默认vertical-align:middle，所以就是默认垂直居中，不做考虑。要注意的就是vertical-align属性的含义是设置内联元素在行]]>
+    </summary>
+    
+      <category term="vertical-align" scheme="http://www.xiaocaoge.com/tags/vertical-align/"/>
+    
+      <category term="垂直居中" scheme="http://www.xiaocaoge.com/tags/%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[表单验证（Form Validation）]]></title>
+    <link href="http://www.xiaocaoge.com/form-validation/"/>
+    <id>http://www.xiaocaoge.com/form-validation/</id>
+    <published>2013-06-04T13:38:50.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>表单验证最常见的就是注册和登录表单，客户端与服务端都需要验证，客户端验证可以即时反馈，服务端用来防止恶意人员绕开客户端验证或JavaScript不起作用时提供验证。</p>
+<p>表单验证包括规则集合、验证引擎、反馈信息。</p>
+<h3 id="规则集合：">规则集合：</h3>
+<p>主要利用正则表达式来验证字符串是否符合特定格式，比如邮箱、URL、IP、日期、电话号码、特定长度范围等。邮箱与URL的正则表达式可以非常复杂，不过一般用不到，而且可以利用插件代替或搜索到规则即可。规则集合是一个对象，包含各种特定格式对象，可以添加扩展规则函数。</p>
+<h3 id="验证引擎：">验证引擎：</h3>
+<p>验证主要是用事件来驱动的，主要有focus、blur、keypress、change等。而与HTML代码的接口通过特定的类来实现，比如邮箱地址的输入框的class为email，对应的规则集合中邮箱的规则对象名也是email。在即时验证某个用户名或邮箱是否存在时，结合keypress事件与Ajax来实现。</p>
+<h3 id="反馈信息：">反馈信息：</h3>
+<p>反馈信息包括输入提示和错误提示，可以包含在规则集合对象中，并且可以定制。</p>
+<p>附：</p>
+<p><strong>正则表达式各符号含义：</strong></p>
+<ul>
+<li><a href="http://www.cnblogs.com/xybs/archive/2012/10/23/2735969.html" target="_blank" rel="external">http://www.cnblogs.com/xybs/archive/2012/10/23/2735969.html</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions</a></li>
+</ul>
+<p><strong>在线正则验证器：</strong></p>
+<ul>
+<li><a href="http://tools.netshiftmedia.com/regexlibrary/" target="_blank" rel="external">http://tools.netshiftmedia.com/regexlibrary/</a></li>
+<li><a href="http://regexp.duttke.de/" target="_blank" rel="external">http://regexp.duttke.de/</a></li>
+</ul>
+<p><strong>jQuery validation插件</strong></p>
+<ul>
+<li><a href="http://jqueryvalidation.org/" target="_blank" rel="external">http://jqueryvalidation.org/</a></li>
+<li><a href="https://github.com/posabsolute/jQuery-Validation-Engine" target="_blank" rel="external">https://github.com/posabsolute/jQuery-Validation-Engine</a></li>
+</ul>
+<p><strong>原生JS表单验证DEMO</strong></p>
+<ul>
+<li><a href="http://www.xiaocaoge.com/demo/form-validation/Register-Classic.html" target="_blank" rel="external">http://www.xiaocaoge.com/demo/form-validation/Register-Classic.html</a></li>
+<li><a href="http://www.xiaocaoge.com/demo/form-validation/Simple-Form.html" target="_blank" rel="external">http://www.xiaocaoge.com/demo/form-validation/Simple-Form.html</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>表单验证最常见的就是注册和登录表单，客户端与服务端都需要验证，客户端验证可以即时反馈，服务端用来防止恶意人员绕开客户端验证或JavaScript不起作用时提供验证。</p>
+<p>表单验证包括规则集合、验证引擎、反馈信息。</p>
+<h3 id="规则集合：">规则集合：<]]>
+    </summary>
+    
+      <category term="form validation" scheme="http://www.xiaocaoge.com/tags/form-validation/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Image Box]]></title>
+    <link href="http://www.xiaocaoge.com/image-box/"/>
+    <id>http://www.xiaocaoge.com/image-box/</id>
+    <published>2013-06-04T06:58:55.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>通过在同一页面实现图片的浏览与查看，从而带来更好的用户体验，越来越与客户端的图片查看工具功能类似。将来，用户只用在网络上寻找、存储、编辑图片，不用下载到本地了。通过原生JavaScript实现的一个image box，比利用jQuery现成的插件要复杂的多。需要综合应用DOM编程能力，所以最好能之前有DOM处理的常见函数，比如DOM节点遍历、创建、删除、插入等。另外还要有处理BOM的函数，比如元素位置获得和修改、元素尺寸获得和修改、元素透明度变化等。这些东西都是《精通JavaScript》一书讲的，这本书对于如何打造自己的库很有帮助，当然对于学习jQuery也有用。书中讲了一个image box是实现，所以自己也跟着实现了一个。</p>
+<p>DEMO：<a href="http://www.xiaocaoge.com/demo/imagebox/image-gallery.html" target="_blank" rel="external">image-gallery.html</a></p>
+<p>有了之前的DOM和BOM函数库就可以很方便的开始编写了，学到的一些东西：</p>
+<p><strong>跨浏览器透明度实现</strong></p>
+<p><a href="http://www.quirksmode.org/css/opacity.html" target="_blank" rel="external">http://www.quirksmode.org/css/opacity.html</a></p>
+<p><strong>动画及时间驱动函数使用</strong></p>
+<p>无论渐变进入还是滑动进入动画效果，要看的自然些，应该开始的时候变化快，然后变化慢。</p>
+<p><strong>渐进增强的JavaScript</strong></p>
+<p>在JavaScript不能作用时仍然能够查看图片，可以为图片缩略图添加链接到图片地址的超链接。</p>
+<p><strong>相关jQuery**</strong>插件**</p>
+<p>插件不仅可以实现图片的查看，还可以是其他任何HTML代码片段，比如注册、登录等。插件的兼容性处理都很好，从而只需关注那些需要定制的东西，如按钮样式、动画效果等。缺点可能就是需要依赖jQuery、也包括一些自己不需要的功能。</p>
+<p>Fancybox</p>
+<p>官网：<a href="http://fancybox.net/" target="_blank" rel="external">http://fancybox.net/</a></p>
+<p>ColorBox</p>
+<p>官网：<a href="http://www.jacklmoore.com/colorbox/" target="_blank" rel="external">http://www.jacklmoore.com/colorbox/</a></p>
+<p>github：<a href="https://github.com/jackmoore/colorbox" target="_blank" rel="external">https://github.com/jackmoore/colorbox</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>通过在同一页面实现图片的浏览与查看，从而带来更好的用户体验，越来越与客户端的图片查看工具功能类似。将来，用户只用在网络上寻找、存储、编辑图片，不用下载到本地了。通过原生JavaScript实现的一个image box，比利用jQuery现成的插件要复杂的多。需要综合应用DO]]>
+    </summary>
+    
+      <category term="imagebox" scheme="http://www.xiaocaoge.com/tags/imagebox/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[下拉菜单与Tab面板]]></title>
+    <link href="http://www.xiaocaoge.com/drop-menu-and-tab-panel/"/>
+    <id>http://www.xiaocaoge.com/drop-menu-and-tab-panel/</id>
+    <published>2013-06-02T14:26:35.000Z</published>
+    <updated>2015-03-15T03:34:48.000Z</updated>
+    <content type="html"><![CDATA[<p>下拉菜单与Tab面板很相似，本质来说就是一种东西，相似的HTML代码结构，CSS设置，JavaScript代码。不考虑IE6，仅限hover事件的话，均可通过纯CSS实现。</p>
+<p>下拉菜单可以有两种HTML代码结构，一种是主菜单包含子菜单，另一种是主菜单与子菜单同一层级。Tab面板HTML代码结构也同样是这两种。如下图所示：<br><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2013/02/3158712188747102097.png" alt="3158712188747102097"></a></a></p>
+<p>对于下拉菜单，纯CSS的实现方式必须采用第一种结构；对于Tab面板，两种结构均可以。不过个人认为第一种包含式结构更合理，禁用CSS的情况下，有条理。<span style="color: #888888;">（PS：不过没有数据说明有多少用户是禁用CSS的？有多少是禁用JS的？又有多少使用屏幕阅读器的？有多少国内开发者考虑这些的？）</span></p>
+<p>采用第二种结构，在写JS时，通常会通过标签的ID来传递数据。比如主导航的一个列表项目为</p>
+<pre><code><span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">”css”</span>&gt;</span>CSS<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+</code></pre><p>其对应的子菜单代码为</p>
+<pre><code><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">”sub-css”</span>&gt;</span>
+ …
+<span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+</code></pre><p>通过ID的如此命名，从而建立其联系，这对于那些并不是每个主导航的列表项都有下拉菜单时是很关键的。</p>
+<p>兼容IE6：通过JS或者jQuery很容易实现。因为IE6不支持出a元素之外的:hover伪类，添加hover事件，添加/去除类（比如“hover”，“on”）来模拟:hover伪类。</p>
+<p>附自己写的一些导航栏和Tab面板：</p>
+<p>导航栏：</p>
+<p><a href="http://www.xiaocaoge.com/demo/nav-example/nav-examples.html" target="_blank" rel="external">nav-examples</a></p>
+<p>Tab面板：</p>
+<p><a href="http://www.xiaocaoge.com/demo/tab/hover-tab.html" target="_blank" rel="external">hover tab</a></p>
+<p><a href="http://www.xiaocaoge.com/demo/tab/click-tab.html" target="_blank" rel="external">click tab</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>下拉菜单与Tab面板很相似，本质来说就是一种东西，相似的HTML代码结构，CSS设置，JavaScript代码。不考虑IE6，仅限hover事件的话，均可通过纯CSS实现。</p>
+<p>下拉菜单可以有两种HTML代码结构，一种是主菜单包含子菜单，另一种是主菜单与子菜单同一]]>
+    </summary>
+    
+      <category term="Tab面板" scheme="http://www.xiaocaoge.com/tags/Tab%E9%9D%A2%E6%9D%BF/"/>
+    
+      <category term="下拉菜单" scheme="http://www.xiaocaoge.com/tags/%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+</feed>

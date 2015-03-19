@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Image Box | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+<link rel="stylesheet" href="/css/highlightjs/github.css" type="text/css">
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="search" name="q" results="0" class="search-form-input" placeholder="Search">
+        <button class="search-form-submit"><i class="fa fa-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-image-box" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-06-04T06:58:55.000Z" itemprop="datePublished">2013-6-4</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/categories/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      Image Box
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>通过在同一页面实现图片的浏览与查看，从而带来更好的用户体验，越来越与客户端的图片查看工具功能类似。将来，用户只用在网络上寻找、存储、编辑图片，不用下载到本地了。通过原生JavaScript实现的一个image box，比利用jQuery现成的插件要复杂的多。需要综合应用DOM编程能力，所以最好能之前有DOM处理的常见函数，比如DOM节点遍历、创建、删除、插入等。另外还要有处理BOM的函数，比如元素位置获得和修改、元素尺寸获得和修改、元素透明度变化等。这些东西都是《精通JavaScript》一书讲的，这本书对于如何打造自己的库很有帮助，当然对于学习jQuery也有用。书中讲了一个image box是实现，所以自己也跟着实现了一个。</p>
+<p>DEMO：<a href="http://www.xiaocaoge.com/demo/imagebox/image-gallery.html" target="_blank" rel="external">image-gallery.html</a></p>
+<p>有了之前的DOM和BOM函数库就可以很方便的开始编写了，学到的一些东西：</p>
+<p><strong>跨浏览器透明度实现</strong></p>
+<p><a href="http://www.quirksmode.org/css/opacity.html" target="_blank" rel="external">http://www.quirksmode.org/css/opacity.html</a></p>
+<p><strong>动画及时间驱动函数使用</strong></p>
+<p>无论渐变进入还是滑动进入动画效果，要看的自然些，应该开始的时候变化快，然后变化慢。</p>
+<p><strong>渐进增强的JavaScript</strong></p>
+<p>在JavaScript不能作用时仍然能够查看图片，可以为图片缩略图添加链接到图片地址的超链接。</p>
+<p><strong>相关jQuery**</strong>插件**</p>
+<p>插件不仅可以实现图片的查看，还可以是其他任何HTML代码片段，比如注册、登录等。插件的兼容性处理都很好，从而只需关注那些需要定制的东西，如按钮样式、动画效果等。缺点可能就是需要依赖jQuery、也包括一些自己不需要的功能。</p>
+<p>Fancybox</p>
+<p>官网：<a href="http://fancybox.net/" target="_blank" rel="external">http://fancybox.net/</a></p>
+<p>ColorBox</p>
+<p>官网：<a href="http://www.jacklmoore.com/colorbox/" target="_blank" rel="external">http://www.jacklmoore.com/colorbox/</a></p>
+<p>github：<a href="https://github.com/jackmoore/colorbox" target="_blank" rel="external">https://github.com/jackmoore/colorbox</a></p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tags/imagebox/">imagebox</a></li>
+    
+  </ul>
+
+      
+        <a href="http://www.xiaocaoge.com/image-box/#comments" class="article-comment-link"><i class="fa fa-comment"></i><span class="visuallyhidden">Comments</span></a>
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-image-box" data-title="Image Box" data-url="http://www.xiaocaoge.com/image-box/"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="fa fa-lg fa-bars" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="fa fa-lg fa-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="http://www.gravatar.com/avatar/7d409f7ca9f450d094236a1e084dc368?s=128" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tags/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tags/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tags/Class/" style="font-size: 12.00px;">Class</a><a href="/tags/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tags/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tags/ID/" style="font-size: 12.00px;">ID</a><a href="/tags/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tags/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tags/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tags/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tags/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tags/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tags/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tags/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tags/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tags/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tags/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tags/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tags/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tags/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tags/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tags/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tags/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tags/Web/" style="font-size: 12.00px;">Web</a><a href="/tags/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tags/auto/" style="font-size: 12.00px;">auto</a><a href="/tags/blog/" style="font-size: 12.00px;">blog</a><a href="/tags/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tags/brieflog/" style="font-size: 12.00px;">brieflog</a><a href="/tags/device-width/" style="font-size: 12.00px;">device-width</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+  
+    <div class="social-list-wrap clearfix">
+  <ul class="social-list clearfix fr">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        
+        <i class="fa fa-lg fa-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        
+        <i class="fa fa-lg fa-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        
+        <i class="fa fa-lg fa-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        
+        <i class="fa fa-lg fa-envelope"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        
+        <i class="fa fa-lg fa-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2015 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/modernizr-latest.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+</body>
+</html>

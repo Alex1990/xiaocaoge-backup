@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>电脑文件管理 | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+<link rel="stylesheet" href="/css/highlightjs/github.css" type="text/css">
+
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="search" name="q" results="0" class="search-form-input" placeholder="Search">
+        <button class="search-form-submit"><i class="fa fa-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-compute-files-management" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2014-04-01T08:42:17.000Z" itemprop="datePublished">2014-4-1</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/categories/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      电脑文件管理
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。</p>
+<h2 id="首先，分析文件来源">首先，分析文件来源</h2>
+<p>文件的来源无非两种：本地与外部。本地主要就是各种新建、复制、剪切等产生的文件，而外部包括下载的、传送的、其他存储器拷贝的。</p>
+<h3 id="本地">本地</h3>
+<ul>
+<li>文档 (doc/ppt/xls/pdf/txt) ：其中office三剑客几乎没用过了，pdf做简历，txt主要记录小的技术点，其他的笔记主要用evernote</li>
+<li>源码 (html/css/js/php/less) ：主要就是编辑器notepad++或sublime产生的</li>
+<li>图片 (jpg/png/gif/psd) ：来源主要是iSee图片编辑器、Photoshop、FSCapture或QQ截图工具</li>
+<li>音频：少量的HTML5测试用的多种格式音频，经过格式工厂转换得来</li>
+<li>视频：少量的HTML5测试用的多种格式视频，经过格式转换工具转换得来</li>
+<li>压缩文件：通常用在QQ传送或微云上，然后应该删除本地的</li>
+</ul>
+<h3 id="外部">外部</h3>
+<ul>
+<li>文档 (doc/ppt/xls/pdf/txt) ：主要就是百度文库、QQ传送、Slideshare或其他网站</li>
+<li>源码 (html/css/js/php) ：第一来源是github，其他主要是各开放源码官网，下载工具要么是Chrome，要么就是git之类的客户端吧</li>
+<li>图片：几乎全是浏览器下载的，网站主要有Google Image、百度图片、deviantart、站酷、dribbble、iconfinder等，另外有少量的是手机的照片、手机的截图等通过QQ文件管理器传送</li>
+<li>软件：常用的软件通过腾讯管家之类下载，Web开发相关软件通过官网下载</li>
+<li>PS资源：主要就是笔刷、形状、渐变等资源，大部分都是在deviantart或站酷下载的</li>
+<li>音频：酷狗下载的歌曲</li>
+<li>视频：几部电影和测试用的视频文件</li>
+<li>压缩文件：压缩文件只是传输用的，解压之后就删除了</li>
+<li>字体文件：暂时很少用到吧</li>
+</ul>
+<h2 id="分析文件类别">分析文件类别</h2>
+<p>突然发现文件分本地与外部意义并不大，应该以类型分更有助于管理，包括文档、图片、源码、软件等。现阶段，源码和图片急需管理：</p>
+<h3 id="源码">源码</h3>
+<p>源码清单包括：</p>
+<ul>
+<li>W3School与基础的前端书籍练习与附带源码，主要来自于入门时</li>
+<li>HTML5、CSS3、响应式设计等基础知识点练习或测试，会来自于MDN、CSS-Tricks、Stackoverflow、Google出的文章、即兴测试等</li>
+<li>类库或插件的源码，版本管理，常用类库的个别测试尽量使用公共CDN</li>
+<li>前端类库的入门学习，比如jQuery、Bootstrap、jQuery Mobile等</li>
+<li>前端小库或插件的学习，比如normalize.css、Respond.js、Modernizr、jQuery plugins、lazyload、swipe、responsive-nav、mediaelement等等，将来会达到数百个，而且考虑版本问题，其中有很多要在移动端测试，这些源码大多从github下载</li>
+<li>基础技术的兼容性测试，跨平台，跨终端</li>
+<li>自己练习写的功能组件</li>
+<li>工作或自己的项目文件</li>
+<li>各种小技术或问题点的总结，写在csstips.txt、jstips.txt、phptips.txt等文本文件中</li>
+<li>与html、css或js有关的pdf或ppt文档，集中在一起管理</li>
+<li>下载的电子版书籍，单独放文件夹即可</li>
+<li>后端源码</li>
+<li>其他语言</li>
+</ul>
+<h3 id="图片">图片</h3>
+<p>图片清单</p>
+<ul>
+<li>图标文件，来自于iconfinder、站酷、自己制作等</li>
+<li>壁纸文件，大尺寸图片，可供测试用，分PC端与移动端</li>
+<li>个人相册，博客logo、照片等</li>
+<li>截图文件，来自于QQ截图或FSCapture</li>
+<li>设计素材，纹理、各种事物素材</li>
+<li>各种类别图片，如自然美景、创意、动物、植物、人物等</li>
+<li>设计图，网站设计、UI设计、logo设计等，设计图的标注文件</li>
+<li>字体特效，最好分文件夹建，包括相应的素材文件</li>
+<li>工作项目，包含相应的icon、设计图等</li>
+<li>表情图片，虽然极少</li>
+</ul>
+<p>目测当前电脑里的文件，源码与图片文件最多，源码主要来自于编辑器或github，而图片主要来自于Google、百度、deviantart等浏览器下载。浏览器或下载软件下载的所有文件，我都放在了D盘的Downloads文件夹里，里面各种类型的文档都有，所以这是一个使用频繁的文件夹。另外三类使用频繁的文件夹为：htdocs、各技术分类对应文件夹及Pictures。htdocs为本地服务器根目录，主要用途为全栈练习、移动端测试、跨浏览器测试（在虚拟机系统中访问）。各技术分类对应文件夹包括HTML、CSS、JS、PHP、Web，为了便于访问将其直接建立在D盘下，将来可能会增加NodeJS、C等。Pictures文件夹存放图片文件。</p>
+<p>目前的存在的问题及解决方法有：</p>
+<ul>
+<li>js类库：存在于多处，Downloads、JS/jsplugin、Web、htdocs/jsplugin。应该将类库、源码等放在htdocs文件夹下，从而方便在移动端调试和集中管理。所有下载的js类库放于一处，好像本地CDN一样，并在htdocs文件夹下建一个连接到这个CDN文件夹的junction连接。而对于小的插件，不必这样，使用时直接复制一份。</li>
+<li>图片文件：既存在于D盘下Pictures文件夹，又存在于Downloads文件夹下的Pictures文件夹，应该合并成一个（通过junction连接）。</li>
+<li>同步策略：所有这些与工作或学习有关的文件夹（htdocs、Downloads、CSS、JS等）其实都是junction连接，真正的文件夹存在于DBank的同步盘中，从而可以实现这些文件夹的同步。</li>
+<li>文件的查找：可以通过everything来快速查找，很快速方便。</li>
+<li>源码文件夹结构与规划：主要是HTML、CSS、JS、PHP这些文件夹。</li>
+</ul>
+<p>现在的文件夹结构如下图，虚线框的代表junction链接</p>
+<p><a href="http://www.xiaocaoge.com/wp-content/uploads/2014/04/电脑文件管理.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2014/04/电脑文件管理.png" alt="电脑文件管理"></a></p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tags/文件管理/">文件管理</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tags/文件结构/">文件结构</a></li>
+    
+  </ul>
+
+      
+        <a href="http://www.xiaocaoge.com/compute-files-management/#comments" class="article-comment-link"><i class="fa fa-comment"></i><span class="visuallyhidden">Comments</span></a>
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-compute-files-management" data-title="电脑文件管理" data-url="http://www.xiaocaoge.com/compute-files-management/"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="fa fa-lg fa-bars" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="fa fa-lg fa-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="http://www.gravatar.com/avatar/7d409f7ca9f450d094236a1e084dc368?s=128" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tags/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tags/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tags/Class/" style="font-size: 12.00px;">Class</a><a href="/tags/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tags/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tags/ID/" style="font-size: 12.00px;">ID</a><a href="/tags/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tags/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tags/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tags/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tags/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tags/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tags/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tags/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tags/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tags/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tags/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tags/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tags/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tags/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tags/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tags/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tags/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tags/Web/" style="font-size: 12.00px;">Web</a><a href="/tags/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tags/auto/" style="font-size: 12.00px;">auto</a><a href="/tags/blog/" style="font-size: 12.00px;">blog</a><a href="/tags/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tags/brieflog/" style="font-size: 12.00px;">brieflog</a><a href="/tags/device-width/" style="font-size: 12.00px;">device-width</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+  
+    <div class="social-list-wrap clearfix">
+  <ul class="social-list clearfix fr">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        
+        <i class="fa fa-lg fa-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        
+        <i class="fa fa-lg fa-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        
+        <i class="fa fa-lg fa-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        
+        <i class="fa fa-lg fa-envelope"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        
+        <i class="fa fa-lg fa-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2015 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/modernizr-latest.js" type="text/javascript"></script>
+<script src="/js/main.js" type="text/javascript"></script>
+
+</body>
+</html>
