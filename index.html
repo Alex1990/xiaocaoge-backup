@@ -31,50 +31,6 @@
       <div class="content">
         <section class="wrapper">
   
-    <article id="post-hello-world" class="article article-type-post" itemprop="blogPost">
-  <div class="article-meta clearfix">
-    <div class="article-date fl">
-  <time datetime="2015-03-15T03:34:48.000Z" itemprop="datePublished">2015-3-15</time>
-</div>
-    
-  </div>
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/hello-world/">Hello World</a>
-    </h1>
-  
-
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in trobuleshooting or you can ask me on GitHub.
-Quick Start
-Create a new post
-$ hexo new "My New Post"
-More info: Writing
-Run server
-$ hexo server
-More i
-        
-          <p class="article-more-link">
-            <a href="/hello-world/#more">更多</a>
-          </p>
-        
-      
-    </div>
-    
-  </div>
-  
-</article>
-
-
-  
     <article id="post-repair-grub-and-some-useful-tools" class="article article-type-post" itemprop="blogPost">
   <div class="article-meta clearfix">
     <div class="article-date fl">
@@ -82,7 +38,7 @@ More i
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/后端/">后端</a>
+    <a class="article-category-link" href="/category/后端/">后端</a>
   </div>
 
   </div>
@@ -124,7 +80,7 @@ More i
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/后端/">后端</a>
+    <a class="article-category-link" href="/category/后端/">后端</a>
   </div>
 
   </div>
@@ -167,7 +123,7 @@ More i
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/前端/">前端</a>
+    <a class="article-category-link" href="/category/前端/">前端</a>
   </div>
 
   </div>
@@ -220,7 +176,7 @@ More i
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/后端/">后端</a>
+    <a class="article-category-link" href="/category/后端/">后端</a>
   </div>
 
   </div>
@@ -262,7 +218,7 @@ More i
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/前端/">前端</a>
+    <a class="article-category-link" href="/category/前端/">前端</a>
   </div>
 
   </div>
@@ -305,7 +261,7 @@ img { max-width: 100%; }
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/前端/">前端</a>
+    <a class="article-category-link" href="/category/前端/">前端</a>
   </div>
 
   </div>
@@ -348,7 +304,7 @@ CSS Sprites历史悠久，大概在2004年之前就出现了，Dave Shea 在这�
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/前端/">前端</a>
+    <a class="article-category-link" href="/category/前端/">前端</a>
   </div>
 
   </div>
@@ -391,7 +347,7 @@ CSS Sprites历史悠久，大概在2004年之前就出现了，Dave Shea 在这�
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/前端/">前端</a>
+    <a class="article-category-link" href="/category/前端/">前端</a>
   </div>
 
   </div>
@@ -433,7 +389,7 @@ Markdown是一种为了提高文档易读性与易写性的纯文本格式规范
 </div>
     
   <div class="article-category fl">
-    <a class="article-category-link" href="/categories/前端/">前端</a>
+    <a class="article-category-link" href="/category/前端/">前端</a>
   </div>
 
   </div>
@@ -471,9 +427,55 @@ device pixels指设备的物理像素，在PC端就是你在操作系统里设�
 
 
   
+    <article id="post-transition-height-from-0-to-auto" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2014-04-03T09:35:08.000Z" itemprop="datePublished">2014-4-3</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/transition-height-from-0-to-auto/">Transition height from 0 to auto</a>
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于height:auto;时，浏览器会识别height值为0，因此无法直接从height: 0;过渡到height: auto;。
+一种简单的方法是，将过渡应用于max-height属性，通过设置一个大于元素所可能达到的最大高度值。代码如下：
+.elem {
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transform: translate3d(0,0,
+        
+          <p class="article-more-link">
+            <a href="/transition-height-from-0-to-auto/#more">更多</a>
+          </p>
+        
+      
+    </div>
+    
+  </div>
+  
+</article>
+
+
+  
   
     <nav class="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next</a>
     </nav>
   
 </section>
@@ -505,7 +507,7 @@ device pixels指设备的物理像素，在PC端就是你在操作系统里设�
   <div class="widget-wrap widget-category">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/其他/">其他</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
     </div>
   </div>
 
@@ -514,7 +516,7 @@ device pixels指设备的物理像素，在PC端就是你在操作系统里设�
   <div class="widget-wrap widget-tagcloud">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget widget-tagcloud-list">
-      <a href="/tags/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tags/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tags/Class/" style="font-size: 12.00px;">Class</a><a href="/tags/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tags/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tags/ID/" style="font-size: 12.00px;">ID</a><a href="/tags/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tags/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tags/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tags/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tags/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tags/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tags/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tags/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tags/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tags/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tags/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tags/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tags/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tags/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tags/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tags/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tags/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tags/Web/" style="font-size: 12.00px;">Web</a><a href="/tags/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tags/auto/" style="font-size: 12.00px;">auto</a><a href="/tags/blog/" style="font-size: 12.00px;">blog</a><a href="/tags/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tags/brieflog/" style="font-size: 12.00px;">brieflog</a><a href="/tags/device-width/" style="font-size: 12.00px;">device-width</a>
+      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a><a href="/tag/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tag/brieflog/" style="font-size: 12.00px;">brieflog</a><a href="/tag/device-width/" style="font-size: 12.00px;">device-width</a>
     </div>
   </div>
 
