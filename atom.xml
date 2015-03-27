@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.xiaocaoge.com/"/>
-  <updated>2015-03-26T13:04:45.597Z</updated>
+  <updated>2015-03-27T13:40:45.538Z</updated>
   <id>http://www.xiaocaoge.com/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://www.xiaocaoge.com/repair-grub-and-some-useful-tools/"/>
     <id>http://www.xiaocaoge.com/repair-grub-and-some-useful-tools/</id>
     <published>2014-08-13T13:49:17.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是“crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows7 要靠 grub 引导，自然也进不去了。</p>
 <p>想着先利用分区工具修复 Windows7 的 MBR（到最后发现这个思路走远了），然后从网上或同事那里弄一个 crypto.mod 放进去试试。但是，发现U盘启动盘不见了，应该没带，只好向同事借了一个，里面还没有我需要的工具，只是一个 CentOS 安装盘。由于我不会在 Linux 下面制作启动盘，只好借了一位同事的 Windows 电脑，是利用U启动这款软件来制作的，功能挺全，就是有点大，300多M。很快我就制作好了，并利用里面的图形分区工具 DiskGenius 重新安装了 MBR，从而可以进入 Windows7 系统了。</p>
 <p>我一开始是想从网上下载 crypto.mod 的，但是只有源代码，我想下载一个 minGW 来编译一下，但是我怕编译后的文件不能用于 Linux 系统下（话说到底能用吗），然后从同事那里复制了一个。哦，说明一下，上周我装双系统 Windows7 时，已经知道了 Ext2Fsd 这款工具可以让 Windows 系统读写 Linux 的 Ext2/3/4 分区，通过设置就可以像操作 Windows 分区那样操作 Linux 下的分区（另外一款相似工具 Ext2explore 在我的电脑上只能读，不能写，而且界面类似于很多 FTP 工具那样的，我是不大喜欢）。这样我就可以把 crypto.mod 拷贝到 Ubuntu 中了。</p>
@@ -54,7 +54,7 @@ grub-install --root-directory=<span class="regexp">/media/</span>tempdir <span c
     <link href="http://www.xiaocaoge.com/install-windows7-in-ubuntu/"/>
     <id>http://www.xiaocaoge.com/install-windows7-in-ubuntu/</id>
     <published>2014-08-13T13:30:41.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 grub 给覆盖。</p>
 <p>系统现状：Debian 与 Ubuntu 14.04 双系统，Debian 是前一位离职人员使用的，我安装 Ubuntu 时没有把它删除。</p>
 <p>由于没有删除 Debian，所以 boot 分区是它所在的分区（/sda1），然后我怎么改 Ubuntu 里面的 grub 配置，都没办法使 Ubuntu 成为开机启动项的第一项，我觉得和 boot 分区是 Debian 所在分区有关。当然，这是我在直接格式化 Debian 所在的分区之后才反应过来的，因为删除之后，重启直接进入了 grub rescue 模式。至于我为什么去格式化 Debian 分区，因为我要装 Win7，我一直修改 Ubuntu 里面的 grub，总是无法让 Ubuntu 成为启动项第一，心里烦了，反正 Debian 里面有什么与我无关，反正我也不知道删除它会怎么样。</p>
@@ -94,7 +94,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/redefine-clearfix-float/"/>
     <id>http://www.xiaocaoge.com/redefine-clearfix-float/</id>
     <published>2014-05-25T07:16:09.000Z</published>
-    <updated>2015-03-15T03:34:51.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="经典">经典</h2>
 <p>以前最经典的清除浮动方法是利用<code>:after</code>伪元素，代码如下：</p>
 <pre><code><span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
@@ -173,7 +173,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/build-linux-workspace/"/>
     <id>http://www.xiaocaoge.com/build-linux-workspace/</id>
     <published>2014-05-18T03:37:42.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。</p>
 <p>电脑本来装着的是Debian，我以前没见过，本来也不会什么Linux，结果很抗拒它的桌面系统，呵呵。刚开始老大给了我一个Ubuntu 12.04的安装U盘，然后我在网上查了半天怎么把U盘挂载到Debian，我试了很多命令或方法，发现就是没反应。后来同事说主机前面的USB接口可能不能用，我心想：怪不得我试任何命令都没反应。于是我换到了主机后面的接口，一插上去就自动挂载了，很兴奋地可以从U盘启动了，出现了安装引导界面，但是在从U盘读取镜像文件时一直报错，我又查了半天，折腾了半天，最后说什么MD5错误。好吧就这样半天过去了，后来老大又给我下载了Ubuntu 14.04，果然只用半个多小时就安装好了。就这样半天过去，下班了。</p>
 <p><strong>第二天，我开始安装并配置我经常使用的软件：</strong></p>
@@ -227,7 +227,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/responsive-images/"/>
     <id>http://www.xiaocaoge.com/responsive-images/</id>
     <published>2014-04-21T12:53:28.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>从定宽布局转向响应式布局的过程中，要想把PC端显示的内容显示在小屏幕的手机或平板上，首先也是最基本的就是采用流式布局，而图片的显示需要加下面一行代码：</p>
 <pre><code><span class="tag">img</span> <span class="rules">{ <span class="rule"><span class="attribute">max-width</span>:<span class="value"> <span class="number">100%</span></span></span>; <span class="rule">}</span></span>
 </code></pre><p>这样图片最大宽度就不会超过小屏幕设备浏览器的宽度，但是把大图片在小屏幕设备上显示会带来额外的带宽消耗。尤其是现今移动端网络速度慢于PC端，且速度上下浮动太大，慢的是2.5G网络，快的是4G，又会经常从WiFI切换到2.5G或3G。而且对于大部分网站，图片的流量会占一半以上，因此缩减图片大小，节省带宽成为响应式图片的一大挑战。幸而开源社区已经有了很多响应式图片解决方案，但是要注意并没有完美的方案，要根据具体需要来选择合适的方案。</p>
@@ -267,7 +267,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face/"/>
     <id>http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face/</id>
     <published>2014-04-13T10:17:56.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>很多网站都需要用到小的图标，而且不止一个，会用很多个。最先接触到（也是最早出现的）的一种解决方案是CSS Sprites，把所有图标都合并成一张大图。后来又了解了DataURI这种把图片编码成字符的方法，接着是现在大行其道的@font-face方法，将常用的图标都制作成字体。三种方法的共同点是都能减少请求数，从而提高页面加载速度，同时又各有优劣：</p>
 <h2 id="CSS_Sprites">CSS Sprites</h2>
 <p>CSS Sprites历史悠久，大概在2004年之前就出现了，Dave Shea 在<a href="http://alistapart.com/article/sprites" target="_blank" rel="external">这篇文章</a>中提出了CSS Sprites这种技术。至于怎么应用这种技术，可以谷歌，也可以参考这两篇文章：<a href="http://udc.weibo.com/2012/05/%E8%B0%88%E8%B0%88css-sprites%E6%8A%80%E6%9C%AF%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/" target="_blank" rel="external">谈谈CSS Sprites技术及其优化</a>和<a href="http://css-tricks.com/css-sprites/" target="_blank" rel="external">CSS Sprites: What They Are, Why They’re Cool, And How to Use Them</a>。</p>
@@ -362,7 +362,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/bookmark-management/"/>
     <id>http://www.xiaocaoge.com/bookmark-management/</id>
     <published>2014-04-11T18:56:05.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>在大学时代，电脑基本上玩游戏了，浏览的网站无非都是些QQ空间、淘宝、人人之类，一共也就那么几个，连标签栏都占不满，也就没必要管理。后来学习PPT，发现了一些相关的博客、工具、图片资源等大概几十个网址。这也很好管理，两三个文件夹，分类管理就可以了。我想这些对于大部分学生时代的人都够用了，说真的，书签还真不用怎么管理，没多少。</p>
 <p>后来学习前端后，书签开始持续增长。书签主要来自：百度或谷歌搜索、书上、博文或导航页面中的链接。书签虽然增长到了几百个，不过还是采用文件夹分组管理，大概就按技术来分：常用、手册、图片、前端、CSS、JS、博客、PHP、设计、待读等。</p>
 <p>一开始学习时，经常把书中或博文中的链接都看一下（做到这个就必须学会架fan梯qiang子和提高英语阅读水平，字典是必须随时查的），看一下具体什么内容，网站主题，是否值得收藏，可谓是人工爬虫，所以收藏了很多链接。经过一年半载之后，发现有很多链接从来不再访问，即使访问也是通过搜索引擎而不是书签访问的。而且这么多链接也太占地方了，决定筛选清理一下。</p>
@@ -403,7 +403,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/markdown-syntax/"/>
     <id>http://www.xiaocaoge.com/markdown-syntax/</id>
     <published>2014-04-08T20:14:17.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<h2 id="简介">简介</h2>
 <p><a href="http://en.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a>是一种为了提高文档易读性与易写性的纯文本格式规范，其可以转换成HTML，从而可以利用CSS定制其样式。Markdown语法非常简单，而且语法符号也是为了快速书写文本而设计。Markdown发布已经很久了，其初由John Gruber与Aaron Swartz于2004年合作发布，<a href="https://daringfireball.net/projects/markdown/basics" target="_blank" rel="external">最初的发布版本</a>。直到现在，并没有一个统一的标准规范，各个实现版本会有些不同，不过基础的语法基本是相同的。Markdown已经应用在很多地方，如Github、Stackoverflow、reddit等网站，也应用于项目的ReadMe文件、一些论坛、写邮件、博客等地方。有多种实现的语言版本，也有多个系统平台上的编辑器实现，在线编辑器也有，这些可以谷歌会得到很多结果。</p>
 <h2 id="语法">语法</h2>
@@ -519,7 +519,7 @@ markdown
     <link href="http://www.xiaocaoge.com/understanding-viewport-and-device-width/"/>
     <id>http://www.xiaocaoge.com/understanding-viewport-and-device-width/</id>
     <published>2014-04-08T09:39:22.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
 <pre><code>&amp;lt;meta <span class="variable">name=</span>”viewport” <span class="variable">content=</span>”<span class="variable">width=</span>device-width” &amp;gt;
 </code></pre><p>content属性还包括initial-scale，user-scalable等，不过这里不谈，它们的意思都很容易理解。这里要谈得是：viewport代表什么？device-width又是啥？</p>
@@ -573,7 +573,7 @@ markdown
     <link href="http://www.xiaocaoge.com/transition-height-from-0-to-auto/"/>
     <id>http://www.xiaocaoge.com/transition-height-from-0-to-auto/</id>
     <published>2014-04-03T09:35:08.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于<code>height:auto;时</code>，浏览器会识别height值为0，因此无法直接从<code>height: 0;</code>过渡到<code>height: auto;</code>。</p>
 <p>一种简单的方法是，将过渡应用于max-height属性，通过设置一个大于元素所可能达到的最大高度值。代码如下：</p>
 <pre><code><span class="class">.elem</span> <span class="rules">{
@@ -619,7 +619,7 @@ markdown
     <link href="http://www.xiaocaoge.com/compute-files-management/"/>
     <id>http://www.xiaocaoge.com/compute-files-management/</id>
     <published>2014-04-01T08:42:17.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。</p>
 <h2 id="首先，分析文件来源">首先，分析文件来源</h2>
 <p>文件的来源无非两种：本地与外部。本地主要就是各种新建、复制、剪切等产生的文件，而外部包括下载的、传送的、其他存储器拷贝的。</p>
@@ -687,7 +687,7 @@ markdown
 <li>源码文件夹结构与规划：主要是HTML、CSS、JS、PHP这些文件夹。</li>
 </ul>
 <p>现在的文件夹结构如下图，虚线框的代表junction链接</p>
-<p><a href="http://www.xiaocaoge.com/wp-content/uploads/2014/04/电脑文件管理.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2014/04/电脑文件管理.png" alt="电脑文件管理"></a></p>
+<p><a href="http://www.xiaocaoge.com/uploads/2014/04/电脑文件管理.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2014/04/电脑文件管理.png" alt="电脑文件管理"></a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。</p>
@@ -708,7 +708,7 @@ markdown
     <link href="http://www.xiaocaoge.com/sublime-text-2-settings-and-use/"/>
     <id>http://www.xiaocaoge.com/sublime-text-2-settings-and-use/</id>
     <published>2014-03-28T10:45:30.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>从notepad++切换到Sublime Text 2已经有两个月了，已经不习惯notepad++了。总得来说，Sublime比notepad++有很多功能方面的改进，使用体验非常好，又有丰富的插件，活跃的开发者氛围。当然，还是有个别地方不如notepad++的，比如重命名文件，所有的配置都是json格式，难免使得习惯图形界面的人头大。当时配置与上手练习花了大概5个小时，再加上解决一些插件等使用的问题，少说也有十多个小时，这还是有notepadd++的配置与使用基础。但我还是觉得十分划算，毕竟这个是天天用，也会用个几年的东西，最开始的十小时能带来很大的效率提升。</p>
 <h2 id="下载与安装">下载与安装</h2>
 <p>直接到<a href="http://www.sublimetext.com/" target="_blank" rel="external">官网</a>选择合适的版本下载即可，Windows、Mac和Linux系统都有。虽然Sublime是收费的，且70刀的价格对于我来说还是挺贵的，但是仔细想想，与买衣服的价格比起来也不算贵，这个要天天用，可能用好几年，又是工作必须的。之所以不买许可证，大概是因为它提供了不限期限不限功能的免费试用，与收费版本比起来，就是大概每个小时都会弹出一个让你购买许可证的窗口估计这个会让不少人去破解。要是衣服能像软件一样下载破解，还不吃官司，估计不少人都会尝试免费的衣服。</p>
@@ -809,7 +809,7 @@ markdown
     <link href="http://www.xiaocaoge.com/cross-browser-transparency/"/>
     <id>http://www.xiaocaoge.com/cross-browser-transparency/</id>
     <published>2013-10-20T19:55:49.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。</p>
 <h3 id="图片包含全透明像素时">图片包含全透明像素时</h3>
 <p>对于这种不包含半透明像素的图片，可以导出为GIF格式来支持IE6。但是只适用于图片包含少量颜色时，通常Logo、icons等颜色只包含几种。对于色彩丰富的图片，只能采用PNG图片，并通过一些方法解决IE6的PNG支持问题。</p>
@@ -839,7 +839,7 @@ markdown
     <link href="http://www.xiaocaoge.com/software-and-ecosystem/"/>
     <id>http://www.xiaocaoge.com/software-and-ecosystem/</id>
     <published>2013-10-17T20:00:27.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>几乎所有人初次接触电脑时，脑子里很少有“软件”这个概念，太抽象了。自己第一次接触电脑还是在初中的电脑课程上，接触的第一批软件是金山打字、记事本、纸牌游戏之类的。至于那些经常去网吧的同学，还会接触到QQ、游戏之类的软件。除此之外如果没人教，也很少接触新的软件，本来电脑都很少接触。高中时学会玩红警与魔兽，还学会了迅雷下载。到了大学，既有了自己的电脑，也有了折腾电脑的时间，玩电脑的水平才有很大提高。</p>
 <p>刚上大学时，想不到转换格式用转换格式软件（其实还不知道格式是什么东西），不知道编辑图片用图片编辑软件，也不知道IE之外的浏览器，不知道文件或图片批量处理软件，总之有很多完全想不到。最可恶的是也不知道用百度搜一下。</p>
 <p>后来，逛软件下载站，疯狂的下载、试用、卸载软件，总算把常用类型的软件都熟悉了一下。的确，一个软件下载站就可以熟悉常用的软件，一个智商正常的人都有能力完成这个任务。再说还有大学上的计算机基础、计算机应用、计算机程序基础等课程，还有同学朋友的熏陶。这样，大部分人的计算机技能都够应付日常生活和工作了。</p>
@@ -889,7 +889,7 @@ markdown
     <link href="http://www.xiaocaoge.com/photoshop-beginner/"/>
     <id>http://www.xiaocaoge.com/photoshop-beginner/</id>
     <published>2013-10-15T19:05:00.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>已经忘记什么时候开始使用Photoshop软件了，也许是当时需要处理图片，又听说了Photoshop的大名，于是便安装使用了。印象中，从Photoshop 7开始使用的，那时还没有现在这么大的体积。当然软件的第一步就是安装，安装教程网上也是一大把，得修改hosts文件来屏蔽验证。</p>
 <p>安装好软件后，首先就是自己先看一些工具的功能，试验一下。之后就是到图书馆借一两本Photoshop的教程，但是当时什么都不懂，更不知道选哪本书好，也许很多人像我当初一样，选一本充满实例的书。然后就照着书中有趣的例子一步一步做，然后发现没有素材，图书馆没借光盘，去网上找又找不到一样的（也有搜索能力低的原因）。好吧，这些我都忍了，可是做到一半，发现教程不仅不给详细的设置参数，有的还跳过了一些步骤，写得好不详细，更别提什么工具使用的精髓了。之后就把书扔到一边去了，留下了Photoshop教程都是这样列一些实例，写得又不详细的印象，害了我好久。</p>
 <p>后来，不知怎么想的，觉得应该先学会每一个工具的使用，于是就照着我要自学网上的教程举一反二。也算是会了一些基本操作，但是字体特效、图片特效等复杂的技术还是不会。</p>
@@ -925,7 +925,7 @@ markdown
     <link href="http://www.xiaocaoge.com/vertical-align-methods/"/>
     <id>http://www.xiaocaoge.com/vertical-align-methods/</id>
     <published>2013-06-05T17:33:07.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>垂直居中包括单行文本居中、单元格（td）内容居中、块级元素居中。由于单元格的display属性为table-cell，且浏览器默认vertical-align:middle，所以就是默认垂直居中，不做考虑。要注意的就是vertical-align属性的含义是设置内联元素在行框（一行）内的垂直对齐方式，对于display:table-cell的元素也适用，但是IE8+才支持display:table-cell设置，于是就有了各种跨浏览器垂直对齐的方法。</p>
 <p><strong>DEMO：</strong><a href="http://www.xiaocaoge.com/demo/vertical-align/vertical-align.html" target="_blank" rel="external">vertical align methods</a></p>
 <h3 id="单行文本"><strong>单行文本</strong></h3>
@@ -1060,7 +1060,7 @@ display: table;
     <link href="http://www.xiaocaoge.com/form-validation/"/>
     <id>http://www.xiaocaoge.com/form-validation/</id>
     <published>2013-06-04T13:38:50.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>表单验证最常见的就是注册和登录表单，客户端与服务端都需要验证，客户端验证可以即时反馈，服务端用来防止恶意人员绕开客户端验证或JavaScript不起作用时提供验证。</p>
 <p>表单验证包括规则集合、验证引擎、反馈信息。</p>
 <h3 id="规则集合：">规则集合：</h3>
@@ -1108,7 +1108,7 @@ display: table;
     <link href="http://www.xiaocaoge.com/image-box/"/>
     <id>http://www.xiaocaoge.com/image-box/</id>
     <published>2013-06-04T06:58:55.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>通过在同一页面实现图片的浏览与查看，从而带来更好的用户体验，越来越与客户端的图片查看工具功能类似。将来，用户只用在网络上寻找、存储、编辑图片，不用下载到本地了。通过原生JavaScript实现的一个image box，比利用jQuery现成的插件要复杂的多。需要综合应用DOM编程能力，所以最好能之前有DOM处理的常见函数，比如DOM节点遍历、创建、删除、插入等。另外还要有处理BOM的函数，比如元素位置获得和修改、元素尺寸获得和修改、元素透明度变化等。这些东西都是《精通JavaScript》一书讲的，这本书对于如何打造自己的库很有帮助，当然对于学习jQuery也有用。书中讲了一个image box是实现，所以自己也跟着实现了一个。</p>
 <p>DEMO：<a href="http://www.xiaocaoge.com/demo/imagebox/image-gallery.html" target="_blank" rel="external">image-gallery.html</a></p>
 <p>有了之前的DOM和BOM函数库就可以很方便的开始编写了，学到的一些东西：</p>
@@ -1141,9 +1141,9 @@ display: table;
     <link href="http://www.xiaocaoge.com/drop-menu-and-tab-panel/"/>
     <id>http://www.xiaocaoge.com/drop-menu-and-tab-panel/</id>
     <published>2013-06-02T14:26:35.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>下拉菜单与Tab面板很相似，本质来说就是一种东西，相似的HTML代码结构，CSS设置，JavaScript代码。不考虑IE6，仅限hover事件的话，均可通过纯CSS实现。</p>
-<p>下拉菜单可以有两种HTML代码结构，一种是主菜单包含子菜单，另一种是主菜单与子菜单同一层级。Tab面板HTML代码结构也同样是这两种。如下图所示：<br><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2013/02/3158712188747102097.png" alt="3158712188747102097"></a></a></p>
+<p>下拉菜单可以有两种HTML代码结构，一种是主菜单包含子菜单，另一种是主菜单与子菜单同一层级。Tab面板HTML代码结构也同样是这两种。如下图所示：<br><a href="http://www.xiaocaoge.com/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><a href="http://www.xiaocaoge.com/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/3158712188747102097.png" alt="3158712188747102097"></a></a></p>
 <p>对于下拉菜单，纯CSS的实现方式必须采用第一种结构；对于Tab面板，两种结构均可以。不过个人认为第一种包含式结构更合理，禁用CSS的情况下，有条理。<span style="color: #888888;">（PS：不过没有数据说明有多少用户是禁用CSS的？有多少是禁用JS的？又有多少使用屏幕阅读器的？有多少国内开发者考虑这些的？）</span></p>
 <p>采用第二种结构，在写JS时，通常会通过标签的ID来传递数据。比如主导航的一个列表项目为</p>
 <pre><code><span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">”css”</span>&gt;</span>CSS<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
@@ -1178,10 +1178,10 @@ display: table;
     <link href="http://www.xiaocaoge.com/php-blog-brieflog/"/>
     <id>http://www.xiaocaoge.com/php-blog-brieflog/</id>
     <published>2013-05-31T14:21:18.000Z</published>
-    <updated>2015-03-15T03:34:48.000Z</updated>
+    <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>读完《PHP6与MySQL5基础教程》之后就开始做一个简单的博客，既可以练习所学，又可以在练习的过程中解决新的问题。名字就叫brieflog，但是功能都是参照自己的Wordpress博客设计的。虽然功能、样式能有很多不足，不过先把所学的总结一下。</p>
 <p><span style="color: #333333;"><span style="color: #808080;"><strong>博客演示</strong></span>：</span><a href="http://www.xiaocaoge.com/demo/brief/" target="_blank" rel="external">brieflog</a></p>
-<p><span style="color: #808080;"><strong>首页截图</strong></span><br><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/1948369788891271720.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2013/02/1948369788891271720.png" alt="1948369788891271720"></a></p>
+<p><span style="color: #808080;"><strong>首页截图</strong></span><br><a href="http://www.xiaocaoge.com/uploads/2013/02/1948369788891271720.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/1948369788891271720.png" alt="1948369788891271720"></a></p>
 <h3 id="包含文件"><strong>包含文件</strong></h3>
 <p>通过简单的包含，就不用重复写header，sidebar，footer了，这是静态网页永远实现不了的。CSS的任务就是为header，sidebar，footer，content及其内容设计样式。</p>
 <h3 id="输出内容"><strong>输出内容</strong></h3>

@@ -116,7 +116,7 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 $(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
     setInterval(slideSwitch, <span class="number">3000</span>);
 }
-</code></pre><p>然后会发现从最后一张切换到第一张时没有渐变效果，突然就跳到第一张，其过程见下图所示，第一和第三张都具有类active时（z-index相同），因第三张在文档流的后面，会在第一张上面。<br><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/1893763643409314700.jpg" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2013/02/1893763643409314700.jpg" alt="1893763643409314700"></a><br>因此在第一张设置不透明度为0之前可以使第三张z-index减小，从而在第一张下面，但又必须大于第二张的，这里添加一个类last-active，并设置其z-index为2。这样第一张从透明逐渐出现时就可以看的着了，示意图如下：<br><a href="http://www.xiaocaoge.com/wp-content/uploads/2013/02/1672805786691448946.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/wp-content/uploads/2013/02/1672805786691448946.png" alt="1672805786691448946"></a><br>完整的代码如下</p>
+</code></pre><p>然后会发现从最后一张切换到第一张时没有渐变效果，突然就跳到第一张，其过程见下图所示，第一和第三张都具有类active时（z-index相同），因第三张在文档流的后面，会在第一张上面。<br><a href="http://www.xiaocaoge.com/uploads/2013/02/1893763643409314700.jpg" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/1893763643409314700.jpg" alt="1893763643409314700"></a><br>因此在第一张设置不透明度为0之前可以使第三张z-index减小，从而在第一张下面，但又必须大于第二张的，这里添加一个类last-active，并设置其z-index为2。这样第一张从透明逐渐出现时就可以看的着了，示意图如下：<br><a href="http://www.xiaocaoge.com/uploads/2013/02/1672805786691448946.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/1672805786691448946.png" alt="1672805786691448946"></a><br>完整的代码如下</p>
 <pre><code><span class="comment">#slideshow img.last-active {</span>
     z-index: <span class="number">2</span>;
 }
