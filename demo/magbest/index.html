@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>MAGBEST</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/gslide-0.1.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var options = {
+                width: 960,
+                height: 450,
+                switchEffect: 'scroll',
+                delay: 5000
+            };
+            $('#slide').gslide(options);
+        });
+    </script>
+    <!--[if lte IE 6]>
+    <script type="text/javascript" src="js/DD_belatedPNG.js"></script>
+    <script type="text/javascript">
+        DD_belatedPNG.fix('.png-fix,.png-fix:hover');
+    </script>
+    <![endif]-->
+</head>
+<body>
+    <!-- page start -->
+    <div id="page">
+        <!-- header start -->
+        <div id="header">
+            <div class="header-sup cf">
+                <h1 id="logo"><a href="index.html" class="icon png-fix">MAGBEST</a></h1>
+                <form action="" id="search">
+                    <input type="text" name="s" class="keywords" />
+                    <input type="submit" class="search-btn png-fix icon" value="Search" />
+                </form>
+            </div>
+            <ul id="nav" class="gradient cf">
+                <li class="cur"><a href="index.html">Home</a></li>
+                <li><a href="product.html">Product</a></li>
+                <li><a href="#">Workshop</a></li>
+                <li><a href="#">Certification</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <!-- slide start -->
+        <div id="slide">
+            <ul class="img-list">
+                <li><a href="#"><img src="img/slide-01.jpg" alt="Slide image 1" /></a></li>
+                <li><a href="#"><img src="img/slide-02.jpg" alt="Slide image 2" /></a></li>
+                <li><a href="#"><img src="img/slide-03.jpg" alt="Slide image 3" /></a></li>
+                <li><a href="#"><img src="img/slide-04.jpg" alt="Slide image 4" /></a></li>
+                <li><a href="#"><img src="img/slide-05.jpg" alt="Slide image 5" /></a></li>
+            </ul>
+        </div>
+        <!-- panel start -->
+        <div id="panel" class="cf">
+            <div class="panel about">
+                <h2 class="gradient">About</h2>
+                <div class="panel-body">
+                    <p>MAG INDUSTRY CO., LIMITED was founded in 2010, who is the professional Magnetic Education toys and Magnetic assembly manufactory. We have reliable and good quality magnets and...</p>
+                </div>
+                <a href="#" class="gradient continue">Continue</a>
+            </div>
+            <div class="panel product">
+                <h2 class="gradient">Product</h2>
+                <div class="panel-body">
+                    <span class="p-icon png-fix icon"></span>
+                    <ul class="p-cate">
+                        <li><a href="#">NbFeb Magnet</a></li>
+                        <li><a href="#">NeoCube/Buckyballs</a></li>
+                        <li><a href="#">Magnet cube boys</a></li>
+                        <li><a href="#">Magsmarters</a></li>
+                    </ul>
+                </div>
+                <a href="#" class="gradient continue">Continue</a>
+            </div>
+            <div class="panel contact">
+                <h2 class="gradient">Contact</h2>
+                <div class="panel-body">
+                    <p class="call">
+                        <span class="call-icon icon png-fix"></span>
+                        +86 0769 23456789
+                    </p>
+                    <p class="email">
+                        <span class="email-icon icon png-fix"></span>
+                        sales@magbest.com
+                    </p>
+                </div>
+                <a href="#" class="gradient continue">Continue</a>
+            </div>
+        </div>
+        <!-- footer start -->
+        <div id="footer">
+            <p class="nav-bottom">
+                <a href="#">Home</a>|
+                <a href="#">Product</a>|
+                <a href="#">Workshop</a>|
+                <a href="#">Certification</a>|
+                <a href="#">About</a>|
+                <a href="#">Contact</a>
+            </p>
+            <p class="copyright">
+                &copy;2011-2012 MAG INDUSTRY CO.LTD. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

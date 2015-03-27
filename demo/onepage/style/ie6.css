@@ -1,0 +1,24 @@
+/*
+ * ie6.css
+ * xiaomi-2s.html
+ */
+
+html {
+    overflow:auto;
+}
+html,body {
+    height:100%;
+    overflow:auto;
+}
+.fixed {
+    position:absolute;
+    top:0;
+    left:auto;
+}
+.con7 .tab-box {
+    margin-top:0;
+}
+.con7 .txt {
+    position:static;
+    margin-left:500px;
+}

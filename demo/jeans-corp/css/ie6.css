@@ -1,0 +1,30 @@
+/* ie6 style */
+#page {
+    height: 100%;
+}
+/* Hidden div#full-image */
+#full-image {
+    display: none;
+}
+.home #page {
+    background-repeat: no-repeat;
+    background-image: url(../img/full-1.jpg);
+}
+#nav {
+    font-size: 0;
+}
+#nav a {
+    display: inline;
+    zoom: 1;
+}
+#nav a:hover {
+    background: url(../img/nav-item-h.png) repeat-x;
+}
+/* handle the priority of hover in ie6 */
+#header #nav .cur a {
+    color: #fb7000;
+}
+/* list item gap */
+#sidebar .sidenav li {
+    display: inline;
+}

@@ -1,0 +1,12 @@
+/*
+ * ie8.css
+ * xiaomi-2s.html
+ */
+
+.semi-trans-bg {
+    background:transparent;
+    /* For IE 5.5 - 7 */
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#d8ffffff, endColorstr=#d8ffffff);
+    /* IE 8 */
+    -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#d8ffffff, endColorstr=#d8ffffff);
+}

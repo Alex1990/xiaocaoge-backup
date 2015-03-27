@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery城市二/三级联动</title>
+    <script type="text/javascript" src="../scripts/jquery/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cityselect.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        $('#city').citySelect({
+            url: "js/city.min.js",
+            prov: "湖南",
+            city: "长沙",
+            dist: "岳麓区",
+            nodata: "none",
+            required: true
+        });
+    });
+    </script>
+</head>
+<body>
+    <div id="city">
+        <select class="prov"></select>
+        <select class="city" disabled="disabled"></select>
+        <select class="dist" disabled="disabled"></select>
+    </div>
+</body>
+</html>

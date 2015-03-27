@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        #wrapper {
+            width: 1040px;
+            margin: 0 auto;
+        }
+        .btns {
+            margin: 50px 0;
+        }
+        .btns a {
+            margin-right: 20px;
+            padding: 5px;
+            font-family: Arial, 微软雅黑, sans-serif;
+            font-size: 16px;
+            text-decoration: none;
+            color: #555;
+            background: #eee;
+            border: 1px solid #ddd;
+        }
+        .btns .cur,
+        .btns .cur:hover {
+            color: #fff;
+            border: 1px solid #1aa;
+            background: #1aa;
+        }
+        .display {
+            width: 1020px;
+            height: 800px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="btns">
+            <a href="javascript:;" class="cur" id="btn-1">产品图片</a>
+            <a href="javascript:;" id="btn-2">Tab分类导航</a>
+            <a href="javascript:;" id="btn-3">树形菜单</a>
+            <a href="javascript:;" id="btn-4">产品列表</a>
+            <a href="javascript:;" id="btn-5">Tab列表动画</a>
+        </div>
+        <iframe id="display" class="display" src="jd-products-show-images.html" frameborder="0"></iframe>
+    </div>
+    <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var urls = [
+                'jd-products-show-images.html',
+                'jd-categories-1.html',
+                'jd-tree-menu.html',
+                'jd-product-list.html',
+                'jd-tab.html'
+            ];
+            
+            $('a').attr('hideFocus', true);
+            $('.btns').click(function(e) {
+                var $target = $(e.target),
+                    index = $target.attr('id').slice(4);
+                
+                $target.addClass('cur')
+                        .siblings().removeClass('cur');
+                
+                $('#display').attr('src', urls[index-1]);
+            });
+        });
+    </script>
+</body>
+</html>

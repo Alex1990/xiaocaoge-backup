@@ -1,0 +1,251 @@
+/*
+ * style.css
+ * xiaomi-2s.html
+ */
+
+/* Eric reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+body {
+    font-family:Arial, 微软雅黑, 黑体, 宋体, sans-serif;
+}
+a {
+    text-decoration:none;
+    outline:none;
+}
+.cf:after {
+    content:'';
+    height:0;
+    visibility:hidden;
+    display:block;
+    clear:both;
+}
+.cf {
+    zoom:1;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1.6;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* main */
+#wrapper {
+    width:960px;
+    margin:0 auto;
+}
+/* header */
+.header {
+    position:fixed;
+    margin-bottom:20px;
+    padding:10px 0;
+    width:960px;
+    border-bottom:2px solid #fa7a20;
+    background:rgba(255,255,255,0.85);
+    z-index:10;
+}
+.logo {
+    float:left;
+}
+.logo a {
+    display:block;
+    width:67px;
+    height:28px;
+    text-indent:-100%;
+    background:url(../images/mi-logo.gif) no-repeat -1px -6px;
+    overflow:hidden;
+}
+.nav {
+    float:right;
+}
+.nav li {
+    float:left;
+    padding:0 10px;
+}
+.nav a {
+    font-size:20px;
+    line-height:28px;
+    color:#5e5d5c;
+}
+.nav a:hover {
+    color:#fa7a20;
+}
+/* content */
+.content {
+    background:#fafafa;
+}
+.con {
+    padding-top: 50px;
+    text-align:center;
+    border-top:1px solid #e8e8e8;
+}
+.con1, .con2, .con4 {
+    border-top:none;
+}
+.con .txt {
+    width:768px;
+    margin:50px auto;
+}
+.con h2 {
+    margin-bottom:20px;
+    font-size:30px;
+    font-weight:normal;
+    line-height:45px;
+    color:#999;
+}
+.con h2 em {
+    font-style:normal;
+    color:#333;
+}
+.con p {
+    font-size:14px;
+    color:#555;
+}
+.con .tab-box {
+    margin:0 auto;
+}
+.con .t-con {
+    display:none;
+}
+.con .on {
+    display:block;
+}
+.con .t-nav {
+    border-left:1px solid #e0e0e0;
+}
+.con .t-nav li {
+    float:left;
+    margin-left:-1px;
+    text-align:center;
+    font-size:14px;
+    line-height:44px;
+    border:1px solid #e0e0e0;
+    cursor:pointer;
+}
+.con .t-nav .on {
+    font-weight:bold;
+    box-shadow: 2px 2px 2px 0 #aaa inset;
+    background:#e8e8e8;
+}
+.con2 .tab-box {
+    width:762px;
+}
+.con2 .t-con {
+    height:350px;
+}
+.con2 .t-nav li {
+    width:49%;
+}
+.con4 .txt {
+    float:left;
+    width:256px;
+    margin-left:96px;
+    text-align:left;
+    display:inline;
+}
+.con4 h2 {
+    margin-top:50px;
+    font-size:48px;
+}
+.con4 h2 em {
+    font-size:30px;
+}
+.con4 img {
+    float:right;
+}
+.con5 .t-con {
+    height:550px;
+    text-align:center;
+}
+.con5 .t-con p {
+    width:760px;
+    margin:0 auto;
+}
+.con5 .t-con strong {
+    display:block;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+.con5 .t-nav {
+    width:768px;
+    margin:0 auto;
+}
+.con5 .t-nav li {
+    width:24%;
+}
+.con7 .tab-box {
+    text-align:left;
+}
+.con7 .txt {
+    position:relative;
+    top:250px;
+    left:180px;
+    width:384px;
+    text-align:left;
+    z-index:1;
+}
+.con7 .tab-box {
+    margin-top: -300px;
+}
+.con7 .t-con {
+    height:950px;
+}
+.con7 .part {
+    text-align:center;
+}
+.con7 .part img {
+    margin-top:300px;
+}
+.con7 .t-nav {
+    width:768px;
+    margin:0 auto;
+}
+.con7 .t-nav li {
+    width:24%;
+}
+.con8 .txt {
+    position:relative;
+    top:50px;
+    left:-192px;
+    width:384px;
+    text-align:left;
+}
+.con8 img {
+    margin-top:-100px;
+}

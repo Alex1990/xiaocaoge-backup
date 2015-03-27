@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <audio id="audio" src="7days.mp3" controls preload="auto">Your browser does not support audio element</audio>
+    <script>
+        var audio = document.getElementById('audio');
+
+        audio.addEventListener('play', function() {
+            console.log('play');
+        });
+        audio.addEventListener('pause', function() {
+            console.log('pause');
+        });
+        audio.addEventListener('ended', function() {
+            console.log('ended');
+        });
+
+        // loadstart事件只是说明浏览器开始请求资源
+        // 而不管资源是否被下载或存在
+        audio.addEventListener('loadstart', function() {
+            console.log('loadstart');
+        });
+
+        // loadedmetadata事件说明浏览器下载完资源的元数据，比如总时长
+        // 如果preload属性设置为none则初次加载时，不会触发此事件
+        audio.addEventListener('loadedmetadata', function() {
+            console.log('loadedmetadata');
+        });
+
+        audio.addEventListener('canplay', function() {
+            console.log('canplay');
+        });
+
+        // progress事件在下载资源期间会持续触发
+        audio.addEventListener('progress', function() {
+            console.log('progress');
+        });
+
+        // timeupdate事件触发频率各浏览器不一样，大都在每秒3-5次
+        audio.addEventListener('timeupdate', function() {
+            console.log('timeupdate');
+        });
+    </script>
+</body>
+</html>

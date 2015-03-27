@@ -1,0 +1,57 @@
+﻿<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=0" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+    <script type="text/javascript">
+        var data = {
+            title: '发送圣诞贺卡给朋友',
+            imgUrl: 'img/top-1.png',
+            desc: '一张卡片，传递温情',
+            link: location.href // 要分享的链接，即查看卡片的链接
+        };
+    </script>
+</head>
+<body class="birthday">
+    <div class="page">
+        <p class="card-tip">点击文字可直接编辑，按底部按钮发送</p>
+        <div class="banner top-banner">
+            <img src="img/top-1.png" alt="" />
+        </div>
+        <div class="banner">
+            <img src="img/line.png" alt="" />
+        </div>
+        <div class="card-con">
+            <div class="send-to">
+                <!-- 如果是收到贺卡，则去掉placeholder属性，用value输出实际的值，
+                    并且input或textarea加上readonly属性关键字 -->
+                <input type="text" name="receiver" placeholder="填写收卡人" required />
+            </div>
+            <div class="send-con">
+                <textarea name="send-con">填写内容</textarea>
+            </div>
+            <div class="send-from">
+                <input type="text" name="sender" placeholder="署名" required />
+            </div>
+            <div class="send-date">
+                <input type="text" class="send-date-btn" name="send-date" readonly />
+            </div>
+        </div>
+        <a href="javascript:;" class="send-btn">发送贺卡</a>
+        <!-- <a href="javascript:;" >我也要发送贺卡</a> -->
+        <div class="hsdiv"></div>
+    </div>
+    <div id="guide" class="guide">
+        <img src="img/guide.png" alt="" />
+        <button id="cancel-share">取消</button>
+    </div>
+    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript">
+        var sendDate = document.getElementsByClassName('send-date-btn')[0],
+            now = new Date();
+        sendDate.value = now.getFullYear() + '年' + (now.getMonth()+1) + '月' + now.getDate() + '日';
+    </script>
+</body>
+</html>

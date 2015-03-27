@@ -1,0 +1,135 @@
+/*
+ * jd-products-show.css
+ */
+
+/* reset */
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+body {
+    font-family: Arial, 宋体, sans-serif;
+    font-size: 14px;
+    text-align: center;
+}
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    outline: none;
+}
+.cf:after {
+    content: '';
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+.cf {
+    zoom: 1;
+}
+/* products show */
+#container {
+    width: 990px;
+    margin: 50px auto;
+    text-align: left;
+}
+#preview {
+    position: relative;
+}
+#img-show {
+    position: relative;
+    width: 352px;
+    height: 352px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+.zoom-shader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 176px;
+    height: 176px;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    background: #aa0;
+    cursor: crosshair;
+}
+.zoom-show {
+    position: absolute;
+    top: 0;
+    left: 370px;
+    width: 400px;
+    height: 400px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+.zoom-show img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#img-list {
+    margin: 5px 0;
+    position: relative;
+    width: 352px;
+}
+#img-list .img-list-ctrl {
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    width: 20px;
+    height: 52px;
+    font-size: 24px;
+    line-height: 50px;
+    text-align: center;
+    color: #777;
+    background: #eee;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+#img-next {
+    right: 0;
+}
+#img-list .img-list-ctrl:hover {
+    background: #ddd;
+}
+#img-list .ctrl-off,
+#img-list .ctrl-off:hover {
+    color: #ddd;
+    background: #fff;
+}
+.img-items {
+    position: absolute;
+    top: 0;
+    left: 26px;
+    width: 300px;
+    height: 54px;
+    overflow: hidden;
+}
+.img-items ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 540px;
+}
+.img-items li {
+    float: left;
+    margin: 0 3px;
+    font-size: 0;
+    border: 1px solid #ddd;
+    display: inline;
+}
+.img-items li:hover,
+.img-items .item-hover {
+    border-color: #e6393c;
+}
+.img-items img {
+    border: 1px solid #fff;
+}
+.img-items li:hover img,
+.img-items .item-hover img {
+    border-color: #e6393c;
+}

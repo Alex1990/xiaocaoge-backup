@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>ALEX1990~</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+    <script type="text/javascript" src="js/anyFixed.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            anyFixed({
+                fixedObj: '#me-sidebar',
+                pos: 'origin'
+            });
+        };
+    </script>
+    <!--[if lte IE 6]>
+    <link rel="stylesheet" type="text/css" href="css/ie6.css" media="all" />
+    <script type="text/javascript" src="js/DD_belatedPNG.js"></script>
+    <script type="text/javascript">
+        DD_belatedPNG.fix('.png-fix, .png-fix:hover');
+    </script>
+    <![endif]-->
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" type="text/css" href="css/ie8.css" media="all" />
+    <script type="text/javascript" src="js/ie-hover-focus.js"></script>
+    <script type="text/javascript" src="js/curvycorners.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var settings = {
+                tl: { radius: 10 },
+                tr: { radius: 10 },
+                bl: { radius: 10 },
+                br: { radius: 10 },
+                antiAlias: true
+            };
+            
+            curvyCorners(settings, '#me-sidebar');
+            curvyCorners(settings, '#me-main');
+        }
+    </script>
+    <![endif]-->
+</head>
+<body>
+    <div id="container">
+        <!-- header start -->
+        <div id="header" class="png-fix">
+            <div class="wrap cf">
+                <!-- logo -->
+                <div id="me-logo" class="logo fl">
+                    <h1><a href="index.html">ALEX<span>1990~</span></a></h1>
+                </div>
+                <!-- nav -->
+                <div id="me-nav" class="nav fr">
+                    <ul>
+                        <li class="nav-item nav-item-1"><a href="#">Web</a></li>
+                        <li class="nav-item nav-item-2"><a href="#">CSS</a></li>
+                        <li class="nav-item nav-item-3"><a href="#">JavaScript</a></li>
+                        <li class="nav-item nav-item-4"><a href="#">Design</a></li>
+                        <li class="nav-item nav-item-5"><a href="#">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- header end -->
+        <!-- content start -->
+        <div id="content">
+            <div class="wrap cf">
+                <!-- sidebar -->
+                <div id="me-sidebar" class="sidebar fr">
+                    <div class="widget search">
+                        <form action="#">
+                            <input type="text" class="search-input ie-focus" name="keywords" />
+                            <input type="submit" class="search-btn png-fix" value="Search" />
+                        </form>
+                    </div>
+                    <div class="widget category">
+                        <h2>Category</h2>
+                        <ul>
+                            <li class="cate-item">
+                                <a href="#">Web</a>
+                                <span class="posts-num">(13)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">HTML</a>
+                                <span class="posts-num">(5)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">CSS</a>
+                                <span class="posts-num">(9)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">JavaScript</a>
+                                <span class="posts-num">(7)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">Design</a>
+                                <span class="posts-num">(9)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">WordPress</a>
+                                <span class="posts-num">(5)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">PHP</a>
+                                <span class="posts-num">(7)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">MySQL</a>
+                                <span class="posts-num">(3)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">Linux</a>
+                                <span class="posts-num">(3)</span>
+                            </li>
+                            <li class="cate-item">
+                                <a href="#">Others</a>
+                                <span class="posts-num">(3)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- main content -->
+                <div id="me-main" class="main fl">
+                    <div class="post">
+                        <h2 class="post-title"><a href="#">下拉菜单与Tab面板</a></h2>
+                        <div class="post-meta">
+                            <span class="post-date">2013-9-12</span>
+                            <span class="post-cate">分类：<a href="#">CSS</a></span>
+                            <span class="post-tags">标签：
+                                <a href="#">CSS</a>, 
+                                <a href="#">DOM</a>
+                            </span>
+                            <span class="post-comment fr">
+                                <a href="#" class="png-fix">Comment</a>
+                            </span>
+                        </div>
+                        <div class="entry">
+                            <p>垂直居中包括单行文本居中、单元格（td）内容居中
+                            、块级元素居中。由于单元格的<code>display</code>属性为
+                            <code>table-cell</code>，且浏览器默认<code>vertical-align:middle</code>，
+                            所以就是默认垂直居中，不做考虑。要注意的就是
+                            <code>vertical-align</code>属性的含义是设置内联元素在行框
+                            （一行）内的垂直对齐方式，对于<code>display:table-cell</code>
+                            的元素也适用，但是IE8+才支持<code>display:table-cell</code>
+                            设置，于是就有了各种跨浏览器垂直对齐的方法。<p>
+                            <h3>单行文本</h3>
+                            <p>此种情况最简单，使用<code>line-height</code>来控制元素的高度即可，
+                            兼容IE6+及其他现在浏览器，也可参考<a href="#">垂直居中方法大集合</a></p>
+<pre>
+.child {
+    line-height: 300px;
+}
+img {
+    width: 200px;
+    vertical-align: middle;
+}
+</pre>
+                            <h3>块级元素</h3>
+                            <p>块级元素的垂直对其方法有很多种，但有些方法必须要求知道
+                            和统一块级元素的高度，有些不需要但是跨浏览器支持不好，最后还得需要
+                            针对个别浏览器（IE6、7）单独设置。</p>
+                            <h4>元素高度可知</h4>
+                            <p>设置相等的内边距或外边距</p>
+                            <h4>元素高度不可知</h4>
+                            <p>兼容所有现在浏览器的方法</p>
+                        </div>
+                    </div>
+                    <!-- comments list start -->
+                    <div id="me-comments" class="comments-list">
+                        <h4 class="comments-num">已有11条评论</h4>
+                        <div id="comment-item-1" class="comment-item ie-hover cf">
+                            <div class="comment-avatar">
+                                <img src="images/avatar.gif" alt="" />
+                            </div>
+                            <div class="comment-content cf">
+                                <div class="comment-meta">
+                                    <h5 class="comment-author">东汉末年</h5>
+                                    <span class="comment-date">2013-8-23</span>
+                                    <span class="comment-edit show"><a href="#">编辑</a></span>
+                                </div>
+                                <div class="comment-body">
+                                    <p>好文章，就是最后一种方法需要添加额外标签</p>
+                                </div>
+                                <span class="comment-reply"><a href="#">回复</a></span>
+                            </div>
+                        </div>
+                        <div id="comment-item-2" class="comment-item cf">
+                            <div class="comment-avatar">
+                                <img src="images/avatar.gif" alt="" />
+                            </div>
+                            <div class="comment-content cf">
+                                <div class="comment-meta">
+                                    <h5 class="comment-author">Hargoo</h5>
+                                    <span class="comment-date">2013-8-25</span>
+                                    <span class="comment-edit"><a href="#">编辑</a></span>
+                                </div>
+                                <div class="comment-body">
+                                    <p>顶楼主，好文章</p>
+                                </div>
+                                <span class="comment-reply"><a href="#">回复</a></span>
+                            </div>
+                            <!-- sub comment item -->
+                            <div id="comment-item-3" class="comment-item cf">
+                                <div class="comment-avatar">
+                                    <img src="images/avatar.gif" alt="" />
+                                </div>
+                                <div class="comment-content cf">
+                                    <div class="comment-meta">
+                                        <h5 class="comment-author">小曹哥</h5>
+                                        <span class="comment-date">2013-9-1</span>
+                                        <span class="comment-edit"><a href="#">编辑</a></span>
+                                    </div>
+                                    <div class="comment-body">
+                                        <p>可恶的IE，罪恶的来源</p>
+                                    </div>
+                                    <span class="comment-reply"><a href="#">回复</a></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="comment-item-4" class="comment-item cf">
+                            <div class="comment-avatar">
+                                <img src="images/avatar.gif" alt="" />
+                            </div>
+                            <div class="comment-content cf">
+                                <div class="comment-meta">
+                                    <h5 class="comment-author">前端往事</h5>
+                                    <span class="comment-date">2013-9-12</span>
+                                    <span class="comment-edit"><a href="#">编辑</a></span>
+                                </div>
+                                <div class="comment-body">
+                                    <p>都啥年代来，楼主还在支持IE6啊</p>
+                                </div>
+                                <span class="comment-reply"><a href="#">回复</a></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- comments list end -->
+                    <!-- comment form start -->
+                    <div id="me-comment-form" class="comment-form">
+                        <h4>回复</h4>
+                        <form action="">
+                            <div class="form-input nickname">
+                                <span>昵称*</span><input type="text" name="nickname" class="ie-focus" />
+                            </div>
+                            <div class="form-input email">
+                                <span>邮箱*</span><input type="text" name="email" class="ie-focus email" />
+                            </div>
+                            <div class="form-input site">
+                                <span>网站</span><input type="text" name="site" class="ie-focus site" />
+                            </div>
+                            <textarea name="form-content" class="ie-focus" cols="30" rows="10"></textarea>
+                            <input type="submit" class="comment-submit" value="回复" />
+                        </form>
+                    </div>
+                    <!-- comment form end -->
+                </div>
+            </div>
+        </div>
+        <!-- content end -->
+        <!-- footer start -->
+        <div id="footer">
+            <div class="wrap">
+                <p class="copyright">&copy; 2013 ALEX1990. All Rights Reserved. 
+                Powered by <a href="http://www.wordpress.org" target="_blank">WordPress</a></p>
+            </div>
+        </div>
+        <!-- footer end -->
+    </div>
+</body>
+</html>

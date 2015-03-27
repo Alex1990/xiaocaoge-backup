@@ -1,0 +1,174 @@
+/*
+ * Linked: resume.html
+ * Date: 2012-6-6
+ * Author: Alex Chao
+ */
+
+/* Reset */
+body,div,span,h1,h2,h3,h4,h5,h6,p,
+img,a,strong,ul,ol,li,
+table,caption,thead,tbody,tfoot,
+tr,th,td {
+    margin:0;
+    padding:0;
+}
+body {
+    color:#333;
+    font:16px/1.6 Arial, 微软雅黑, 宋体, sans-serif;
+}
+ul,ol {
+    list-style:none;
+}
+a {
+    color:#27507f;
+    text-decoration:none;
+    outline:none;
+}
+.cf:after {
+    content:'';
+    height:0;
+    visibility:hidden;
+    display:block;
+    clear:both;
+}
+.cf {
+    zoom:1; /* IE6,7 haslayout */
+}
+
+/* Body */
+#wrapper {
+    width:960px;
+    margin:50px auto;
+    background:#fafafa;
+}
+.section {
+    background:#e6f0f5;
+}
+.title {
+    float:left;
+    width:192px;
+}
+.title h2 {
+    padding-top: 5px;
+    font-size:22px;
+    text-align:center;
+    background:#b4d8f4;
+}
+.content {
+    float:right;
+    padding:10px 0;
+    width:768px;
+    border-top:2px solid #b4d8f4;
+    background:#fafafa;
+}
+.info {
+}
+.info-meta {
+    float:left;
+    width:576px;
+}
+.info-meta {
+    border-collapse:collapse;
+}
+.info-meta td {
+    padding:10px;
+}
+.info-meta .name {
+    width:192px;
+    padding-left: 48px;
+    font-size:32px;
+}
+.info-meta .gender {
+    width:50px;
+}
+.info-meta .edu td,
+.info-meta .phone td,
+.info-meta .email td {
+    padding-left:48px;
+}
+.info-meta .edu td {
+    background:url(../images/edu.png) no-repeat 10px center;
+}
+.info-meta .phone td {
+    background:url(../images/phone.png) no-repeat 10px center;
+}
+.info-meta .email td {
+    background:url(../images/email.png) no-repeat 10px center;
+}
+.avatar {
+    float:right;
+    width:192px;
+}
+.avatar img {
+    margin: 0 auto;
+    display:block;
+    width:132px;
+    border:5px solid #fff;
+    box-shadow: 1px 1px 2px 0 #aaa;
+}
+.tech .content ul,
+.work .content ul,
+.site .content ul {
+    padding-left:30px;
+    color:#999;
+    list-style-type:disc;
+}
+.tech .content li {
+    line-height: 1.8;
+}
+.tech .content span {
+    color:#333;
+}
+.work .content a:hover,
+.site .content a:hover {
+    text-decoration:underline;
+}
+.book .navi {
+    float:right;
+    margin-right:10px;
+}
+.book .navi a {
+    float:left;
+    display:block;
+    margin:0 5px;
+    width:24px;
+    height:24px;
+    text-indent:-9999px;
+    background:url(../images/prev.png) no-repeat top left;
+}
+.book .navi .next {
+    background-image:url(../images/next.png);
+}
+.book .navi .poff {
+    background-image:url(../images/prev-off.png);
+}
+.book .navi .noff {
+    background-image:url(../images/next-off.png);
+}
+.book .slide-box {
+    position:relative;
+    width:768px;
+    height:256px;
+    overflow:hidden;
+}
+.book .slide-box .list {
+    position:absolute;
+    top:0;
+    left:0;
+    width:2304px;
+}
+.book .slide-box li {
+    float:left;
+}
+.book .slide-box a {
+    display:block;
+    margin:10px;
+    width:172px;
+    text-align:center;
+    line-height:236px;
+}
+.book .slide-box img {
+    width:172px;
+    vertical-align:middle;
+    border:none;
+}

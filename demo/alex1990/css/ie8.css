@@ -1,0 +1,32 @@
+/* opacity */
+.thumbnail a:hover img {
+    filter:alpha(opacity=75);
+}
+/* search input border */
+.search .search-input {
+    border-color:#ddd;
+}
+/****** The following bugs come cross in IE6/7 *****/
+/* Fix the floating element down to next line */
+* html .post-meta {
+    zoom: 1;
+}
+* html .post-meta span {
+    float: left;
+}
+* html .post-meta .post-comment {
+    float: right;
+}
+/* Fix the inline element top/bottom padding */
+* html .pagination span,
+* html .pagination a {
+    zoom: 1;
+    vertical-align: bottom;
+}
+/* Remove the submit input white space */
+* html .comment-submit {
+    padding: 0 15px;
+    height: 29px;
+    line-height: 29px;
+    overflow: visible;
+}

@@ -1,0 +1,69 @@
+/*
+ * jd-tree-menu.css
+ */
+
+/* reset */
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: Arial, 微软雅黑, sans-serif;
+    font-size: 14px;
+    line-height: 1;
+}
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    outline: none;
+}
+/* sortlist */
+#container {
+    width: 1020px;
+    margin: 50px auto;
+}
+#sortlist {
+    width: 200px;
+    border: 1px solid #ddd;
+    border-top: 2px solid #aaa;
+}
+.item h2 {
+    padding: 5px 0 5px 20px;
+    font-weight: 400;
+    font-size: 16px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+.item span {
+    margin-right: 10px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #fafafa;
+    background: #ccc;
+}
+.item ul {
+    display: none;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+#sortlist .cur ul {
+    display: block;
+}
+.item li {
+    padding-left: 50px;
+}
+.item a {
+    font: 13px/24px Arial, 宋体, sans-serif;
+    color: #444;
+}
+.item a:hover {
+    text-decoration: underline;
+    color: #e6393c;
+}

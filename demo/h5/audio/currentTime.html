@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <audio id="audio" src="7days.mp3" controls>Your browser does not support audio element</audio>
+    <button id="btn">currentTime</button>
+    <script>
+        var btn = document.getElementById('btn'),
+            audio = document.getElementById('audio');
+
+        btn.addEventListener('click', function() {
+            console.log(audio.currentTime);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+/*
+ * ie6-8 style 
+ */
+
+/* nav item hover background semi transparent */
+#nav a:hover,
+#nav .cur a {
+    background: #153346;
+    /* The cursor will flash in moving if the below code is added */
+/*     background: transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f20546c,endColorstr=#7f20546c);
+    zoom: 1; */
+}
+/* sidebar background semi transparent */
+#sidebar {
+    background: transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f202020,endColorstr=#7f202020);
+    zoom: 1;
+}
+/* sidenav item hover semi transparent */
+/* The background will twinkle */
+/* #sidebar .sidenav .sub-sidenav a:hover {
+    background: transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f404040,endColorstr=#7f404040);
+    zoom: 1;
+}*/
+/* footer background semi transparent */
+#footer {
+    background: transparent;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,endColorstr=#7f000000);
+    zoom: 1;
+}

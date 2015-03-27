@@ -1,0 +1,159 @@
+/*
+ * gtab-test1.css
+ */
+
+/* reset */
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+body {
+    font-family: Arial, 微软雅黑, 宋体, sans-serif;
+    font-size: 12px;
+    line-height: 1;
+    vertical-align: baseline;
+}
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    outline: none;
+}
+img {
+    display: block;
+    border: none;
+}
+.cf:after {
+    content: '';
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+.cf {
+    zoom: 1;
+}
+/* ranklist */
+.wrapper {
+    width: 760px;
+    margin: 0 auto;
+}
+.wrapper h1 {
+    margin: 30px 0;
+    font-size: 32px;
+    color: #5cc;
+}
+.example {
+    margin: 50px 0;
+}
+.example h2 {
+    margin: 20px 0;
+    padding-top: 10px;
+    font-size: 28px;
+    font-weight: 400;
+    color: #777;
+    border-top: 2px solid #eee;
+}
+.ranklist {
+    width: 210px;
+    border: 1px solid #ddd;
+}
+.ranklist h3 {
+    padding-left: 10px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 28px;
+    background: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+}
+.ranklist .tab {
+    border-bottom: 1px solid #ddd;
+}
+.ranklist .gtab {
+    position: relative;
+    height: 430px;
+    overflow: hidden;
+}
+.example-3 .tc {
+    position: absolute;
+    left: 0;
+}
+.example-4 .tc {
+    position: relative;
+}
+.example-4 .tc-item {
+    position: absolute;
+}
+.ranklist .tc-item {
+    width: 210px;
+}
+.ranklist .tab-item {
+    float: left;
+    margin: 10px 0 0 4px;
+    padding: 5px 10px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    cursor: pointer;
+    display: inline;
+}
+.ranklist .tab .cur {
+    margin-bottom: -1px;
+    font-weight: 700;
+    color: #e6393c;
+    background: #fff;
+    border-bottom: 1px solid #fff;
+    z-index: 10;
+}
+.ranklist .hide {
+    display: none;
+}
+.ranklist .tabcon li {
+    position: relative;
+    height: 50px;
+    margin: 0 5px;
+    padding: 10px 5px 5px 80px;
+    border-top: 1px dotted #ddd;
+}
+.ranklist .tabcon .item-1 {
+    border-top: none;
+}
+.ranklist .tabcon span {
+    position: absolute;
+    left: 10px;
+    display: block;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    color: #aaa;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+}
+.ranklist .tabcon .item-1 span,
+.ranklist .tabcon .item-2 span,
+.ranklist .tabcon .item-3 span {
+    color: #e6393c;
+    border-color: #e6393c;
+}
+.ranklist .p-img {
+    position: absolute;
+    left: 30px;
+}
+.ranklist .p-name {
+    height: 30px;
+}
+.ranklist .tabcon a {
+    color: #333;
+}
+.ranklist .tabcon a:hover {
+    color: #e6393c;
+    text-decoration: underline;
+}
+.ranklist .tabcon strong {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e6393c;
+}
