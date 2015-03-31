@@ -57,7 +57,7 @@
         <h2 id="经典">经典</h2>
 <p>以前最经典的清除浮动方法是利用<code>:after</code>伪元素，代码如下：</p>
 <pre><code><span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
-   <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>; <span class="comment">/* 元素内容后面，即元素闭合标签前面加个点 */</span>
+   <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">"."</span></span></span>; <span class="comment">/* 元素内容后面，即元素闭合标签前面加个点 */</span>
    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>; <span class="comment">/* 伪元素高度为0 */</span>
    <span class="rule"><span class="attribute">visibility</span>:<span class="value"> hidden</span></span>; <span class="comment">/* 隐藏伪元素内容 */</span>
    <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>; <span class="comment">/* 默认是inline，所以默认clear不起作用 */</span>
@@ -72,7 +72,7 @@
 <p>鉴于以上问题，上面文章的作者后来在<a href="http://www.yuiblog.com/blog/2010/09/27/clearfix-reloaded-overflowhidden-demystified/" target="_blank" rel="external">clearfix Reloaded + overflow:hidden Demystified</a>一文中介绍了一种技术，利用<code>:before</code>伪元素在被清除浮动元素的内容前面插入伪元素，并设置<code>overflow:hidden</code>使该伪元素具有BFC，因此可以阻止与内部元素垂直方向的外边距叠加。代码如下：</p>
 <pre><code><span class="class">.clearfix</span><span class="pseudo">:before</span>,
 <span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
-    <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>;
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">"."</span></span></span>;
     <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>;
     <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>;
     <span class="rule"><span class="attribute">overflow</span>:<span class="value"> hidden</span></span>;
@@ -87,7 +87,7 @@
 <p>此后，来自Twitter的Nicolas Gallagher，也是normalize.css的作者，提出了一个更精简的实现方法，被他称为“micro clearfix”，此方法讲解可参考其写的一篇文章：<a href="http://nicolasgallagher.com/micro-clearfix-hack/" target="_blank" rel="external">A new micro clearfix hack</a>。其代码如下：</p>
 <pre><code><span class="class">.cf</span><span class="pseudo">:before</span>,
 <span class="class">.cf</span><span class="pseudo">:after</span> <span class="rules">{
-    <span class="rule"><span class="attribute">content</span>:<span class="value"> “ ”</span></span>;
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">" "</span></span></span>;
     <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
 <span class="rule">}</span></span>
 <span class="class">.cf</span><span class="pseudo">:after</span> <span class="rules">{

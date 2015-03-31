@@ -67,10 +67,10 @@
 <li>hr</li>
 <li>input、select、textarea、button</li>
 <li>iframe、embed、object、applet</li>
-<li><p>marquee<br>上面没几个是常用的元素，需要指出的是hasLayout不是CSS属性，不可以通过设置hasLayout = true 使元素拥有布局，可以通过设置某些CSS属性来触发hasLayout属性：</p>
+<li><p>marquee</p>
+<p>上面没几个是常用的元素，需要指出的是hasLayout不是CSS属性，不可以通过设置hasLayout = true 使元素拥有布局，可以通过设置某些CSS属性来触发hasLayout属性：</p>
 </li>
-<li><p>float: left/right;</p>
-</li>
+<li>float: left/right;</li>
 <li>display: inline-block;</li>
 <li>width: 任何值</li>
 <li>height: 任何值</li>
@@ -93,7 +93,7 @@
 <p><strong>包含浮动元素(Containing Floats):</strong></p>
 <p>即一个容器内子元素浮动，若容器具有Layout，则容器会包含子元素，也就是自动扩展以适应内容(extend-to-fit)。设置容器高度，百分比为单位时，IE7才会自动扩展overflow:hidden|scroll|auto; 添加layout，仅对IE7有效，且在IE7中的表现和在其他现在浏览器中一样，会包含子元素。position: fixed同样。</p>
 <p>另外，若容器相对定位，比如向左偏移（left: -20px），则在IE6中，浮动的子元素不会跟着发生偏移，除非容器具有layout</p>
-<p><strong>紧跟浮动元素的元素(Elements next to floats：</strong></p>
+<p><strong>紧跟浮动元素的元素(Elements next to floats)：</strong></p>
 <p>若为块级元素，其包含的内容会被浮动元素挤占(标准情况下)</p>
 <p>如果块级元素具有layout，则块级元素也会被浮动元素挤开，并且其包含的的内容也不会跑到浮动元素的下面形成环绕。另外在给块级元素使用相对定位时，相对原点也会从浮动元素的右上角计算。还有注意IE6下的3像素偏移bug。</p>
 <p><strong>列表的项目符号</strong></p>

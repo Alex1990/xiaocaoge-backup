@@ -61,13 +61,20 @@
 <p>下面接着说利用CSS生成内容方法清理浮动元素的影响。</p>
 <p>通常是对要清理的浮动元素添加clearfix类名，然后添加如下代码：</p>
 <pre><code><span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
-    <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>;
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">"."</span></span></span>;
     <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>;
     <span class="rule"><span class="attribute">visibility</span>:<span class="value"> hidden</span></span>;
     <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>;
     <span class="rule"><span class="attribute">clear</span>:<span class="value"> both</span></span>;
 <span class="rule">}</span></span>
-</code></pre><p><strong>说明几点：</strong><br>1. 此方法在现代浏览器中能用，在IE6/7下不能用，因IE6/7不支持:after伪元素；<br>2. 经测试content: “”;也会使此方法生效；<br>3. 高度为0，为了不使生成的内容占据垂直空间，visibility: hidden为了使内容不显示，因为生成的内容默认display属性值为inline，即为行框，而行框的上4 下外边距无效，影响清除，所以要设置：display: block；<br>4. content属性是在元素<strong>内容</strong>后面添加内容，因此添加的内容仍被元素包裹着；<br>5. 类名为什么为clearfix而不是clear呢？这个还真不太清楚，很多著名网站都用clearfix吧，也能区别以前的clear方法。</p>
+</code></pre><p><strong>说明几点：</strong></p>
+<ol>
+<li>此方法在现代浏览器中能用，在IE6/7下不能用，因IE6/7不支持:after伪元素；</li>
+<li>经测试content: “”;也会使此方法生效；</li>
+<li>高度为0，为了不使生成的内容占据垂直空间，visibility: hidden为了使内容不显示，因为生成的内容默认display属性值为inline，即为行框，而行框的上下外边距无效，影响清除，所以要设置：display: block；</li>
+<li>content属性是在元素<strong>内容</strong>后面添加内容，因此添加的内容仍被元素包裹着；</li>
+<li>类名为什么为clearfix而不是clear呢？这个还真不太清楚，很多著名网站都用clearfix吧，也能区别以前的clear方法。</li>
+</ol>
 <p>IE6/7下要想使此方法生效，就得添加以下代码：</p>
 <pre><code><span class="class">.clearfix</span> <span class="rules">{<span class="rule"><span class="attribute">zoom</span>:<span class="value"> <span class="number">1</span></span></span>;<span class="rule">}</span></span>
 </code></pre><p>zoom:1可激活IE的专有属性hasLayout,有关神奇的引起诸多IE6 CSSbug的hasLayout属性，详情移步至：</p>

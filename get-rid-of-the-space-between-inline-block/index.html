@@ -55,17 +55,18 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>通常在两个相邻元素均设置display:inline-block后，两个元素之间会有空白间隙（大多数浏览器中为4px），如下面代码：</p>
+<p>HTML:</p>
 <pre><code><span class="tag">&lt;<span class="title">ul</span>&gt;</span>
     <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>One<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
     <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Two<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
     <span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Three<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
 <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
-
-ul a {
-    display: inline-block;
-    padding: 5px;
-    background: #aaa;
-}
+</code></pre><p>CSS:</p>
+<pre><code><span class="tag">ul</span> <span class="tag">a</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> inline-block</span></span>;
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">5px</span></span></span>;
+    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#aaa</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>形成空白是因为浏览器把标签间的空白当成一个文本节点来渲染。消除空白的方法很多，从HTML代码、CSS、JavaScript入手的都有，但是能够跨浏览器、简单的方法并不是很多，自己还没找到一种完美的方法。不过已知的方法，足以用来应付日常开发了，下面从HTML、CSS、JavaScript三方面介绍。</p>
 <h3 id="HTML">HTML</h3>
 <p>最直接简单的一种就是把标签写在一行，消除标签间空白。此方法兼容所有浏览器，只是一来写在一行看着不习惯，二来用感觉应该用CSS控制样式规范些。<br>还有各种改变标签写法的方法，详细参考：</p>

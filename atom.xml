@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.xiaocaoge.com/"/>
-  <updated>2015-03-27T13:40:45.538Z</updated>
+  <updated>2015-03-31T16:10:31.114Z</updated>
   <id>http://www.xiaocaoge.com/</id>
   
   <author>
@@ -54,7 +54,7 @@ grub-install --root-directory=<span class="regexp">/media/</span>tempdir <span c
     <link href="http://www.xiaocaoge.com/install-windows7-in-ubuntu/"/>
     <id>http://www.xiaocaoge.com/install-windows7-in-ubuntu/</id>
     <published>2014-08-13T13:30:41.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-30T15:00:06.000Z</updated>
     <content type="html"><![CDATA[<p>由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 grub 给覆盖。</p>
 <p>系统现状：Debian 与 Ubuntu 14.04 双系统，Debian 是前一位离职人员使用的，我安装 Ubuntu 时没有把它删除。</p>
 <p>由于没有删除 Debian，所以 boot 分区是它所在的分区（/sda1），然后我怎么改 Ubuntu 里面的 grub 配置，都没办法使 Ubuntu 成为开机启动项的第一项，我觉得和 boot 分区是 Debian 所在分区有关。当然，这是我在直接格式化 Debian 所在的分区之后才反应过来的，因为删除之后，重启直接进入了 grub rescue 模式。至于我为什么去格式化 Debian 分区，因为我要装 Win7，我一直修改 Ubuntu 里面的 grub，总是无法让 Ubuntu 成为启动项第一，心里烦了，反正 Debian 里面有什么与我无关，反正我也不知道删除它会怎么样。</p>
@@ -64,11 +64,11 @@ grub-install --root-directory=<span class="regexp">/media/</span>tempdir <span c
 <p>如何从 grub rescue 模式进入到 Ubuntu 呢？详细可参考此文：<a href="http://blog.chinaunix.net/uid-22915173-id-229241.html" target="_blank" rel="external">grub rescue 救援模式的处理</a>。</p>
 <p>grub rescue 模式下，只有几个命令可用：<code>ls</code>、<code>set</code>、<code>insmod</code>、<code>root</code>、<code>prefix</code>。</p>
 <p>执行以下命令：</p>
-<pre><code>grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> root<span class="subst">=</span>(hd0,msdos2) <span class="comment">// 设定 grub 启动分区，Ubuntu 所在分区</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> prefix<span class="subst">=</span>(hd0,msdos2)/boot/grub <span class="comment">// 设定 grub 启动路径</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> <span class="comment">// 查看设置情况</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;insmod /boot/grub/i386<span class="attribute">-pc</span>/normal<span class="built_in">.</span>mod <span class="comment">// 加载基本模块</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;normal <span class="comment">// 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入</span>
+<pre><code>grub rescue&gt;<span class="built_in">set</span> root=(hd0,msdos2)<span class="comment"> // 设定 grub 启动分区，Ubuntu 所在分区</span>
+grub rescue&gt;<span class="built_in">set</span> prefix=(hd0,msdos2)/boot/grub<span class="comment"> // 设定 grub 启动路径</span>
+grub rescue&gt;<span class="built_in">set</span><span class="comment"> // 查看设置情况</span>
+grub rescue&gt;insmod /boot/grub/i386-pc/<span class="keyword">normal</span>.<span class="operator">mod</span><span class="comment"> // 加载基本模块</span>
+grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入</span>
 </code></pre><p>上面需要注意 normal.mod 模块位置，我的 Ubuntu 14.04 在 <code>grub/i386-pc/</code> 目录下，有些就在 <code>grub/</code> 目录下。</p>
 <p>进入到 Ubuntu 之后，还要重新安装 grub 引导，更新 grub 配置才可以。执行以下命令：</p>
 <pre><code>grub-<span class="operator"><span class="keyword">install</span> /dev/sda
@@ -94,11 +94,11 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/redefine-clearfix-float/"/>
     <id>http://www.xiaocaoge.com/redefine-clearfix-float/</id>
     <published>2014-05-25T07:16:09.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-31T14:20:41.000Z</updated>
     <content type="html"><![CDATA[<h2 id="经典">经典</h2>
 <p>以前最经典的清除浮动方法是利用<code>:after</code>伪元素，代码如下：</p>
 <pre><code><span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
-   <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>; <span class="comment">/* 元素内容后面，即元素闭合标签前面加个点 */</span>
+   <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">"."</span></span></span>; <span class="comment">/* 元素内容后面，即元素闭合标签前面加个点 */</span>
    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>; <span class="comment">/* 伪元素高度为0 */</span>
    <span class="rule"><span class="attribute">visibility</span>:<span class="value"> hidden</span></span>; <span class="comment">/* 隐藏伪元素内容 */</span>
    <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>; <span class="comment">/* 默认是inline，所以默认clear不起作用 */</span>
@@ -113,7 +113,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
 <p>鉴于以上问题，上面文章的作者后来在<a href="http://www.yuiblog.com/blog/2010/09/27/clearfix-reloaded-overflowhidden-demystified/" target="_blank" rel="external">clearfix Reloaded + overflow:hidden Demystified</a>一文中介绍了一种技术，利用<code>:before</code>伪元素在被清除浮动元素的内容前面插入伪元素，并设置<code>overflow:hidden</code>使该伪元素具有BFC，因此可以阻止与内部元素垂直方向的外边距叠加。代码如下：</p>
 <pre><code><span class="class">.clearfix</span><span class="pseudo">:before</span>,
 <span class="class">.clearfix</span><span class="pseudo">:after</span> <span class="rules">{
-    <span class="rule"><span class="attribute">content</span>:<span class="value"> “.”</span></span>;
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">"."</span></span></span>;
     <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>;
     <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">0</span></span></span>;
     <span class="rule"><span class="attribute">overflow</span>:<span class="value"> hidden</span></span>;
@@ -128,7 +128,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
 <p>此后，来自Twitter的Nicolas Gallagher，也是normalize.css的作者，提出了一个更精简的实现方法，被他称为“micro clearfix”，此方法讲解可参考其写的一篇文章：<a href="http://nicolasgallagher.com/micro-clearfix-hack/" target="_blank" rel="external">A new micro clearfix hack</a>。其代码如下：</p>
 <pre><code><span class="class">.cf</span><span class="pseudo">:before</span>,
 <span class="class">.cf</span><span class="pseudo">:after</span> <span class="rules">{
-    <span class="rule"><span class="attribute">content</span>:<span class="value"> “ ”</span></span>;
+    <span class="rule"><span class="attribute">content</span>:<span class="value"> <span class="string">" "</span></span></span>;
     <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
 <span class="rule">}</span></span>
 <span class="class">.cf</span><span class="pseudo">:after</span> <span class="rules">{
@@ -403,7 +403,7 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
     <link href="http://www.xiaocaoge.com/markdown-syntax/"/>
     <id>http://www.xiaocaoge.com/markdown-syntax/</id>
     <published>2014-04-08T20:14:17.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-30T15:34:32.000Z</updated>
     <content type="html"><![CDATA[<h2 id="简介">简介</h2>
 <p><a href="http://en.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a>是一种为了提高文档易读性与易写性的纯文本格式规范，其可以转换成HTML，从而可以利用CSS定制其样式。Markdown语法非常简单，而且语法符号也是为了快速书写文本而设计。Markdown发布已经很久了，其初由John Gruber与Aaron Swartz于2004年合作发布，<a href="https://daringfireball.net/projects/markdown/basics" target="_blank" rel="external">最初的发布版本</a>。直到现在，并没有一个统一的标准规范，各个实现版本会有些不同，不过基础的语法基本是相同的。Markdown已经应用在很多地方，如Github、Stackoverflow、reddit等网站，也应用于项目的ReadMe文件、一些论坛、写邮件、博客等地方。有多种实现的语言版本，也有多个系统平台上的编辑器实现，在线编辑器也有，这些可以谷歌会得到很多结果。</p>
 <h2 id="语法">语法</h2>
@@ -426,69 +426,58 @@ grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;norma
 &gt;</span> 这和上面是同一段引用</span>
 &gt; 这和上面是同一段引用
 </code></pre><h3 id="代码">代码</h3>
-<p>内嵌代码用    </p>
-<pre><code>### 列表
-
-无序列表用<span class="escape">`*</span><span class="escape">`或</span><span class="escape">`+</span><span class="escape">`或</span><span class="escape">`-</span><span class="escape">`开</span>头表示：
-markdown
-</code></pre><ul>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<p>  或<br>  markdown</p>
-</li>
-</ul>
-<ul>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<p>  或<br>  markdown</p>
-</li>
-</ul>
-<ul>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<p>  有序列表用数字跟一个英文句点表示：<br>  markdown</p>
-</li>
-</ul>
-<ol>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<h3 id="强调">强调</h3>
-<p> 包括斜体与粗体，分别对应HTML中的<code>em</code>与<code>strong</code>标签。斜体为两边各一个<code>#</code>或<code>_</code>包裹，而粗体用<code>##</code>或<code>__</code>包裹，斜体可与粗体嵌套，比如：<code>##_斜粗体_##</code>。<br> markdown</p>
-<h1 id="斜体">斜体</h1>
-<p><em>斜体</em></p>
-<h2 id="粗体">粗体</h2>
-<p><strong>粗体</strong></p>
-<h2 id="斜粗体##`"><em>斜粗体</em>##`</h2>
-<h3 id="超链接">超链接</h3>
-<p> 超链接文本放在<code>[]</code>中，而超链接地址放在紧跟其后面的<code>()</code>中。<br> markdown<br><a href="http://www.baidu.com" target="_blank" rel="external">百度</a></p>
-<h3 id="图片">图片</h3>
-<p> 图片与超链接语法类似：</p>
+<p>内嵌代码用反引号<code>` </code>，如<code>`background: #fff;` </code>。代码块使用四个空格或一个Tab缩进。</p>
+<h3 id="列表">列表</h3>
+<p>无序列表用<code>*</code>或<code>+</code>或<code>-</code>开头表示：</p>
+<pre><code><span class="bullet">* </span>项目一
+<span class="bullet">* </span>项目二
+<span class="bullet">* </span>项目三
+</code></pre><p>或</p>
+<pre><code><span class="addition">+ 项目一</span>
+<span class="addition">+ 项目二</span>
+<span class="addition">+ 项目三</span>
+</code></pre><p>或</p>
+<pre><code>-<span class="ruby"> 项目一
+</span>-<span class="ruby"> 项目二
+</span>-<span class="ruby"> 项目三</span>
+</code></pre><p>有序列表用数字跟一个英文句点表示：</p>
+<pre><code><span class="bullet">1. </span>项目一
+<span class="bullet">2. </span>项目二
+<span class="bullet">3. </span>项目三
+</code></pre><h3 id="强调">强调</h3>
+<p>包括斜体与粗体，分别对应HTML中的<code>em</code>与<code>strong</code>标签。斜体为两边各一个<code>#</code>或<code>_</code>包裹，而粗体用<code>##</code>或<code>__</code>包裹，斜体可与粗体嵌套，比如：<code>##_斜粗体_##</code>。</p>
+<pre><code><span class="preprocessor">#斜体#</span>
+_斜体_
+<span class="preprocessor">##粗体##</span>
+__粗体__
+<span class="preprocessor">##_斜粗体_##`</span>
+</code></pre><h3 id="超链接">超链接</h3>
+<p>超链接文本放在<code>[]</code>中，而超链接地址放在紧跟其后面的<code>()</code>中。</p>
+<pre><code>[<span class="link_label">百度</span>](<span class="link_url">http://www.baidu.com</span>)
+</code></pre><h3 id="图片">图片</h3>
+<p>图片与超链接语法类似：</p>
 <ul>
 <li>一个英文感叹号<code>!</code></li>
 <li>接一个[]包裹的文本，其文本为图片无法显示时的替代文字，<code>![替代文字]</code></li>
-<li><p>接一个()包裹的图片链接，<code>![替代文字](http://www.domain.com/photo.jpg)</code></p>
-<p>在图片链接的后面还可以跟一个鼠标悬停在图片上时显示的文字：<br>markdown<br><img src="http://www.domain.com/photo.jpg “鼠标悬停显示的文字&quot;" alt="替代文字"></p>
-<h3 id="转义特殊字符">转义特殊字符</h3>
-<p>Markdown允许通过反斜杠<code>\</code>来转义下面的特殊字符：<br>txt<br>\   反斜杠<br>`   反引号</p>
-</li>
+<li>接一个()包裹的图片链接，<code>![替代文字](http://www.domain.com/photo.jpg)</code></li>
 </ul>
-</li>
-</ol>
-<ul>
-<li>星号<br>_   下划线<br>{}  花括号<br>[]  方括号<br>()  括号<h1 id="井号">井号</h1>
-</li>
-</ul>
-<ul>
-<li>加号</li>
-</ul>
-<ul>
-<li>减号<br>.   英文句点<br>!   感叹号<br>```</li>
-</ul>
-<h2 id="更好的参考：">更好的参考：</h2>
+<p>在图片链接的后面还可以跟一个鼠标悬停在图片上时显示的文字：</p>
+<pre><code>![<span class="link_label">替代文字</span>](<span class="link_url">http://www.domain.com/photo.jpg "鼠标悬停显示的文字"</span>)
+</code></pre><h3 id="转义特殊字符">转义特殊字符</h3>
+<p>Markdown允许通过反斜杠<code>\</code>来转义下面的特殊字符：</p>
+<pre><code>\   反斜杠
+`   反引号
+<span class="bullet">*   </span>星号
+_   下划线
+{}  花括号
+[]  方括号
+()  括号
+<span class="header">#   井号</span>
+<span class="bullet">+   </span>加号
+<span class="bullet">-   </span>减号
+.   英文句点
+!   感叹号
+</code></pre><h2 id="更好的参考：">更好的参考：</h2>
 <ul>
 <li>Markdown Here Cheatsheet: <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet" target="_blank" rel="external">https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet</a></li>
 <li>Markdown语法说明：<a href="http://wowubuntu.com/markdown/" target="_blank" rel="external">http://wowubuntu.com/markdown/</a></li>
@@ -519,9 +508,9 @@ markdown
     <link href="http://www.xiaocaoge.com/understanding-viewport-and-device-width/"/>
     <id>http://www.xiaocaoge.com/understanding-viewport-and-device-width/</id>
     <published>2014-04-08T09:39:22.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-30T15:12:42.000Z</updated>
     <content type="html"><![CDATA[<p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
-<pre><code>&amp;lt;meta <span class="variable">name=</span>”viewport” <span class="variable">content=</span>”<span class="variable">width=</span>device-width” &amp;gt;
+<pre><code>&lt;meta <span class="variable">name=</span><span class="string">"viewport"</span> <span class="variable">content=</span><span class="string">"width=device-width"</span>&gt;
 </code></pre><p>content属性还包括initial-scale，user-scalable等，不过这里不谈，它们的意思都很容易理解。这里要谈得是：viewport代表什么？device-width又是啥？</p>
 <h3 id="先来理解两个概念：device_pixels与CSS_pixels。">先来理解两个概念：device pixels与CSS pixels。</h3>
 <p>device pixels指设备的物理像素，在PC端就是你在操作系统里设置的屏幕分辨率y，其值可以通过<code>screen.width/screen.height</code>获取。在移动端下面再说。</p>
@@ -542,7 +531,7 @@ markdown
 <p><a href="http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html" target="_blank" rel="external">http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html</a>。</p>
 <p>Chrome与Opera比较深入实现了中间层的概念，屏幕的实际分辨率与Web开发关系并不大，Chrome与Opera就将<code>screen.width</code>返回中间层的宽度。这里我也不明白哪种设计更好些。</p>
 <p>这里<a href="http://viewportsizes.com/?filter=" target="_blank" rel="external">有个链接</a>可以查看各种手机型号的device-width/device-height大小，虽然链接称为viewport size。</p>
-<h3 id="参考资源：">参考资源：</h3>
+<h2 id="参考资源：">参考资源：</h2>
 <ul>
 <li>A tale of two viewports - part one: <a href="http://www.quirksmode.org/mobile/viewports.html" target="_blank" rel="external">http://www.quirksmode.org/mobile/viewports.html</a></li>
 <li>A tale of two viewports - part two: <a href="http://www.quirksmode.org/mobile/viewports2.html" target="_blank" rel="external">http://www.quirksmode.org/mobile/viewports2.html</a></li>
@@ -555,7 +544,7 @@ markdown
 ]]></content>
     <summary type="html">
     <![CDATA[<p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
-<pre><code>&amp;lt;meta <span class="variable">name=</span>”viewport” <span class="variable">content=</spa]]>
+<pre><code>&lt;meta <span class="variable">name=</span><span class="string">"viewport"</span> <span class=]]>
     </summary>
     
       <category term="device-width" scheme="http://www.xiaocaoge.com/tag/device-width/"/>
@@ -839,7 +828,7 @@ markdown
     <link href="http://www.xiaocaoge.com/software-and-ecosystem/"/>
     <id>http://www.xiaocaoge.com/software-and-ecosystem/</id>
     <published>2013-10-17T20:00:27.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-31T14:13:57.000Z</updated>
     <content type="html"><![CDATA[<p>几乎所有人初次接触电脑时，脑子里很少有“软件”这个概念，太抽象了。自己第一次接触电脑还是在初中的电脑课程上，接触的第一批软件是金山打字、记事本、纸牌游戏之类的。至于那些经常去网吧的同学，还会接触到QQ、游戏之类的软件。除此之外如果没人教，也很少接触新的软件，本来电脑都很少接触。高中时学会玩红警与魔兽，还学会了迅雷下载。到了大学，既有了自己的电脑，也有了折腾电脑的时间，玩电脑的水平才有很大提高。</p>
 <p>刚上大学时，想不到转换格式用转换格式软件（其实还不知道格式是什么东西），不知道编辑图片用图片编辑软件，也不知道IE之外的浏览器，不知道文件或图片批量处理软件，总之有很多完全想不到。最可恶的是也不知道用百度搜一下。</p>
 <p>后来，逛软件下载站，疯狂的下载、试用、卸载软件，总算把常用类型的软件都熟悉了一下。的确，一个软件下载站就可以熟悉常用的软件，一个智商正常的人都有能力完成这个任务。再说还有大学上的计算机基础、计算机应用、计算机程序基础等课程，还有同学朋友的熏陶。这样，大部分人的计算机技能都够应付日常生活和工作了。</p>
@@ -864,7 +853,7 @@ markdown
 </li>
 </ul>
 <p>而且可以注意到，上面这些系统也都可以归属于更高层的系统。比如，jQuery只是JavaScript的一个库，而搜狗输入法不过只是一个软件。</p>
-<p>即使这样，哪有如何？虽未接触，但不难联想到一些3D、音频、视频编辑软件应该与Photoshop有类似的系统。而很多软件会有主题样式之类的。</p>
+<p>即使这样，那又如何？虽未接触，但不难联想到一些3D、音频、视频编辑软件应该与Photoshop有类似的系统。而很多软件会有主题样式之类的。</p>
 <p>这些生态系统也在各自发展、进化，就如同生物界的生态系统一样从低级到高级，从简单到复杂。比如编程语言从机器语言到汇编语言，再到高级语言。再比如JavaScript经过数年的发展到各种库的诞生，再到基于jQuery的Bootstrap，而且Bootstrap又有各种风格的主题。</p>
 <p>为什么会这样？和生物生态系统一样，这些发展能够适应所处的环境，不过不是自然环境，这里的环境主要就是指用户，所以要以用户为中心，客户至上。</p>
 <p>而且，这些系统想想也挺合理的，不可能期望所有人都是程序员，所有程序员都是优秀的。是的，最终用户只需选择就可以了。</p>
@@ -925,98 +914,106 @@ markdown
     <link href="http://www.xiaocaoge.com/vertical-align-methods/"/>
     <id>http://www.xiaocaoge.com/vertical-align-methods/</id>
     <published>2013-06-05T17:33:07.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-30T15:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>垂直居中包括单行文本居中、单元格（td）内容居中、块级元素居中。由于单元格的display属性为table-cell，且浏览器默认vertical-align:middle，所以就是默认垂直居中，不做考虑。要注意的就是vertical-align属性的含义是设置内联元素在行框（一行）内的垂直对齐方式，对于display:table-cell的元素也适用，但是IE8+才支持display:table-cell设置，于是就有了各种跨浏览器垂直对齐的方法。</p>
 <p><strong>DEMO：</strong><a href="http://www.xiaocaoge.com/demo/vertical-align/vertical-align.html" target="_blank" rel="external">vertical align methods</a></p>
-<h3 id="单行文本"><strong>单行文本</strong></h3>
+<h3 id="单行文本">单行文本</h3>
 <p>此种情况最简单，使用line-height来控制元素的高度即可，兼容IE6+及其他现代浏览器。</p>
+<p>HTML:</p>
 <pre><code>&lt;<span class="keyword">div</span>&gt;
-     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Text here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-.child {
-     line-height:<span class="number">50</span>px;
- }
+    &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Text here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">line-height</span>:<span class="value"><span class="number">50px</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>而此种方法对于display为inline或inline-block的元素也适用，只不过元素要加上vertical-align:middle，而且不兼容IE6。</p>
-<pre><code>&lt;<span class="keyword">div</span>&gt;
-     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;
-         &lt;img src=<span class="string">"images/1024.jpg"</span> alt=<span class="string">""</span> /&gt;
-     &lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-.child {
-     line-height:<span class="number">300</span>px;
- }
- img {
-     width:<span class="number">200</span>px;
-     vertical-align:<span class="keyword">middle</span>;
- }
-</code></pre><h3 id="块级元素"><strong>块级元素</strong></h3>
+<p>HTML:</p>
+<pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"child"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"images/1024.jpg"</span> <span class="attribute">alt</span>=<span class="value">""</span> /&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">line-height</span>:<span class="value"><span class="number">300px</span></span></span>;
+<span class="rule">}</span></span>
+<span class="tag">img</span> <span class="rules">{
+    <span class="rule"><span class="attribute">width</span>:<span class="value"><span class="number">200px</span></span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value">middle</span></span>;
+<span class="rule">}</span></span>
+</code></pre><h3 id="块级元素">块级元素</h3>
 <p>块级元素的垂直对齐方法有很多种，但有些方法必须要求知道和统一块级元素的高度，有些不需要但是跨浏览器支持不好，最后还得需要针对个别浏览器（IE6、7）单独设置。</p>
 <p><strong>元素高度预知：</strong></p>
 <p>（两种方法兼容IE6+，Chrome，Firefox，Safari，Opera）</p>
 <p>设置相等的内边距或外边距</p>
+<p>HTML:</p>
 <pre><code>&lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"parent"</span>&gt;
-     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-.parent {
-     padding:<span class="number">5</span>% <span class="number">0</span>;
- }
- .child {
-     height:<span class="number">50</span>px;
- }
+    &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.parent</span> <span class="rules">{
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"><span class="number">5%</span> <span class="number">0</span></span></span>;
+<span class="rule">}</span></span>
+<span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">height</span>:<span class="value"><span class="number">50px</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>绝对定位和负外边距</p>
-<pre><code>&lt;<span class="keyword">div</span> class=<span class="string">"parent"</span>&gt;
-     &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-<span class="string">.parent</span> {
-<span class="label">     position:</span>relative<span class="comment">;</span>
-<span class="label">     height:</span>100px<span class="comment">;</span>
- }
- <span class="string">.child</span> {
-<span class="label">     position:</span><span class="built_in">absolute</span><span class="comment">;</span>
-<span class="label">     top:</span><span class="number">50</span>%<span class="comment">;</span>
-<span class="label">     height:</span>50px<span class="comment">;</span>
-     margin-top:-25px<span class="comment">;</span>
- }
+<p>HTML:</p>
+<pre><code>&lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"parent"</span>&gt;
+    &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.parent</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value">relative</span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"><span class="number">100px</span></span></span>;
+<span class="rule">}</span></span>
+<span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value">absolute</span></span>;
+    <span class="rule"><span class="attribute">top</span>:<span class="value"><span class="number">50%</span></span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"><span class="number">50px</span></span></span>;
+    <span class="rule"><span class="attribute">margin-top</span>:<span class="value">-<span class="number">25px</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p><strong>元素高度不可预知：</strong></p>
 <p>table-cell方法</p>
 <p>(不兼容IE6-7)</p>
+<p>HTML:</p>
 <pre><code>&lt;<span class="keyword">div</span>&gt;
-     &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-<span class="string">.parent</span> {
-<span class="label">     display:</span> table<span class="comment">;</span>
- }
- <span class="string">.child</span> {
-<span class="label">     display:</span> table-cell<span class="comment">;</span>
-<span class="label">     height:</span> 200px<span class="comment">;</span>
-     vertical-<span class="preprocessor">align</span>:middle<span class="comment">;</span>
- }
+    &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.parent</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table-cell</span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">200px</span></span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value">middle</span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>兼容所有现在浏览器的方法</p>
 <p>DEMO: <a href="http://www.xiaocaoge.com/demo/vertical-align/multi-lined-text-vc.html" target="_blank" rel="external">multi-lined text vertical align</a></p>
-<pre><code>&lt;<span class="keyword">div</span>&gt;
-    &lt;<span class="keyword">div</span>&gt;
-       &lt;p&gt;To look best, <span class="type">text</span> should really be centered inside this bubble both vertically <span class="keyword">and</span> horizontally.&lt;/p&gt;
-    &lt;/<span class="keyword">div</span>&gt;
-&lt;/<span class="keyword">div</span>&gt;
-
-.area {
-display: table;
-    width: <span class="number">200</span>px;
-    height: <span class="number">150</span>px;
-    background: <span class="comment">#eee;</span>
-}
-.bubble {
-    display: table-cell;
-    vertical-align: <span class="keyword">middle</span>;
-}
-.bubble p {
-    border: <span class="number">1</span>px solid red;
-}
+<p>HTML:</p>
+<pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">p</span>&gt;</span>To look best, text should really be centered inside this bubble both vertically and horizontally.<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.area</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">200px</span></span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">150px</span></span></span>;
+    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#eee</span></span></span>;
+<span class="rule">}</span></span>
+<span class="class">.bubble</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table-cell</span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value"> middle</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.bubble</span> <span class="tag">p</span> <span class="rules">{
+    <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid red</span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>兼容IE6-7，利用条件注释单独设置，而且要添加一个多余的div标签，下面针对IE6-7的代码对于其他现代浏览器并不适用。</p>
+<p>HTML:</p>
 <pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
     <span class="tag">&lt;<span class="title">div</span>&gt;</span>
         <span class="tag">&lt;<span class="title">div</span>&gt;</span>
@@ -1108,7 +1105,7 @@ display: table;
     <link href="http://www.xiaocaoge.com/image-box/"/>
     <id>http://www.xiaocaoge.com/image-box/</id>
     <published>2013-06-04T06:58:55.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-30T15:19:06.000Z</updated>
     <content type="html"><![CDATA[<p>通过在同一页面实现图片的浏览与查看，从而带来更好的用户体验，越来越与客户端的图片查看工具功能类似。将来，用户只用在网络上寻找、存储、编辑图片，不用下载到本地了。通过原生JavaScript实现的一个image box，比利用jQuery现成的插件要复杂的多。需要综合应用DOM编程能力，所以最好能之前有DOM处理的常见函数，比如DOM节点遍历、创建、删除、插入等。另外还要有处理BOM的函数，比如元素位置获得和修改、元素尺寸获得和修改、元素透明度变化等。这些东西都是《精通JavaScript》一书讲的，这本书对于如何打造自己的库很有帮助，当然对于学习jQuery也有用。书中讲了一个image box是实现，所以自己也跟着实现了一个。</p>
 <p>DEMO：<a href="http://www.xiaocaoge.com/demo/imagebox/image-gallery.html" target="_blank" rel="external">image-gallery.html</a></p>
 <p>有了之前的DOM和BOM函数库就可以很方便的开始编写了，学到的一些东西：</p>
@@ -1118,7 +1115,7 @@ display: table;
 <p>无论渐变进入还是滑动进入动画效果，要看的自然些，应该开始的时候变化快，然后变化慢。</p>
 <p><strong>渐进增强的JavaScript</strong></p>
 <p>在JavaScript不能作用时仍然能够查看图片，可以为图片缩略图添加链接到图片地址的超链接。</p>
-<p><strong>相关jQuery**</strong>插件**</p>
+<p><strong>相关jQuery插件</strong></p>
 <p>插件不仅可以实现图片的查看，还可以是其他任何HTML代码片段，比如注册、登录等。插件的兼容性处理都很好，从而只需关注那些需要定制的东西，如按钮样式、动画效果等。缺点可能就是需要依赖jQuery、也包括一些自己不需要的功能。</p>
 <p>Fancybox</p>
 <p>官网：<a href="http://fancybox.net/" target="_blank" rel="external">http://fancybox.net/</a></p>
@@ -1141,18 +1138,18 @@ display: table;
     <link href="http://www.xiaocaoge.com/drop-menu-and-tab-panel/"/>
     <id>http://www.xiaocaoge.com/drop-menu-and-tab-panel/</id>
     <published>2013-06-02T14:26:35.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-03-31T14:11:08.000Z</updated>
     <content type="html"><![CDATA[<p>下拉菜单与Tab面板很相似，本质来说就是一种东西，相似的HTML代码结构，CSS设置，JavaScript代码。不考虑IE6，仅限hover事件的话，均可通过纯CSS实现。</p>
 <p>下拉菜单可以有两种HTML代码结构，一种是主菜单包含子菜单，另一种是主菜单与子菜单同一层级。Tab面板HTML代码结构也同样是这两种。如下图所示：<br><a href="http://www.xiaocaoge.com/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><a href="http://www.xiaocaoge.com/uploads/2013/02/3158712188747102097.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/3158712188747102097.png" alt="3158712188747102097"></a></a></p>
 <p>对于下拉菜单，纯CSS的实现方式必须采用第一种结构；对于Tab面板，两种结构均可以。不过个人认为第一种包含式结构更合理，禁用CSS的情况下，有条理。<span style="color: #888888;">（PS：不过没有数据说明有多少用户是禁用CSS的？有多少是禁用JS的？又有多少使用屏幕阅读器的？有多少国内开发者考虑这些的？）</span></p>
 <p>采用第二种结构，在写JS时，通常会通过标签的ID来传递数据。比如主导航的一个列表项目为</p>
-<pre><code><span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">”css”</span>&gt;</span>CSS<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+<pre><code><span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">"css"</span>&gt;</span>CSS<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
 </code></pre><p>其对应的子菜单代码为</p>
-<pre><code><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">”sub-css”</span>&gt;</span>
+<pre><code><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">"sub-css"</span>&gt;</span>
  …
 <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
 </code></pre><p>通过ID的如此命名，从而建立其联系，这对于那些并不是每个主导航的列表项都有下拉菜单时是很关键的。</p>
-<p>兼容IE6：通过JS或者jQuery很容易实现。因为IE6不支持出a元素之外的:hover伪类，添加hover事件，添加/去除类（比如“hover”，“on”）来模拟:hover伪类。</p>
+<p>兼容IE6：通过JS或者jQuery很容易实现。因为IE6不支持除a元素之外的:hover伪类，添加hover事件，添加/去除类（比如“hover”，“on”）来模拟:hover伪类。</p>
 <p>附自己写的一些导航栏和Tab面板：</p>
 <p>导航栏：</p>
 <p><a href="http://www.xiaocaoge.com/demo/nav-example/nav-examples.html" target="_blank" rel="external">nav-examples</a></p>

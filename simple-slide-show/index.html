@@ -55,30 +55,30 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>通过Jqurey只需要几行代码就可以实现最简单的图片循环播放，非常容易实现。</p>
-<h3 id="基础版"><strong>基础版</strong></h3>
-<p>下面是HTML和CSS代码：</p>
+<h3 id="基础版">基础版</h3>
+<p>HTML:</p>
 <pre><code>&lt;div <span class="variable">id=</span><span class="string">"slideshow"</span>&gt;
     &lt;img <span class="variable">src=</span><span class="string">"images/1.jpg"</span> <span class="variable">alt=</span><span class="string">""</span> /&gt;
     &lt;img <span class="variable">src=</span><span class="string">"images/2.jpg"</span> <span class="variable">alt=</span><span class="string">""</span> /&gt;
     &lt;img <span class="variable">src=</span><span class="string">"images/3.jpg"</span> <span class="variable">alt=</span><span class="string">""</span> /&gt;
 &lt;/div&gt;
-
-<span class="comment">#slideshow {</span>
-     position: relative;
-     width: <span class="number">512</span>px;
-     height: <span class="number">384</span>px;
-     overflow: hidden;
- }
- <span class="comment">#slideshow img {</span>
-     position: absolute;
-     top: <span class="number">0</span>;
-     left: <span class="number">0</span>;
-     width: <span class="number">512</span>px; <span class="comment">/* 统一图片宽度 */</span>
-     z-index:<span class="number">1</span>;
- }
- <span class="comment">#slideshow img.active {</span>
-     z-index: <span class="number">3</span>; <span class="comment">/* 当前图片处于最前（上）层 */</span>
-}
+</code></pre><p>CSS:</p>
+<pre><code><span class="id">#slideshow</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value"> relative</span></span>;
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">512px</span></span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">384px</span></span></span>;
+    <span class="rule"><span class="attribute">overflow</span>:<span class="value"> hidden</span></span>;
+<span class="rule">}</span></span>
+<span class="id">#slideshow</span> <span class="tag">img</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;
+    <span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">left</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">512px</span></span></span>; <span class="comment">/* 统一图片宽度 */</span>
+    <span class="rule"><span class="attribute">z-index</span>:<span class="value"><span class="number">1</span></span></span>;
+<span class="rule">}</span></span>
+<span class="id">#slideshow</span> <span class="tag">img</span><span class="class">.active</span> <span class="rules">{
+    <span class="rule"><span class="attribute">z-index</span>:<span class="value"> <span class="number">3</span></span></span>; <span class="comment">/* 当前图片处于最前（上）层 */</span>
+<span class="rule">}</span></span>
 </code></pre><ol>
 <li>从第一张播放到第N（N=3）张</li>
 </ol>
@@ -98,13 +98,13 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 <li>从第N（N=3）张到第一张</li>
 </ol>
 <p>首先有一个判断当前显示图片是否为第N张，也就是最后一张的语句，若为最后一张，则设置下一张为第一张，则$next改成如下：</p>
-<pre><code>var <span class="variable">$next</span> = <span class="variable">$active</span>.<span class="keyword">next</span>().length ? <span class="variable">$active</span>.<span class="keyword">next</span>() <span class="symbol">:</span> <span class="variable">$(</span>‘<span class="comment">#slideshow img:first’);</span>
+<pre><code>var <span class="variable">$next</span> = <span class="variable">$active</span>.<span class="keyword">next</span>().length ? <span class="variable">$active</span>.<span class="keyword">next</span>() <span class="symbol">:</span> <span class="variable">$(</span><span class="string">'#slideshow img:first'</span>);
 </code></pre><p>至此实现了一个最简单的图片轮播效果。</p>
 <h3 id="加入渐变切换效果">加入渐变切换效果</h3>
 <p>通过改变图片的透明度即可实现，而且Jqurey可以兼容IE6。实现思路就是先让当前显示图片不透明度为0，然后逐渐增加到100，代码如下</p>
 <pre><code><span class="function"><span class="keyword">function</span> <span class="title">slideSwitch</span><span class="params">()</span></span>{
     <span class="keyword">var</span> <span class="variable">$active</span> = $(<span class="string">'#slideshow img.active'</span>);
-    <span class="keyword">var</span> <span class="variable">$next</span> = <span class="variable">$active</span>.next().length ? <span class="variable">$active</span>.next() : $(‘<span class="comment">#slideshow img:first’);</span>
+    <span class="keyword">var</span> <span class="variable">$next</span> = <span class="variable">$active</span>.next().length ? <span class="variable">$active</span>.next() : $(<span class="string">'#slideshow img:first'</span>);
 
     <span class="variable">$next</span>.css({opacity: <span class="number">0</span>}
     .addClass(<span class="string">'active'</span>)
@@ -117,11 +117,12 @@ $(<span class="function"><span class="keyword">function</span><span class="param
     setInterval(slideSwitch, <span class="number">3000</span>);
 }
 </code></pre><p>然后会发现从最后一张切换到第一张时没有渐变效果，突然就跳到第一张，其过程见下图所示，第一和第三张都具有类active时（z-index相同），因第三张在文档流的后面，会在第一张上面。<br><a href="http://www.xiaocaoge.com/uploads/2013/02/1893763643409314700.jpg" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/1893763643409314700.jpg" alt="1893763643409314700"></a><br>因此在第一张设置不透明度为0之前可以使第三张z-index减小，从而在第一张下面，但又必须大于第二张的，这里添加一个类last-active，并设置其z-index为2。这样第一张从透明逐渐出现时就可以看的着了，示意图如下：<br><a href="http://www.xiaocaoge.com/uploads/2013/02/1672805786691448946.png" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/1672805786691448946.png" alt="1672805786691448946"></a><br>完整的代码如下</p>
-<pre><code><span class="comment">#slideshow img.last-active {</span>
-    z-index: <span class="number">2</span>;
-}
-
-<span class="function"><span class="keyword">function</span> <span class="title">slideSwitch</span><span class="params">()</span></span>{
+<p>CSS:</p>
+<pre><code><span class="id">#slideshow</span> <span class="tag">img</span><span class="class">.last-active</span> <span class="rules">{
+    <span class="rule"><span class="attribute">z-index</span>:<span class="value"> <span class="number">2</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>JavaScript:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">slideSwitch</span><span class="params">()</span></span>{
     <span class="keyword">var</span> <span class="variable">$active</span> = $(<span class="string">'#slideshow img.active'</span>);
     <span class="keyword">var</span> <span class="variable">$next</span> = <span class="variable">$active</span>.next().length ? <span class="variable">$active</span>.next() : $(<span class="string">'#slideshow img:first'</span>);
     <span class="variable">$active</span>.addClass(<span class="string">'last-active'</span>);
@@ -150,55 +151,56 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 });
 </code></pre><h3 id="加入编号按钮">加入编号按钮</h3>
 <p>加入对应每张图片的编号按钮，通过一个列表实现，并且在鼠标悬停在按钮上面时，显示对应图片，且图片停止切换；移开鼠标之后，图标恢复自动切换。本质上同上一个效果相似，除了要利用CSS设置列表的样式之外。代码如下：</p>
-<pre><code>&lt;div id=<span class="string">"slideshow"</span>&gt;
-    &lt;ul id=<span class="string">"slide-list"</span>&gt;
-        &lt;li id=<span class="string">"0"</span>&gt;<span class="number">1</span>&lt;/li&gt;
-        &lt;li id=<span class="string">"1"</span>&gt;<span class="number">2</span>&lt;/li&gt;
-        &lt;li id=<span class="string">"2"</span>&gt;<span class="number">3</span>&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;img src=<span class="string">"images/1.jpg"</span> alt=<span class="string">""</span> /&gt;
-    &lt;img src=<span class="string">"images/2.jpg"</span> alt=<span class="string">""</span> /&gt;
-    &lt;img src=<span class="string">"images/3.jpg"</span> alt=<span class="string">""</span> /&gt;
-&lt;/div&gt;
-
-<span class="comment">#slide-list {</span>
-    margin: <span class="number">0</span>;
-    padding: <span class="number">0</span>;
-    <span class="keyword">list</span>-style: none;
-    position: absolute;
-    right: <span class="number">50</span>px;
-    bottom: <span class="number">50</span>px;
-    z-index: <span class="number">4</span>;
-}
-<span class="comment">#slide-list li {</span>
-    float: left;
-    display: inline-block;
-    margin: <span class="number">0</span> <span class="number">3</span>px;
-    padding: <span class="number">3</span>px;
-    width: <span class="number">1</span>em;
-    font: <span class="number">16</span>px/<span class="number">1</span> Arial, sans-serif;
-    text-align: center;
-    vertical-align: baseline;
-    color: <span class="comment">#fff;</span>
-    background: <span class="comment">#555;</span>
-    cursor: pointer;
-}
-<span class="comment">#slide-list li:hover,</span>
-<span class="comment">#slide-list li.hover {</span>
-    background: <span class="comment">#888;</span>
-}
-
-<span class="function"><span class="keyword">function</span> <span class="title">slideSwitch</span><span class="params">()</span></span>{
-    <span class="keyword">var</span> <span class="variable">$active</span> = $(<span class="string">'#slideshow img.active'</span>);
-    <span class="keyword">var</span> <span class="variable">$next</span> = <span class="variable">$active</span>.next().length ? <span class="variable">$active</span>.next() : $(<span class="string">'#slideshow img:first'</span>);
-    <span class="variable">$active</span>.addClass(<span class="string">'last-active'</span>);
-    <span class="variable">$next</span>.css({opacity: <span class="number">0.0</span>})
+<p>HTML:</p>
+<pre><code><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"slideshow"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">"slide-list"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">"0"</span>&gt;</span>1<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">"1"</span>&gt;</span>2<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">li</span> <span class="attribute">id</span>=<span class="value">"2"</span>&gt;</span>3<span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"images/1.jpg"</span> <span class="attribute">alt</span>=<span class="value">""</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"images/2.jpg"</span> <span class="attribute">alt</span>=<span class="value">""</span> /&gt;</span>
+    <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"images/3.jpg"</span> <span class="attribute">alt</span>=<span class="value">""</span> /&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+</code></pre><p>CSS:</p>
+<pre><code><span class="id">#slide-list</span> <span class="rules">{
+    <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">list-style</span>:<span class="value"> none</span></span>;
+    <span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;
+    <span class="rule"><span class="attribute">right</span>:<span class="value"> <span class="number">50px</span></span></span>;
+    <span class="rule"><span class="attribute">bottom</span>:<span class="value"> <span class="number">50px</span></span></span>;
+    <span class="rule"><span class="attribute">z-index</span>:<span class="value"> <span class="number">4</span></span></span>;
+<span class="rule">}</span></span>
+<span class="id">#slide-list</span> <span class="tag">li</span> <span class="rules">{
+    <span class="rule"><span class="attribute">float</span>:<span class="value"> left</span></span>;
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> inline-block</span></span>;
+    <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span> <span class="number">3px</span></span></span>;
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">3px</span></span></span>;
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">1em</span></span></span>;
+    <span class="rule"><span class="attribute">font</span>:<span class="value"> <span class="number">16px</span>/<span class="number">1</span> Arial, sans-serif</span></span>;
+    <span class="rule"><span class="attribute">text-align</span>:<span class="value"> center</span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value"> baseline</span></span>;
+    <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="hexcolor">#fff</span></span></span>;
+    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#555</span></span></span>;
+    <span class="rule"><span class="attribute">cursor</span>:<span class="value"> pointer</span></span>;
+<span class="rule">}</span></span>
+<span class="id">#slide-list</span> <span class="tag">li</span><span class="pseudo">:hover</span>,
+<span class="id">#slide-list</span> <span class="tag">li</span><span class="class">.hover</span> <span class="rules">{
+    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#888</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>JavaScript:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">slideSwitch</span><span class="params">()</span></span>{
+    <span class="keyword">var</span> $active = $(<span class="string">'#slideshow img.active'</span>);
+    <span class="keyword">var</span> $next = $active.next().length ? $active.next() : $(<span class="string">'#slideshow img:first'</span>);
+    $active.addClass(<span class="string">'last-active'</span>);
+    $next.css({opacity: <span class="number">0.0</span>})
         .addClass(<span class="string">'active'</span>)
         .animate({opacity: <span class="number">1.0</span>}, <span class="number">1000</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
-            $(<span class="string">'#slide-list li'</span>).eq(<span class="variable">$next</span>.index(<span class="string">'#slideshow img'</span>))
+            $(<span class="string">'#slide-list li'</span>).eq($next.index(<span class="string">'#slideshow img'</span>))
                 .addClass(<span class="string">'hover'</span>)
                 .siblings().removeClass(<span class="string">'hover'</span>);
-            <span class="variable">$active</span>.removeClass(<span class="string">'active last-active'</span>);
+            $active.removeClass(<span class="string">'active last-active'</span>);
         });
  }
 
@@ -213,12 +215,12 @@ $(<span class="function"><span class="keyword">function</span><span class="param
 
     $(<span class="string">'#slide-list li'</span>).hover(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
         clearInterval(clear);
-        $(this).addClass(<span class="string">'hover'</span>);
-        $(<span class="string">'#slideshow img'</span>).eq($(this).attr(<span class="string">'id'</span>))
+        $(<span class="keyword">this</span>).addClass(<span class="string">'hover'</span>);
+        $(<span class="string">'#slideshow img'</span>).eq($(<span class="keyword">this</span>).attr(<span class="string">'id'</span>))
             .addClass(<span class="string">'active last-active'</span>)
             .siblings().removeClass(<span class="string">'active last-active'</span>);
     }, <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{
-        $(this).removeClass(<span class="string">'hover'</span>);
+        $(<span class="keyword">this</span>).removeClass(<span class="string">'hover'</span>);
         clear = setInterval(slideSwitch, <span class="number">3000</span>);
     });
 });

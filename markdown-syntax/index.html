@@ -76,69 +76,58 @@
 &gt;</span> 这和上面是同一段引用</span>
 &gt; 这和上面是同一段引用
 </code></pre><h3 id="代码">代码</h3>
-<p>内嵌代码用    </p>
-<pre><code>### 列表
-
-无序列表用<span class="escape">`*</span><span class="escape">`或</span><span class="escape">`+</span><span class="escape">`或</span><span class="escape">`-</span><span class="escape">`开</span>头表示：
-markdown
-</code></pre><ul>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<p>  或<br>  markdown</p>
-</li>
-</ul>
-<ul>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<p>  或<br>  markdown</p>
-</li>
-</ul>
-<ul>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<p>  有序列表用数字跟一个英文句点表示：<br>  markdown</p>
-</li>
-</ul>
-<ol>
-<li>项目一</li>
-<li>项目二</li>
-<li><p>项目三</p>
-<h3 id="强调">强调</h3>
-<p> 包括斜体与粗体，分别对应HTML中的<code>em</code>与<code>strong</code>标签。斜体为两边各一个<code>#</code>或<code>_</code>包裹，而粗体用<code>##</code>或<code>__</code>包裹，斜体可与粗体嵌套，比如：<code>##_斜粗体_##</code>。<br> markdown</p>
-<h1 id="斜体">斜体</h1>
-<p><em>斜体</em></p>
-<h2 id="粗体">粗体</h2>
-<p><strong>粗体</strong></p>
-<h2 id="斜粗体##`"><em>斜粗体</em>##`</h2>
-<h3 id="超链接">超链接</h3>
-<p> 超链接文本放在<code>[]</code>中，而超链接地址放在紧跟其后面的<code>()</code>中。<br> markdown<br><a href="http://www.baidu.com" target="_blank" rel="external">百度</a></p>
-<h3 id="图片">图片</h3>
-<p> 图片与超链接语法类似：</p>
+<p>内嵌代码用反引号<code>` </code>，如<code>`background: #fff;` </code>。代码块使用四个空格或一个Tab缩进。</p>
+<h3 id="列表">列表</h3>
+<p>无序列表用<code>*</code>或<code>+</code>或<code>-</code>开头表示：</p>
+<pre><code><span class="bullet">* </span>项目一
+<span class="bullet">* </span>项目二
+<span class="bullet">* </span>项目三
+</code></pre><p>或</p>
+<pre><code><span class="addition">+ 项目一</span>
+<span class="addition">+ 项目二</span>
+<span class="addition">+ 项目三</span>
+</code></pre><p>或</p>
+<pre><code>-<span class="ruby"> 项目一
+</span>-<span class="ruby"> 项目二
+</span>-<span class="ruby"> 项目三</span>
+</code></pre><p>有序列表用数字跟一个英文句点表示：</p>
+<pre><code><span class="bullet">1. </span>项目一
+<span class="bullet">2. </span>项目二
+<span class="bullet">3. </span>项目三
+</code></pre><h3 id="强调">强调</h3>
+<p>包括斜体与粗体，分别对应HTML中的<code>em</code>与<code>strong</code>标签。斜体为两边各一个<code>#</code>或<code>_</code>包裹，而粗体用<code>##</code>或<code>__</code>包裹，斜体可与粗体嵌套，比如：<code>##_斜粗体_##</code>。</p>
+<pre><code><span class="preprocessor">#斜体#</span>
+_斜体_
+<span class="preprocessor">##粗体##</span>
+__粗体__
+<span class="preprocessor">##_斜粗体_##`</span>
+</code></pre><h3 id="超链接">超链接</h3>
+<p>超链接文本放在<code>[]</code>中，而超链接地址放在紧跟其后面的<code>()</code>中。</p>
+<pre><code>[<span class="link_label">百度</span>](<span class="link_url">http://www.baidu.com</span>)
+</code></pre><h3 id="图片">图片</h3>
+<p>图片与超链接语法类似：</p>
 <ul>
 <li>一个英文感叹号<code>!</code></li>
 <li>接一个[]包裹的文本，其文本为图片无法显示时的替代文字，<code>![替代文字]</code></li>
-<li><p>接一个()包裹的图片链接，<code>![替代文字](http://www.domain.com/photo.jpg)</code></p>
-<p>在图片链接的后面还可以跟一个鼠标悬停在图片上时显示的文字：<br>markdown<br><img src="http://www.domain.com/photo.jpg “鼠标悬停显示的文字&quot;" alt="替代文字"></p>
-<h3 id="转义特殊字符">转义特殊字符</h3>
-<p>Markdown允许通过反斜杠<code>\</code>来转义下面的特殊字符：<br>txt<br>\   反斜杠<br>`   反引号</p>
-</li>
+<li>接一个()包裹的图片链接，<code>![替代文字](http://www.domain.com/photo.jpg)</code></li>
 </ul>
-</li>
-</ol>
-<ul>
-<li>星号<br>_   下划线<br>{}  花括号<br>[]  方括号<br>()  括号<h1 id="井号">井号</h1>
-</li>
-</ul>
-<ul>
-<li>加号</li>
-</ul>
-<ul>
-<li>减号<br>.   英文句点<br>!   感叹号<br>```</li>
-</ul>
-<h2 id="更好的参考：">更好的参考：</h2>
+<p>在图片链接的后面还可以跟一个鼠标悬停在图片上时显示的文字：</p>
+<pre><code>![<span class="link_label">替代文字</span>](<span class="link_url">http://www.domain.com/photo.jpg "鼠标悬停显示的文字"</span>)
+</code></pre><h3 id="转义特殊字符">转义特殊字符</h3>
+<p>Markdown允许通过反斜杠<code>\</code>来转义下面的特殊字符：</p>
+<pre><code>\   反斜杠
+`   反引号
+<span class="bullet">*   </span>星号
+_   下划线
+{}  花括号
+[]  方括号
+()  括号
+<span class="header">#   井号</span>
+<span class="bullet">+   </span>加号
+<span class="bullet">-   </span>减号
+.   英文句点
+!   感叹号
+</code></pre><h2 id="更好的参考：">更好的参考：</h2>
 <ul>
 <li>Markdown Here Cheatsheet: <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet" target="_blank" rel="external">https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet</a></li>
 <li>Markdown语法说明：<a href="http://wowubuntu.com/markdown/" target="_blank" rel="external">http://wowubuntu.com/markdown/</a></li>

@@ -56,95 +56,103 @@
       
         <p>垂直居中包括单行文本居中、单元格（td）内容居中、块级元素居中。由于单元格的display属性为table-cell，且浏览器默认vertical-align:middle，所以就是默认垂直居中，不做考虑。要注意的就是vertical-align属性的含义是设置内联元素在行框（一行）内的垂直对齐方式，对于display:table-cell的元素也适用，但是IE8+才支持display:table-cell设置，于是就有了各种跨浏览器垂直对齐的方法。</p>
 <p><strong>DEMO：</strong><a href="http://www.xiaocaoge.com/demo/vertical-align/vertical-align.html" target="_blank" rel="external">vertical align methods</a></p>
-<h3 id="单行文本"><strong>单行文本</strong></h3>
+<h3 id="单行文本">单行文本</h3>
 <p>此种情况最简单，使用line-height来控制元素的高度即可，兼容IE6+及其他现代浏览器。</p>
+<p>HTML:</p>
 <pre><code>&lt;<span class="keyword">div</span>&gt;
-     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Text here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-.child {
-     line-height:<span class="number">50</span>px;
- }
+    &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Text here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">line-height</span>:<span class="value"><span class="number">50px</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>而此种方法对于display为inline或inline-block的元素也适用，只不过元素要加上vertical-align:middle，而且不兼容IE6。</p>
-<pre><code>&lt;<span class="keyword">div</span>&gt;
-     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;
-         &lt;img src=<span class="string">"images/1024.jpg"</span> alt=<span class="string">""</span> /&gt;
-     &lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-.child {
-     line-height:<span class="number">300</span>px;
- }
- img {
-     width:<span class="number">200</span>px;
-     vertical-align:<span class="keyword">middle</span>;
- }
-</code></pre><h3 id="块级元素"><strong>块级元素</strong></h3>
+<p>HTML:</p>
+<pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"child"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">img</span> <span class="attribute">src</span>=<span class="value">"images/1024.jpg"</span> <span class="attribute">alt</span>=<span class="value">""</span> /&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">line-height</span>:<span class="value"><span class="number">300px</span></span></span>;
+<span class="rule">}</span></span>
+<span class="tag">img</span> <span class="rules">{
+    <span class="rule"><span class="attribute">width</span>:<span class="value"><span class="number">200px</span></span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value">middle</span></span>;
+<span class="rule">}</span></span>
+</code></pre><h3 id="块级元素">块级元素</h3>
 <p>块级元素的垂直对齐方法有很多种，但有些方法必须要求知道和统一块级元素的高度，有些不需要但是跨浏览器支持不好，最后还得需要针对个别浏览器（IE6、7）单独设置。</p>
 <p><strong>元素高度预知：</strong></p>
 <p>（两种方法兼容IE6+，Chrome，Firefox，Safari，Opera）</p>
 <p>设置相等的内边距或外边距</p>
+<p>HTML:</p>
 <pre><code>&lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"parent"</span>&gt;
-     &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-.parent {
-     padding:<span class="number">5</span>% <span class="number">0</span>;
- }
- .child {
-     height:<span class="number">50</span>px;
- }
+    &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.parent</span> <span class="rules">{
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"><span class="number">5%</span> <span class="number">0</span></span></span>;
+<span class="rule">}</span></span>
+<span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">height</span>:<span class="value"><span class="number">50px</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>绝对定位和负外边距</p>
-<pre><code>&lt;<span class="keyword">div</span> class=<span class="string">"parent"</span>&gt;
-     &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-<span class="string">.parent</span> {
-<span class="label">     position:</span>relative<span class="comment">;</span>
-<span class="label">     height:</span>100px<span class="comment">;</span>
- }
- <span class="string">.child</span> {
-<span class="label">     position:</span><span class="built_in">absolute</span><span class="comment">;</span>
-<span class="label">     top:</span><span class="number">50</span>%<span class="comment">;</span>
-<span class="label">     height:</span>50px<span class="comment">;</span>
-     margin-top:-25px<span class="comment">;</span>
- }
+<p>HTML:</p>
+<pre><code>&lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"parent"</span>&gt;
+    &lt;<span class="keyword">div</span> <span class="type">class</span>=<span class="string">"child"</span>&gt;Div here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.parent</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value">relative</span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"><span class="number">100px</span></span></span>;
+<span class="rule">}</span></span>
+<span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value">absolute</span></span>;
+    <span class="rule"><span class="attribute">top</span>:<span class="value"><span class="number">50%</span></span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"><span class="number">50px</span></span></span>;
+    <span class="rule"><span class="attribute">margin-top</span>:<span class="value">-<span class="number">25px</span></span></span>;
+<span class="rule">}</span></span>
 </code></pre><p><strong>元素高度不可预知：</strong></p>
 <p>table-cell方法</p>
 <p>(不兼容IE6-7)</p>
+<p>HTML:</p>
 <pre><code>&lt;<span class="keyword">div</span>&gt;
-     &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
- &lt;/<span class="keyword">div</span>&gt;
-
-<span class="string">.parent</span> {
-<span class="label">     display:</span> table<span class="comment">;</span>
- }
- <span class="string">.child</span> {
-<span class="label">     display:</span> table-cell<span class="comment">;</span>
-<span class="label">     height:</span> 200px<span class="comment">;</span>
-     vertical-<span class="preprocessor">align</span>:middle<span class="comment">;</span>
- }
+    &lt;<span class="keyword">div</span> class=<span class="string">"child"</span>&gt;<span class="keyword">Div</span> here&lt;/<span class="keyword">div</span>&gt;
+&lt;/<span class="keyword">div</span>&gt;
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.parent</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.child</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table-cell</span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">200px</span></span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value">middle</span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>兼容所有现在浏览器的方法</p>
 <p>DEMO: <a href="http://www.xiaocaoge.com/demo/vertical-align/multi-lined-text-vc.html" target="_blank" rel="external">multi-lined text vertical align</a></p>
-<pre><code>&lt;<span class="keyword">div</span>&gt;
-    &lt;<span class="keyword">div</span>&gt;
-       &lt;p&gt;To look best, <span class="type">text</span> should really be centered inside this bubble both vertically <span class="keyword">and</span> horizontally.&lt;/p&gt;
-    &lt;/<span class="keyword">div</span>&gt;
-&lt;/<span class="keyword">div</span>&gt;
-
-.area {
-display: table;
-    width: <span class="number">200</span>px;
-    height: <span class="number">150</span>px;
-    background: <span class="comment">#eee;</span>
-}
-.bubble {
-    display: table-cell;
-    vertical-align: <span class="keyword">middle</span>;
-}
-.bubble p {
-    border: <span class="number">1</span>px solid red;
-}
+<p>HTML:</p>
+<pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">div</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">p</span>&gt;</span>To look best, text should really be centered inside this bubble both vertically and horizontally.<span class="tag">&lt;/<span class="title">p</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+</code></pre><p>CSS:</p>
+<pre><code><span class="class">.area</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table</span></span>;
+    <span class="rule"><span class="attribute">width</span>:<span class="value"> <span class="number">200px</span></span></span>;
+    <span class="rule"><span class="attribute">height</span>:<span class="value"> <span class="number">150px</span></span></span>;
+    <span class="rule"><span class="attribute">background</span>:<span class="value"> <span class="hexcolor">#eee</span></span></span>;
+<span class="rule">}</span></span>
+<span class="class">.bubble</span> <span class="rules">{
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> table-cell</span></span>;
+    <span class="rule"><span class="attribute">vertical-align</span>:<span class="value"> middle</span></span>;
+<span class="rule">}</span></span>
+<span class="class">.bubble</span> <span class="tag">p</span> <span class="rules">{
+    <span class="rule"><span class="attribute">border</span>:<span class="value"> <span class="number">1px</span> solid red</span></span>;
+<span class="rule">}</span></span>
 </code></pre><p>兼容IE6-7，利用条件注释单独设置，而且要添加一个多余的div标签，下面针对IE6-7的代码对于其他现代浏览器并不适用。</p>
+<p>HTML:</p>
 <pre><code><span class="tag">&lt;<span class="title">div</span>&gt;</span>
     <span class="tag">&lt;<span class="title">div</span>&gt;</span>
         <span class="tag">&lt;<span class="title">div</span>&gt;</span>

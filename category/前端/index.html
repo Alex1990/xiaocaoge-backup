@@ -60,7 +60,7 @@
         经典
 以前最经典的清除浮动方法是利用:after伪元素，代码如下：
 .clearfix:after {
-   content: “.”; /* 元素内容后面，即元素闭合标签前面加个点 */
+   content: "."; /* 元素内容后面，即元素闭合标签前面加个点 */
    height: 0; /* 伪元素高度为0 */
    visibility: hidden; /* 隐藏伪元素内容 */
    display: block; /* 默认是inline，所以默认clear不起作用 */
@@ -282,10 +282,10 @@ Markdown是一种为了提高文档易读性与易写性的纯文本格式规范
       
         
         在响应式设计或移动Web开发当中经常见到的一句代码：
-&amp;lt;meta name=”viewport” content=”width=device-width” &amp;gt;
+&lt;meta name="viewport" content="width=device-width"&gt;
 content属性还包括initial-scale，user-scalable等，不过这里不谈，它们的意思都很容易理解。这里要谈得是：viewport代表什么？device-width又是啥？
 先来理解两个概念：device pixels与CSS pixels。
-device pixels指设备的物理像素，在PC端就是你在操作系统里设置的屏幕分辨率y，其值可以通过screen.width/screen.hei
+device pixels指设备的物理像素，在PC端就是你在操作系统里设置的屏幕分辨率y，其值可以通过screen.width/screen.height获取。在移动
         
           <p class="article-more-link">
             <a href="/understanding-viewport-and-device-width/#more">更多</a>

@@ -55,7 +55,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
-<pre><code>&amp;lt;meta <span class="variable">name=</span>”viewport” <span class="variable">content=</span>”<span class="variable">width=</span>device-width” &amp;gt;
+<pre><code>&lt;meta <span class="variable">name=</span><span class="string">"viewport"</span> <span class="variable">content=</span><span class="string">"width=device-width"</span>&gt;
 </code></pre><p>content属性还包括initial-scale，user-scalable等，不过这里不谈，它们的意思都很容易理解。这里要谈得是：viewport代表什么？device-width又是啥？</p>
 <h3 id="先来理解两个概念：device_pixels与CSS_pixels。">先来理解两个概念：device pixels与CSS pixels。</h3>
 <p>device pixels指设备的物理像素，在PC端就是你在操作系统里设置的屏幕分辨率y，其值可以通过<code>screen.width/screen.height</code>获取。在移动端下面再说。</p>
@@ -76,7 +76,7 @@
 <p><a href="http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html" target="_blank" rel="external">http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html</a>。</p>
 <p>Chrome与Opera比较深入实现了中间层的概念，屏幕的实际分辨率与Web开发关系并不大，Chrome与Opera就将<code>screen.width</code>返回中间层的宽度。这里我也不明白哪种设计更好些。</p>
 <p>这里<a href="http://viewportsizes.com/?filter=" target="_blank" rel="external">有个链接</a>可以查看各种手机型号的device-width/device-height大小，虽然链接称为viewport size。</p>
-<h3 id="参考资源：">参考资源：</h3>
+<h2 id="参考资源：">参考资源：</h2>
 <ul>
 <li>A tale of two viewports - part one: <a href="http://www.quirksmode.org/mobile/viewports.html" target="_blank" rel="external">http://www.quirksmode.org/mobile/viewports.html</a></li>
 <li>A tale of two viewports - part two: <a href="http://www.quirksmode.org/mobile/viewports2.html" target="_blank" rel="external">http://www.quirksmode.org/mobile/viewports2.html</a></li>

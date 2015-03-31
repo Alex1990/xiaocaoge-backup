@@ -63,11 +63,11 @@
 <p>如何从 grub rescue 模式进入到 Ubuntu 呢？详细可参考此文：<a href="http://blog.chinaunix.net/uid-22915173-id-229241.html" target="_blank" rel="external">grub rescue 救援模式的处理</a>。</p>
 <p>grub rescue 模式下，只有几个命令可用：<code>ls</code>、<code>set</code>、<code>insmod</code>、<code>root</code>、<code>prefix</code>。</p>
 <p>执行以下命令：</p>
-<pre><code>grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> root<span class="subst">=</span>(hd0,msdos2) <span class="comment">// 设定 grub 启动分区，Ubuntu 所在分区</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> prefix<span class="subst">=</span>(hd0,msdos2)/boot/grub <span class="comment">// 设定 grub 启动路径</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;<span class="built_in">set</span> <span class="comment">// 查看设置情况</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;insmod /boot/grub/i386<span class="attribute">-pc</span>/normal<span class="built_in">.</span>mod <span class="comment">// 加载基本模块</span>
-grub rescue<span class="subst">&amp;</span><span class="literal">gt</span>;normal <span class="comment">// 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入</span>
+<pre><code>grub rescue&gt;<span class="built_in">set</span> root=(hd0,msdos2)<span class="comment"> // 设定 grub 启动分区，Ubuntu 所在分区</span>
+grub rescue&gt;<span class="built_in">set</span> prefix=(hd0,msdos2)/boot/grub<span class="comment"> // 设定 grub 启动路径</span>
+grub rescue&gt;<span class="built_in">set</span><span class="comment"> // 查看设置情况</span>
+grub rescue&gt;insmod /boot/grub/i386-pc/<span class="keyword">normal</span>.<span class="operator">mod</span><span class="comment"> // 加载基本模块</span>
+grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入</span>
 </code></pre><p>上面需要注意 normal.mod 模块位置，我的 Ubuntu 14.04 在 <code>grub/i386-pc/</code> 目录下，有些就在 <code>grub/</code> 目录下。</p>
 <p>进入到 Ubuntu 之后，还要重新安装 grub 引导，更新 grub 配置才可以。执行以下命令：</p>
 <pre><code>grub-<span class="operator"><span class="keyword">install</span> /dev/sda
