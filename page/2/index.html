@@ -31,6 +31,52 @@
       <div class="content">
         <section class="wrapper">
   
+    <article id="post-transition-height-from-0-to-auto" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2014-04-03T09:35:08.000Z" itemprop="datePublished">2014-4-3</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/transition-height-from-0-to-auto/">Transition height from 0 to auto</a>
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于height:auto;时，浏览器会识别height值为0，因此无法直接从height: 0;过渡到height: auto;。
+一种简单的方法是，将过渡应用于max-height属性，通过设置一个大于元素所可能达到的最大高度值。代码如下：
+.elem {
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transform: translate3d(0,0,
+        
+          <p class="article-more-link">
+            <a href="/transition-height-from-0-to-auto/#more">更多</a>
+          </p>
+        
+      
+    </div>
+    
+  </div>
+  
+</article>
+
+
+  
     <article id="post-compute-files-management" class="article article-type-post" itemprop="blogPost">
   <div class="article-meta clearfix">
     <div class="article-date fl">
@@ -425,56 +471,9 @@ DEMO：vertical align methods
 
 
   
-    <article id="post-php-blog-brieflog" class="article article-type-post" itemprop="blogPost">
-  <div class="article-meta clearfix">
-    <div class="article-date fl">
-  <time datetime="2013-05-31T14:21:18.000Z" itemprop="datePublished">2013-5-31</time>
-</div>
-    
-  <div class="article-category fl">
-    <a class="article-category-link" href="/category/前端/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/php-blog-brieflog/">一个PHP做的博客</a>
-    </h1>
-  
-
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        读完《PHP6与MySQL5基础教程》之后就开始做一个简单的博客，既可以练习所学，又可以在练习的过程中解决新的问题。名字就叫brieflog，但是功能都是参照自己的Wordpress博客设计的。虽然功能、样式能有很多不足，不过先把所学的总结一下。
-博客演示：brieflog
-首页截图
-包含文件
-通过简单的包含，就不用重复写header，sidebar，footer了，这是静态网页永远实现不了的。CSS的任务就是为header，sidebar，footer，content及其内容设计样式。
-输出内容
-无论是文章列表、文章全文，还是目录列表、用户列表等，都是一个SELECT查询，查询条件各种各样。
-        
-          <p class="article-more-link">
-            <a href="/php-blog-brieflog/#more">更多</a>
-          </p>
-        
-      
-    </div>
-    
-  </div>
-  
-</article>
-
-
-  
   
     <nav class="page-nav">
-      <a class="extend prev" rel="prev" href="/">Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next</a>
+      <a class="extend prev" rel="prev" href="/">Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next</a>
     </nav>
   
 </section>
@@ -515,7 +514,7 @@ DEMO：vertical align methods
   <div class="widget-wrap widget-tagcloud">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget widget-tagcloud-list">
-      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a><a href="/tag/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tag/brieflog/" style="font-size: 12.00px;">brieflog</a><a href="/tag/device-width/" style="font-size: 12.00px;">device-width</a>
+      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/MDN/" style="font-size: 12.00px;">MDN</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a><a href="/tag/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tag/brieflog/" style="font-size: 12.00px;">brieflog</a>
     </div>
   </div>
 

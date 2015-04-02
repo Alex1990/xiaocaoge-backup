@@ -31,6 +31,51 @@
       <div class="content">
         <section class="wrapper">
   
+    <article id="post-cross-browser-transparency" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-10-20T19:55:49.000Z" itemprop="datePublished">2013-10-21</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/cross-browser-transparency/">跨浏览器透明解决方案</a>
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。
+图片包含全透明像素时
+对于这种不包含半透明像素的图片，可以导出为GIF格式来支持IE6。但是只适用于图片包含少量颜色时，通常Logo、icons等颜色只包含几种。对于色彩丰富的图片，只能采用PNG图片，并通过一些方法解决IE6的PNG支持问题。
+图片包含半透明像素时
+此时，只能使用PNG格式，IE7+及其他现代浏览器都很好地支持PNG格式，对于IE6必须采取某种方案支持，详见此篇文章总结的方案：IE6 PNG透明终极解决方案。由于网站常采用CSS Sprite，所以我首选的方法是DD_belatedPNG，不过此方法在某些情况
+        
+          <p class="article-more-link">
+            <a href="/cross-browser-transparency/#more">更多</a>
+          </p>
+        
+      
+    </div>
+    
+  </div>
+  
+</article>
+
+
+  
     <article id="post-vertical-align-methods" class="article article-type-post" itemprop="blogPost">
   <div class="article-meta clearfix">
     <div class="article-date fl">
@@ -456,48 +501,6 @@ BlueIdea的译文：On having layout
 
 
   
-    <article id="post-quirks-mode-and-standard-mode" class="article article-type-post" itemprop="blogPost">
-  <div class="article-meta clearfix">
-    <div class="article-date fl">
-  <time datetime="2013-04-25T09:33:36.000Z" itemprop="datePublished">2013-4-25</time>
-</div>
-    
-  <div class="article-category fl">
-    <a class="article-category-link" href="/category/前端/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/quirks-mode-and-standard-mode/">浏览器渲染模式：Quirks Mode And Standard Mode</a>
-    </h1>
-  
-
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        由于在写一个测试网页（中文）时，没有声明DOCTYPE，也没有用meta标签来指明使用何种字符编码方式，导致在除Chrome外的其他几大浏览器均出现乱码现象。只含有DOCTYPE而没有使用meta指明编码时，在FireFox中会出现乱码。然后经由百度和Google偶然间得知浏览器还有一种称为“Quirks”的模式，在未声明DOCTYPE时就是此模式。
-在W3C标准出台以前，浏览器对页面的渲染与标准不一致，比如IE6之前的版本与标准在盒模型方面的宽度定义不同。而在出台以后，各浏览器逐渐趋向支持标准，问题是之前产生的大量网站的网页已经不符合标准，因此从IE Mac开始，IE6，Mozilla，Sa
-        
-          <p class="article-more-link">
-            <a href="/quirks-mode-and-standard-mode/#more">更多</a>
-          </p>
-        
-      
-    </div>
-    
-  </div>
-  
-</article>
-
-
-  
   
     <nav class="page-nav">
       <a class="extend prev" rel="prev" href="/category/前端/">Prev</a><a class="page-number" href="/category/前端/">1</a><span class="page-number current">2</span><a class="page-number" href="/category/前端/page/3/">3</a><a class="extend next" rel="next" href="/category/前端/page/3/">Next</a>
@@ -541,7 +544,7 @@ BlueIdea的译文：On having layout
   <div class="widget-wrap widget-tagcloud">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget widget-tagcloud-list">
-      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a><a href="/tag/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tag/brieflog/" style="font-size: 12.00px;">brieflog</a><a href="/tag/device-width/" style="font-size: 12.00px;">device-width</a>
+      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/MDN/" style="font-size: 12.00px;">MDN</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a><a href="/tag/bookmark/" style="font-size: 12.00px;">bookmark</a><a href="/tag/brieflog/" style="font-size: 12.00px;">brieflog</a>
     </div>
   </div>
 
