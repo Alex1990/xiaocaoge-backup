@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>水平导航条与下拉菜单（兼容ie6） | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css" type="text/css">
+
+  <script src="/js/modernizr-custom.min.js" type="text/javascript"></script>
+
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-hnav-dropdown-ie6-js-htc" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-02-10T08:07:55.000Z" itemprop="datePublished">2013-2-10</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      水平导航条与下拉菜单（兼容ie6）
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="水平导航条">水平导航条</h2>
+<p>关键技术即是列表项(li)的浮动，即添加以下代码：</p>
+<pre><code><span class="tag">ul</span> <span class="tag">li</span> <span class="rules">{ <span class="rule"><span class="attribute">float</span>:<span class="value"> left</span></span>;<span class="rule">}</span></span>
+</code></pre><p>举一个例子，下面是html代码</p>
+<pre><code><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">"mainnav"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Home<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>About Us<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Our Clients<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Support<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Contact Us<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+</code></pre><p>第一步，预格式化，消除列表项，列表外边距与内边距；（实际中通过reset.css）</p>
+<pre><code><span class="id">#mainnav</span> <span class="rules">{
+    <span class="rule"><span class="attribute">list-style</span>:<span class="value"> none</span></span>;
+    <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">0</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>第二步，浮动列表项；</p>
+<pre><code><span class="id">#mainnav</span> <span class="tag">li</span> <span class="rules">{
+    <span class="rule"><span class="attribute">float</span>:<span class="value"> left</span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>如图所示即为一个最简单也是最丑的水平导航/横向导航</p>
+<p><a href="http://www.xiaocaoge.com/uploads/2013/02/6597722876563981469.jpg" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/6597722876563981469.jpg" alt="6597722876563981469"></a></p>
+<p>第三步，简单美化导航显示效果，如设置字体，去掉下划线，给列表添加背景色，通过设置列表项边框添加分割线，等等。最终效果图与代码如下：</p>
+<p><a href="http://www.xiaocaoge.com/uploads/2013/02/6597653607331431555.jpg" target="_blank" rel="external"><img src="http://www.xiaocaoge.com/uploads/2013/02/6597653607331431555.jpg" alt="6597653607331431555"></a></p>
+<pre><code><span class="id">#mainnav</span> <span class="rules">{
+    <span class="rule"><span class="attribute">list-style</span>:<span class="value">none</span></span>;
+    <span class="rule"><span class="attribute">margin</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">0</span></span></span>;
+    <span class="rule"><span class="attribute">float</span>:<span class="value"> left</span></span>;  <span class="comment">/* 使无序列表框包裹住浮动的列表项 */</span>
+    <span class="rule"><span class="attribute">background-color</span>:<span class="value"> <span class="hexcolor">#eee</span></span></span>;
+<span class="rule">}</span></span>
+
+<span class="id">#mainnav</span> <span class="tag">li</span> <span class="rules">{
+    <span class="rule"><span class="attribute">float</span>:<span class="value"> left</span></span>;
+<span class="rule">}</span></span>
+
+<span class="id">#mainnav</span> <span class="tag">li</span> <span class="tag">a</span> <span class="rules">{
+    <span class="rule"><span class="attribute">font</span>:<span class="value"> <span class="number">20px</span>/<span class="number">30px</span> Arial, Verdana, sans-serif</span></span>;
+    <span class="rule"><span class="attribute">display</span>:<span class="value"> block</span></span>;
+    <span class="rule"><span class="attribute">text-decoration</span>:<span class="value"> none</span></span>;
+    <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="hexcolor">#404040</span></span></span>;
+    <span class="rule"><span class="attribute">padding</span>:<span class="value"> <span class="number">5px</span> <span class="number">20px</span></span></span>;
+    <span class="rule"><span class="attribute">border-left</span>:<span class="value"> <span class="number">1px</span> solid <span class="hexcolor">#bbb</span></span></span>;
+<span class="rule">}</span></span>
+
+<span class="id">#mainnav</span> <span class="class">.firstChild</span> <span class="tag">a</span> <span class="rules">{  <span class="comment">/* 要给第一个列表项添加 class=”firstChild” */</span>
+    <span class="rule"><span class="attribute">border-left</span>:<span class="value"> none</span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>最后添加鼠标悬停效果，即:hover样式，代码如下：</p>
+<pre><code><span class="id">#mainnav</span> <span class="tag">li</span> <span class="tag">a</span><span class="pseudo">:hover</span>,
+<span class="id">#mainnav</span> <span class="tag">li</span> <span class="tag">a</span><span class="pseudo">:focus</span> <span class="rules">{  <span class="comment">/* :focus伪类使键盘操作获得鼠标悬停效果 */</span>
+    <span class="rule"><span class="attribute">color</span>:<span class="value"> <span class="hexcolor">#fdfdfd</span></span></span>;
+    <span class="rule"><span class="attribute">background-color</span>:<span class="value"> <span class="hexcolor">#4cc</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><p><strong>最终DEMO：</strong><a href="http://xiaocaoge.com/demo/shnav/hnav.html" title="简单的水平导航条" target="_blank" rel="external">简单的水平导航条</a></p>
+<h2 id="下拉菜单">下拉菜单</h2>
+<p>这种技术也叫Suckerfish dropdown，关键之处就是先通过设置二级列表的left属性为一个大的负值（如-999em），将其定位到窗口之外，然后鼠标悬停时再将left属性设置成0，从而显示出来。</p>
+<p>注：虽然可以通过设置二级列表的display: none先隐藏，然后再鼠标悬停时设置diplay: block;</p>
+<p>实现同样效果，但display: none会使屏幕阅读器无法读取其中的内容，从而造成可访问性问题。</p>
+<p>html代码如下：</p>
+<pre><code><span class="tag">&lt;<span class="title">ul</span> <span class="attribute">id</span>=<span class="value">"mainnav"</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span> <span class="attribute">class</span>=<span class="value">"firstChild"</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Home<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>About Us<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Our Clients<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">ul</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Leadership<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Involvement<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span> <span class="attribute">class</span>=<span class="value">"subLastChild"</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Our Vision<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Support<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">ul</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Blog<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Downloads<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">li</span> <span class="attribute">class</span>=<span class="value">"subLastChild"</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>FAQ<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">li</span>&gt;</span><span class="tag">&lt;<span class="title">a</span> <span class="attribute">href</span>=<span class="value">"#"</span>&gt;</span>Contact Us<span class="tag">&lt;/<span class="title">a</span>&gt;</span><span class="tag">&lt;/<span class="title">li</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">ul</span>&gt;</span>
+</code></pre><p>第一步，为了使二级列表绝对定位时的参考元素为包含其的一级列表项，先设置一级列表项为相对定位，添加 #mainnav li { position: relative;}。然后将二级列表定位到窗口之外：</p>
+<pre><code><span class="id">#mainnav</span> <span class="class">.subnav</span> <span class="rules">{
+    <span class="rule"><span class="attribute">position</span>:<span class="value"> absolute</span></span>;
+    <span class="rule"><span class="attribute">left</span>:<span class="value"> -<span class="number">999em</span></span></span>;  <span class="comment">/* 将二级列表定位到窗口之外 */</span>
+    <span class="rule"><span class="attribute">top</span>:<span class="value"> <span class="number">40px</span></span></span>;
+<span class="rule">}</span></span>
+</code></pre><p>top属性的数值 = 锚的行高 + 锚的上下内边距和</p>
+<p>第二步，鼠标悬停时显示二级列表/下拉菜单，添加如下代码：</p>
+<pre><code><span class="id">#mainnav</span> <span class="tag">li</span><span class="pseudo">:hover</span> <span class="class">.subnav</span> <span class="rules">{
+    <span class="rule"><span class="attribute">left</span>:<span class="value"> <span class="number">0</span></span></span>;
+<span class="rule">}</span></span>
+
+<span class="id">#mainnav</span> <span class="class">.subnav</span> <span class="tag">li</span> <span class="rules">{
+    <span class="rule"><span class="attribute">float</span>:<span class="value"> none</span></span>;  <span class="comment">/* 消除列表项对所包含子元素的包裹，扩展宽度 */</span>
+<span class="rule">｝</span></span>
+</code></pre><p>最后设置一些美化代码，<strong>最终DEMO：</strong><a href="http://xiaocaoge.com/demo/dropdown/hnav-suckerfish-dropdown.html" title="Suckerfish下拉菜单" target="_blank" rel="external">Suckerfish下拉菜单</a></p>
+<p>另因为IE6不支持给除a元素之外的元素添加:hover伪类，需要通过JavaScript代码或修改.htc文件实现此效果，具体方法见下。</p>
+<h2 id="JavaScript方法">JavaScript方法</h2>
+<p>原理就是鼠标悬停时给列表项添加类，并在CSS文件设置该类的的left属性，鼠标移出时删除类。详情参考该文：<a href="http://htmldog.com/articles/suckerfish/dropdowns/" target="_blank" rel="external">http://htmldog.com/articles/suckerfish/dropdowns/</a></p>
+<p>JS与CSS代码如下：</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">sfHover</span><span class="params">()</span> </span>{
+
+    <span class="keyword">var</span> sfEls = <span class="built_in">document</span>.getElementById(<span class="string">"mainnav"</span>).getElementsByTagName(<span class="string">"li"</span>);
+
+    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;sfEls.length; i++) {
+        sfEls[i].onmouseover = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+            <span class="keyword">this</span>.className += <span class="string">" sfhover"</span>;
+        }
+
+        sfEls[i].onmouseout = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+            <span class="keyword">this</span>.className = <span class="keyword">this</span>.className.replace(<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">" sfhover\\b"</span>), <span class="string">""</span>);
+        }
+    }
+}
+
+<span class="built_in">window</span>.onload = sfHover;
+
+#mainnav li:hover .subnav,
+#mainnav li.sfhover .subnav {
+    left: auto;
+}
+</code></pre><p><strong>DEMO：</strong><a href="http://xiaocaoge.com/demo/dropdown/hnav-suckerfish-dropdown-ie6-js.html" title="兼容ie6下拉菜单JS版" target="_blank" rel="external">兼容ie6下拉菜单JS版</a></p>
+<h2 id="通过CSS的behavior属性添加特定的-htc文件">通过CSS的behavior属性添加特定的.htc文件</h2>
+<p>需要添加如下代码引用 ie6hover.htc文件。</p>
+<p>参考文章：<a href="http://www.cnblogs.com/czj33499173/archive/2011/12/30/2307674.html" target="_blank" rel="external">http://www.cnblogs.com/czj33499173/archive/2011/12/30/2307674.html</a></p>
+<pre><code><span class="tag">body</span> <span class="rules">{
+  <span class="rule"><span class="attribute">behavior</span>:<span class="value"> <span class="function">url</span>(ie6hover.htc)</span></span>;  <span class="comment">/* 注意路径 */</span>
+<span class="rule">}</span></span>
+</code></pre><p>ie6hover.htc文件代码如下：</p>
+<pre><code><span class="tag">&lt;<span class="title">attach</span> <span class="attribute">event</span>=<span class="value">"ondocumentready"</span> <span class="attribute">handler</span>=<span class="value">"parseStylesheets"</span> /&gt;</span>
+<span class="tag">&lt;<span class="title">script</span> <span class="attribute">language</span>=<span class="value">"JScript"</span>&gt;</span><span class="javascript">
+<span class="comment">/**
+* Pseudos - V1.30.050121 - hover &amp;amp; active
+* ---------------------------------------------
+* Peterned - http://www.xs4all.nl/~peterned/
+* (c) 2005 - Peter Nederlof
+*
+* Credits - Arnoud Berendsen
+*         - Martin Reurings
+*         - Robert Hanson
+*
+* howto: body { behavior:url("csshover.htc"); }
+* ---------------------------------------------
+*/</span>
+
+<span class="keyword">var</span> currentSheet, doc = <span class="built_in">window</span>.document, activators = {
+    onhover:{on:<span class="string">'onmouseover'</span>, off:<span class="string">'onmouseout'</span>},
+    onactive:{on:<span class="string">'onmousedown'</span>, off:<span class="string">'onmouseup'</span>}
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">parseStylesheets</span><span class="params">()</span> </span>{
+    <span class="comment">//window.alert("hi");</span>
+    <span class="keyword">var</span> sheets = doc.styleSheets, l = sheets.length;
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;l; i++)
+        parseStylesheet(sheets[i]);
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">parseStylesheet</span><span class="params">(sheet)</span> </span>{
+    <span class="keyword">if</span>(sheet.imports) {
+        <span class="keyword">try</span> {
+            <span class="keyword">var</span> imports = sheet.imports, l = imports.length;
+            <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;l; i++) parseStylesheet(sheet.imports[i]);
+        } <span class="keyword">catch</span>(securityException){}
+}
+
+<span class="keyword">try</span> {
+    <span class="keyword">var</span> rules = (currentSheet = sheet).rules, l = rules.length;
+    <span class="keyword">for</span>(<span class="keyword">var</span> j=<span class="number">0</span>; j&lt;l; j++) parseCSSRule(rules[j]);
+} <span class="keyword">catch</span>(securityException){}
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">parseCSSRule</span><span class="params">(rule)</span> </span>{
+
+    <span class="keyword">var</span> select = rule.selectorText, style = rule.style.cssText;
+
+    <span class="keyword">if</span>(!(<span class="regexp">/(^|\s)(([^a]([^ ]+)?)|(a([^#.][^ ]+)+)):(hover|active)/i</span>).test(select) || !style) <span class="keyword">return</span>;
+
+    <span class="keyword">var</span> pseudo = select.replace(<span class="regexp">/[^:]+:([a-z-]+).*/i</span>, <span class="string">'on$1'</span>);
+    <span class="keyword">var</span> newSelect = select.replace(<span class="regexp">/(\.([a-z0-9_-]+):[a-z]+)|(:[a-z]+)/gi</span>, <span class="string">'.$2'</span> + pseudo);
+    <span class="keyword">var</span> className = (<span class="regexp">/\.([a-z0-9_-]*on(hover|active))/i</span>).exec(newSelect)[<span class="number">1</span>];
+    <span class="keyword">var</span> affected = select.replace(<span class="regexp">/:hover.*$/</span>, <span class="string">''</span>);
+    <span class="keyword">var</span> elements = getElementsBySelect(affected);
+
+    currentSheet.addRule(newSelect, style);
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;elements.length; i++)
+        <span class="keyword">new</span> HoverElement(elements[i], className, activators[pseudo]);
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">HoverElement</span><span class="params">(node, className, events)</span> </span>{
+
+    <span class="keyword">if</span>(!node.hovers) node.hovers = {};
+    <span class="keyword">if</span>(node.hovers[className]) <span class="keyword">return</span>;
+
+    node.hovers[className] = <span class="literal">true</span>;
+    node.attachEvent(events.on, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+        node.className += <span class="string">' '</span> + className;
+    });
+    node.attachEvent(events.off, <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{
+        node.className = node.className.replace(<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'\\s+'</span>+className, <span class="string">'g'</span>),<span class="string">''</span>);
+    });
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">getElementsBySelect</span><span class="params">(rule)</span> </span>{
+    <span class="keyword">var</span> parts, nodes = [doc];
+
+    parts = rule.split(<span class="string">' '</span>);
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;parts.length; i++) {
+        nodes = getSelectedNodes(parts[i], nodes);
+    }
+
+    <span class="keyword">return</span> nodes;
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">getSelectedNodes</span><span class="params">(select, elements)</span> </span>{
+
+    <span class="keyword">var</span> result, node, nodes = [];
+    <span class="keyword">var</span> classname = (<span class="regexp">/\.([a-z0-9_-]+)/i</span>).exec(select);
+    <span class="keyword">var</span> identify = (<span class="regexp">/\#([a-z0-9_-]+)/i</span>).exec(select);
+    <span class="keyword">var</span> tagName = select.replace(<span class="regexp">/(\.|\#|\:)[a-z0-9_-]+/i</span>, <span class="string">''</span>);
+
+    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;elements.length; i++) {
+        result = tagName? elements[i].all.tags(tagName):elements[i].all;
+        <span class="keyword">for</span>(<span class="keyword">var</span> j=<span class="number">0</span>; j&lt;result.length; j++) {
+            node = result[j];
+            <span class="keyword">if</span>((identify &amp;&amp; node.id != identify[<span class="number">1</span>]) || (classname &amp;&amp; !(<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">'\\b'</span> +
+                classname[<span class="number">1</span>] + <span class="string">'\\b'</span>).exec(node.className)))) <span class="keyword">continue</span>;
+            nodes[nodes.length] = node;
+        }
+    }
+
+    <span class="keyword">return</span> nodes;
+}</span>
+</code></pre>
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/CSS/">CSS</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/ie6/">ie6</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/Javascript/">Javascript</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/下拉菜单/">下拉菜单</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/水平导航/">水平导航</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/hnav-dropdown-ie6-js-htc.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-hnav-dropdown-ie6-js-htc" data-title="水平导航条与下拉菜单（兼容ie6）" data-url="http://www.xiaocaoge.com/hnav-dropdown-ie6-js-htc.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/MDN/" style="font-size: 12.00px;">MDN</a><a href="/tag/Mac/" style="font-size: 12.00px;">Mac</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/OSX/" style="font-size: 12.00px;">OSX</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2015 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js" type="text/javascript"></script>
+
+</body>
+</html>

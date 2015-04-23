@@ -115,53 +115,68 @@
    * Search form
    */
 
-  var searchBtn = id('search-btn');
-  var searchInput = id('keywords');
-  var hideClass = 'hidden';
+  function initSearchForm() {
+    var searchBtn = id('search-btn');
+    var searchInput = id('keywords');
+    var hideClass = 'hidden';
 
-  addEvent(searchBtn, 'click', function(e) {
-    log('search button click');
-    e.stopPropagation();
+    addEvent(searchBtn, 'click', function(e) {
+      log('search button click');
+      e.stopPropagation();
 
-    if (trim(searchInput.value) === '') {
-      e.preventDefault();
+      if (trim(searchInput.value) === '') {
+        e.preventDefault();
 
-      if (hasClass(searchInput, hideClass)) {
-        removeClass(searchInput, hideClass);
-        searchInput.focus();
-      } else {
-        addClass(searchInput, hideClass);
-        searchInput.blur();
+        if (hasClass(searchInput, hideClass)) {
+          removeClass(searchInput, hideClass);
+          searchInput.focus();
+        } else {
+          addClass(searchInput, hideClass);
+          searchInput.blur();
+        }
       }
-    }
-  });
+    });
 
-  addEvent(doc, 'click', function() {
-    log('document click');
-    addClass(searchInput, hideClass);
-  });
+    addEvent(searchInput, 'click', function(e) {
+      e.stopPropagation();
+    });
+
+    addEvent(doc, 'click', function() {
+      log('document click');
+      addClass(searchInput, hideClass);
+    });
+  }
 
 
   /**
    * Sidebar off-canvas
    */
 
-  var sidebarTrigger = id('sidebar-toggle');
-  var bd = doc.body;
+  function initSidebar() {
+    var sidebarTrigger = id('sidebar-toggle');
+    var bd = doc.body;
 
-  addEvent(sidebarTrigger, 'click', function(e) {
-    log('sidebar-toggle click');
-    e.stopPropagation();
-    toggleClass(bd, 'sidebar-active');
-    log('body.className: ' + bd.className);
-  });
+    addEvent(sidebarTrigger, 'click', function(e) {
+      log('sidebar-toggle click');
+      e.stopPropagation();
+      toggleClass(bd, 'sidebar-active');
+      log('body.className: ' + bd.className);
+    });
 
-  var main = id('main');
+    var main = id('main');
 
-  addEvent(main, 'click', function() {
-    log('main click');
-    removeClass(bd, 'sidebar-active');
-    log('body.className: ' + bd.className);
-  });
+    addEvent(main, 'click', function() {
+      log('main click');
+      removeClass(bd, 'sidebar-active');
+      log('body.className: ' + bd.className);
+    });
+  }
+
+  /**
+   * All init* function
+   */
+
+  initSearchForm();
+  initSidebar();
 
 })();

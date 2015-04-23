@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.xiaocaoge.com/"/>
-  <updated>2015-04-23T14:40:52.736Z</updated>
+  <updated>2015-04-23T16:06:22.400Z</updated>
   <id>http://www.xiaocaoge.com/</id>
   
   <author>
@@ -16,8 +16,8 @@
   
   <entry>
     <title><![CDATA[Mac上手]]></title>
-    <link href="http://www.xiaocaoge.com/get-started-on-using-mac/"/>
-    <id>http://www.xiaocaoge.com/get-started-on-using-mac/</id>
+    <link href="http://www.xiaocaoge.com/get-started-on-using-mac.html"/>
+    <id>http://www.xiaocaoge.com/get-started-on-using-mac.html</id>
     <published>2015-04-13T14:16:35.000Z</published>
     <updated>2015-04-13T14:16:35.000Z</updated>
     <content type="html"><![CDATA[<p>使用 Mac OSX 小半年了，记录下上手历程，虽然还是用得不好。</p>
@@ -102,8 +102,8 @@
   
   <entry>
     <title><![CDATA[MDN翻译小总结]]></title>
-    <link href="http://www.xiaocaoge.com/mdn-translation-summary/"/>
-    <id>http://www.xiaocaoge.com/mdn-translation-summary/</id>
+    <link href="http://www.xiaocaoge.com/mdn-translation-summary.html"/>
+    <id>http://www.xiaocaoge.com/mdn-translation-summary.html</id>
     <published>2015-04-02T11:08:04.000Z</published>
     <updated>2015-04-02T11:08:04.000Z</updated>
     <content type="html"><![CDATA[<h2 id="加入MDN翻译">加入MDN翻译</h2>
@@ -156,8 +156,8 @@
   
   <entry>
     <title><![CDATA[修复 grub 及相关工具]]></title>
-    <link href="http://www.xiaocaoge.com/repair-grub-and-some-useful-tools/"/>
-    <id>http://www.xiaocaoge.com/repair-grub-and-some-useful-tools/</id>
+    <link href="http://www.xiaocaoge.com/repair-grub-and-some-useful-tools.html"/>
+    <id>http://www.xiaocaoge.com/repair-grub-and-some-useful-tools.html</id>
     <published>2014-08-13T13:49:17.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是“crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows7 要靠 grub 引导，自然也进不去了。</p>
@@ -191,8 +191,8 @@ grub-install --root-directory=<span class="regexp">/media/</span>tempdir <span c
   
   <entry>
     <title><![CDATA[Ubuntu 下安装 Windows 7]]></title>
-    <link href="http://www.xiaocaoge.com/install-windows7-in-ubuntu/"/>
-    <id>http://www.xiaocaoge.com/install-windows7-in-ubuntu/</id>
+    <link href="http://www.xiaocaoge.com/install-windows7-in-ubuntu.html"/>
+    <id>http://www.xiaocaoge.com/install-windows7-in-ubuntu.html</id>
     <published>2014-08-13T13:30:41.000Z</published>
     <updated>2015-03-30T15:00:06.000Z</updated>
     <content type="html"><![CDATA[<p>由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 grub 给覆盖。</p>
@@ -231,8 +231,8 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
   
   <entry>
     <title><![CDATA[重新定义清除浮动]]></title>
-    <link href="http://www.xiaocaoge.com/redefine-clearfix-float/"/>
-    <id>http://www.xiaocaoge.com/redefine-clearfix-float/</id>
+    <link href="http://www.xiaocaoge.com/redefine-clearfix-float.html"/>
+    <id>http://www.xiaocaoge.com/redefine-clearfix-float.html</id>
     <published>2014-05-25T07:16:09.000Z</published>
     <updated>2015-03-31T14:20:41.000Z</updated>
     <content type="html"><![CDATA[<h2 id="经典">经典</h2>
@@ -310,8 +310,8 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
   
   <entry>
     <title><![CDATA[搭建Linux工作环境之路]]></title>
-    <link href="http://www.xiaocaoge.com/build-linux-workspace/"/>
-    <id>http://www.xiaocaoge.com/build-linux-workspace/</id>
+    <link href="http://www.xiaocaoge.com/build-linux-workspace.html"/>
+    <id>http://www.xiaocaoge.com/build-linux-workspace.html</id>
     <published>2014-05-18T03:37:42.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。</p>
@@ -364,8 +364,8 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
   
   <entry>
     <title><![CDATA[响应式图片]]></title>
-    <link href="http://www.xiaocaoge.com/responsive-images/"/>
-    <id>http://www.xiaocaoge.com/responsive-images/</id>
+    <link href="http://www.xiaocaoge.com/responsive-images.html"/>
+    <id>http://www.xiaocaoge.com/responsive-images.html</id>
     <published>2014-04-21T12:53:28.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>从定宽布局转向响应式布局的过程中，要想把PC端显示的内容显示在小屏幕的手机或平板上，首先也是最基本的就是采用流式布局，而图片的显示需要加下面一行代码：</p>
@@ -404,8 +404,8 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
   
   <entry>
     <title><![CDATA[图标解决方案: CSS Sprites, DataURI和@font-face]]></title>
-    <link href="http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face/"/>
-    <id>http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face/</id>
+    <link href="http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face.html"/>
+    <id>http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face.html</id>
     <published>2014-04-13T10:17:56.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>很多网站都需要用到小的图标，而且不止一个，会用很多个。最先接触到（也是最早出现的）的一种解决方案是CSS Sprites，把所有图标都合并成一张大图。后来又了解了DataURI这种把图片编码成字符的方法，接着是现在大行其道的@font-face方法，将常用的图标都制作成字体。三种方法的共同点是都能减少请求数，从而提高页面加载速度，同时又各有优劣：</p>
@@ -499,8 +499,8 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
   
   <entry>
     <title><![CDATA[书签管理小记]]></title>
-    <link href="http://www.xiaocaoge.com/bookmark-management/"/>
-    <id>http://www.xiaocaoge.com/bookmark-management/</id>
+    <link href="http://www.xiaocaoge.com/bookmark-management.html"/>
+    <id>http://www.xiaocaoge.com/bookmark-management.html</id>
     <published>2014-04-11T18:56:05.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>在大学时代，电脑基本上玩游戏了，浏览的网站无非都是些QQ空间、淘宝、人人之类，一共也就那么几个，连标签栏都占不满，也就没必要管理。后来学习PPT，发现了一些相关的博客、工具、图片资源等大概几十个网址。这也很好管理，两三个文件夹，分类管理就可以了。我想这些对于大部分学生时代的人都够用了，说真的，书签还真不用怎么管理，没多少。</p>
@@ -540,8 +540,8 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
   
   <entry>
     <title><![CDATA[Markdown语法学习]]></title>
-    <link href="http://www.xiaocaoge.com/markdown-syntax/"/>
-    <id>http://www.xiaocaoge.com/markdown-syntax/</id>
+    <link href="http://www.xiaocaoge.com/markdown-syntax.html"/>
+    <id>http://www.xiaocaoge.com/markdown-syntax.html</id>
     <published>2014-04-08T20:14:17.000Z</published>
     <updated>2015-03-30T15:34:32.000Z</updated>
     <content type="html"><![CDATA[<h2 id="简介">简介</h2>
@@ -645,8 +645,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[理解viewport与device-width]]></title>
-    <link href="http://www.xiaocaoge.com/understanding-viewport-and-device-width/"/>
-    <id>http://www.xiaocaoge.com/understanding-viewport-and-device-width/</id>
+    <link href="http://www.xiaocaoge.com/understanding-viewport-and-device-width.html"/>
+    <id>http://www.xiaocaoge.com/understanding-viewport-and-device-width.html</id>
     <published>2014-04-08T09:39:22.000Z</published>
     <updated>2015-03-30T15:12:42.000Z</updated>
     <content type="html"><![CDATA[<p>在响应式设计或移动Web开发当中经常见到的一句代码：</p>
@@ -699,8 +699,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[Transition height from 0 to auto]]></title>
-    <link href="http://www.xiaocaoge.com/transition-height-from-0-to-auto/"/>
-    <id>http://www.xiaocaoge.com/transition-height-from-0-to-auto/</id>
+    <link href="http://www.xiaocaoge.com/transition-height-from-0-to-auto.html"/>
+    <id>http://www.xiaocaoge.com/transition-height-from-0-to-auto.html</id>
     <published>2014-04-03T09:35:08.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于<code>height:auto;时</code>，浏览器会识别height值为0，因此无法直接从<code>height: 0;</code>过渡到<code>height: auto;</code>。</p>
@@ -745,8 +745,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[电脑文件管理]]></title>
-    <link href="http://www.xiaocaoge.com/compute-files-management/"/>
-    <id>http://www.xiaocaoge.com/compute-files-management/</id>
+    <link href="http://www.xiaocaoge.com/compute-files-management.html"/>
+    <id>http://www.xiaocaoge.com/compute-files-management.html</id>
     <published>2014-04-01T08:42:17.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。</p>
@@ -834,8 +834,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[Sublime Text 2配置与使用]]></title>
-    <link href="http://www.xiaocaoge.com/sublime-text-2-settings-and-use/"/>
-    <id>http://www.xiaocaoge.com/sublime-text-2-settings-and-use/</id>
+    <link href="http://www.xiaocaoge.com/sublime-text-2-settings-and-use.html"/>
+    <id>http://www.xiaocaoge.com/sublime-text-2-settings-and-use.html</id>
     <published>2014-03-28T10:45:30.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>从notepad++切换到Sublime Text 2已经有两个月了，已经不习惯notepad++了。总得来说，Sublime比notepad++有很多功能方面的改进，使用体验非常好，又有丰富的插件，活跃的开发者氛围。当然，还是有个别地方不如notepad++的，比如重命名文件，所有的配置都是json格式，难免使得习惯图形界面的人头大。当时配置与上手练习花了大概5个小时，再加上解决一些插件等使用的问题，少说也有十多个小时，这还是有notepadd++的配置与使用基础。但我还是觉得十分划算，毕竟这个是天天用，也会用个几年的东西，最开始的十小时能带来很大的效率提升。</p>
@@ -935,8 +935,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[跨浏览器透明解决方案]]></title>
-    <link href="http://www.xiaocaoge.com/cross-browser-transparency/"/>
-    <id>http://www.xiaocaoge.com/cross-browser-transparency/</id>
+    <link href="http://www.xiaocaoge.com/cross-browser-transparency.html"/>
+    <id>http://www.xiaocaoge.com/cross-browser-transparency.html</id>
     <published>2013-10-20T19:55:49.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。</p>
@@ -965,8 +965,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[软件与生态系统]]></title>
-    <link href="http://www.xiaocaoge.com/software-and-ecosystem/"/>
-    <id>http://www.xiaocaoge.com/software-and-ecosystem/</id>
+    <link href="http://www.xiaocaoge.com/software-and-ecosystem.html"/>
+    <id>http://www.xiaocaoge.com/software-and-ecosystem.html</id>
     <published>2013-10-17T20:00:27.000Z</published>
     <updated>2015-03-31T14:13:57.000Z</updated>
     <content type="html"><![CDATA[<p>几乎所有人初次接触电脑时，脑子里很少有“软件”这个概念，太抽象了。自己第一次接触电脑还是在初中的电脑课程上，接触的第一批软件是金山打字、记事本、纸牌游戏之类的。至于那些经常去网吧的同学，还会接触到QQ、游戏之类的软件。除此之外如果没人教，也很少接触新的软件，本来电脑都很少接触。高中时学会玩红警与魔兽，还学会了迅雷下载。到了大学，既有了自己的电脑，也有了折腾电脑的时间，玩电脑的水平才有很大提高。</p>
@@ -1015,8 +1015,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[Photoshop入门教程]]></title>
-    <link href="http://www.xiaocaoge.com/photoshop-beginner/"/>
-    <id>http://www.xiaocaoge.com/photoshop-beginner/</id>
+    <link href="http://www.xiaocaoge.com/photoshop-beginner.html"/>
+    <id>http://www.xiaocaoge.com/photoshop-beginner.html</id>
     <published>2013-10-15T19:05:00.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>已经忘记什么时候开始使用Photoshop软件了，也许是当时需要处理图片，又听说了Photoshop的大名，于是便安装使用了。印象中，从Photoshop 7开始使用的，那时还没有现在这么大的体积。当然软件的第一步就是安装，安装教程网上也是一大把，得修改hosts文件来屏蔽验证。</p>
@@ -1051,8 +1051,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[垂直居中（Vertical-Align)]]></title>
-    <link href="http://www.xiaocaoge.com/vertical-align-methods/"/>
-    <id>http://www.xiaocaoge.com/vertical-align-methods/</id>
+    <link href="http://www.xiaocaoge.com/vertical-align-methods.html"/>
+    <id>http://www.xiaocaoge.com/vertical-align-methods.html</id>
     <published>2013-06-05T17:33:07.000Z</published>
     <updated>2015-03-30T15:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>垂直居中包括单行文本居中、单元格（td）内容居中、块级元素居中。由于单元格的display属性为table-cell，且浏览器默认vertical-align:middle，所以就是默认垂直居中，不做考虑。要注意的就是vertical-align属性的含义是设置内联元素在行框（一行）内的垂直对齐方式，对于display:table-cell的元素也适用，但是IE8+才支持display:table-cell设置，于是就有了各种跨浏览器垂直对齐的方法。</p>
@@ -1194,8 +1194,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[表单验证（Form Validation）]]></title>
-    <link href="http://www.xiaocaoge.com/form-validation/"/>
-    <id>http://www.xiaocaoge.com/form-validation/</id>
+    <link href="http://www.xiaocaoge.com/form-validation.html"/>
+    <id>http://www.xiaocaoge.com/form-validation.html</id>
     <published>2013-06-04T13:38:50.000Z</published>
     <updated>2015-03-27T13:39:34.000Z</updated>
     <content type="html"><![CDATA[<p>表单验证最常见的就是注册和登录表单，客户端与服务端都需要验证，客户端验证可以即时反馈，服务端用来防止恶意人员绕开客户端验证或JavaScript不起作用时提供验证。</p>
@@ -1242,8 +1242,8 @@ _   下划线
   
   <entry>
     <title><![CDATA[Image Box]]></title>
-    <link href="http://www.xiaocaoge.com/image-box/"/>
-    <id>http://www.xiaocaoge.com/image-box/</id>
+    <link href="http://www.xiaocaoge.com/image-box.html"/>
+    <id>http://www.xiaocaoge.com/image-box.html</id>
     <published>2013-06-04T06:58:55.000Z</published>
     <updated>2015-03-30T15:19:06.000Z</updated>
     <content type="html"><![CDATA[<p>通过在同一页面实现图片的浏览与查看，从而带来更好的用户体验，越来越与客户端的图片查看工具功能类似。将来，用户只用在网络上寻找、存储、编辑图片，不用下载到本地了。通过原生JavaScript实现的一个image box，比利用jQuery现成的插件要复杂的多。需要综合应用DOM编程能力，所以最好能之前有DOM处理的常见函数，比如DOM节点遍历、创建、删除、插入等。另外还要有处理BOM的函数，比如元素位置获得和修改、元素尺寸获得和修改、元素透明度变化等。这些东西都是《精通JavaScript》一书讲的，这本书对于如何打造自己的库很有帮助，当然对于学习jQuery也有用。书中讲了一个image box是实现，所以自己也跟着实现了一个。</p>

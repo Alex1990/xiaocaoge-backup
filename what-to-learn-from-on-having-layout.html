@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>从“On having layout”可以学到什么 | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css" type="text/css">
+
+  <script src="/js/modernizr-custom.min.js" type="text/javascript"></script>
+
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-what-to-learn-from-on-having-layout" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-04-26T05:32:08.000Z" itemprop="datePublished">2013-4-26</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      从“On having layout”可以学到什么
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>早先从《精通CSS》一书中知道有这么一篇文章专门讲IE的一个专有属性hasLayout，hasLayout就是IE6/7中诸多bug的罪魁祸首。说是一篇文章，读完之后发现是“一本书”，知识容量有点大，有40页左右，再加上必须看里面链接的文章，估计总共不下百页，花了三天才马马虎虎看完，期间发生大脑神志模糊、缺氧等症状。言归正传：</p>
+<p>原文链接：<a href="http://www.satzansatz.de/cssd/onhavinglayout.html" target="_blank" rel="external">On having layout</a></p>
+<p>BlueIdea的译文：<a href="http://www.blueidea.com/tech/site/2006/3698.asp" target="_blank" rel="external">On having layout</a></p>
+<p>“Layout”是IE/Win的一个私有概念，用来控制元素的尺寸和定位，拥有布局（have layout）的元素负责本身及其子元素的尺寸和定位。如果一个元素没有拥有布局，那么它的尺寸有最近的拥有布局的祖先元素控制。（这句话摘抄的，读得是云里雾里）</p>
+<p>通常IE6/7中的bug可以通过使元素拥有布局（hasLayout = true）来解决，默认情况下拥有布局的元素包括：</p>
+<ul>
+<li>html</li>
+<li>table</li>
+<li>tr、td</li>
+<li>img</li>
+<li>hr</li>
+<li>input、select、textarea、button</li>
+<li>iframe、embed、object、applet</li>
+<li><p>marquee</p>
+<p>上面没几个是常用的元素，需要指出的是hasLayout不是CSS属性，不可以通过设置hasLayout = true 使元素拥有布局，可以通过设置某些CSS属性来触发hasLayout属性：</p>
+</li>
+<li>float: left/right;</li>
+<li>display: inline-block;</li>
+<li>width: 任何值</li>
+<li>height: 任何值</li>
+<li>zoom: 任何值（IE的专有属性，常用）</li>
+<li>writing-mode: tb-rl（IE的专有属性）</li>
+</ul>
+<p>在IE7中，下面属性也可以触发布局</p>
+<ul>
+<li>overflow: hidden/scroll/auto;</li>
+<li>min-width: 任何值</li>
+<li>max-width: 除none之外任何值</li>
+</ul>
+<p>详细的关于hasLayout触发和重置（使元素不具有布局）的条件可参考此文：<a href="http://onhavinglayout.fwpf-webdesign.de/hack_management/" target="_blank" rel="external">layout-trigger-comparison</a>，第二部分是关于如何用条件注释管理IE hack的。</p>
+<p>怎么查看一个元素是否具有布局呢？可以通过地址栏输入代码：</p>
+<p>javascript:alert(eid.currentStyle.hasLayout)</p>
+<p>“eid”指某个元素</p>
+<p>另外也可以通过IE的Developer Toolbar查看，若hasLayout 为 true，其值为-1。</p>
+<p><strong>一些关于hasLayout的实例：</strong></p>
+<p>（本人采用以下浏览器验证：IE6（绿色版），IE7（IE8中的IE7模式），IE8，Chrome25，Firefox19，Opera12，Safari5/Win）</p>
+<p><strong>包含浮动元素(Containing Floats):</strong></p>
+<p>即一个容器内子元素浮动，若容器具有Layout，则容器会包含子元素，也就是自动扩展以适应内容(extend-to-fit)。设置容器高度，百分比为单位时，IE7才会自动扩展overflow:hidden|scroll|auto; 添加layout，仅对IE7有效，且在IE7中的表现和在其他现在浏览器中一样，会包含子元素。position: fixed同样。</p>
+<p>另外，若容器相对定位，比如向左偏移（left: -20px），则在IE6中，浮动的子元素不会跟着发生偏移，除非容器具有layout</p>
+<p><strong>紧跟浮动元素的元素(Elements next to floats)：</strong></p>
+<p>若为块级元素，其包含的内容会被浮动元素挤占(标准情况下)</p>
+<p>如果块级元素具有layout，则块级元素也会被浮动元素挤开，并且其包含的的内容也不会跑到浮动元素的下面形成环绕。另外在给块级元素使用相对定位时，相对原点也会从浮动元素的右上角计算。还有注意IE6下的3像素偏移bug。</p>
+<p><strong>列表的项目符号</strong></p>
+<p>IE6/7中的是通过列表的外边距空出空间的，而在其他现在浏览器中是通过列表的内边距空出空间的。若使列表具有layout，则会使项目符号凭空消失，也可能发生其他定位问题。</p>
+<p><strong>有序列表序数数字</strong></p>
+<p>IE6/7中有序列表项具有layout时，会从新计数，即从1开始；通常情况下应该给列表外面的容器设置宽度，设置列表项里面的内容的高度，从而避免使列表或列表项具有layout。</p>
+<p><strong>垂直列表项目之间的空白间隔</strong></p>
+<p>IE6 中，若列表项的内容是一个块级元素（比如anchor）时，多行列表项之间会形成空白，就好像插入了一个看不见的列表项，避免的方法有：</p>
+<p>a. 使列表项的块级内容具有layout（标签a的鼠标单击/悬浮感应区域扩展，就是超链接的click和hover事件，同其他现代浏览器）</p>
+<p>b. 设置列表项 display为 inline（标签a的鼠标单击/悬浮感应区域并不扩展）</p>
+<p><strong>IE6下常规的垂直导航列表，列表元素(ul/ol浮动时</strong></p>
+<p>若&lt;a&gt;没有layout则列表项之间有空白间隔，且&lt;a&gt;不具有扩展的点击或悬浮感应区域，但列表会收缩包裹；</p>
+<p>若&lt;a&gt;有layout，则列表项之间无空白间隔，&lt;a&gt;具有扩展的点击或悬浮感应区域，但列表项会扩展直到整个宽度（指最近的祖先元素所限制的宽度）。</p>
+<p>若列表项浮动（即想制作水平列表），&lt;a&gt;具有haslayout，且不浮动时，列表项扩展直到整个宽度，且有垂直空白间隔，解决方法时，让&lt;a&gt;不具有layout，或具有浮动。</p>
+<p><strong>浮动之后的清理元素与浮动元素接触</strong></p>
+<p>容器包含一个浮动元素时，若浮动之后的清理元素与浮动元素接触(外观接触），则在IE6/7中发生多种问题：容器的margin可能不起作用；清理元素之前的标准流内容，若不具有haslayout会消失。</p>
+<p><strong>1像素舍入误差（1 pixel rounding error）</strong></p>
+<p>绝对定位的元素以相对单位(%/em)为长度单位时，在IE6/7中可能会有1像素的计算误差，这取决于相对单位值大小和窗口的大小(也是祖先定位元素的大小)。</p>
+<p>另外，绝对定位元素的百分比宽度或高度会根据最近已定位的祖先元素(relative,absolute,fixed)计算，但是在IE6中，会根据其父元素计算。</p>
+<p><strong>对表单元素左外边距的影响</strong></p>
+<p>IE6/7 表单元素的父元素若具有layout，则表单元素(除checkbox,radio,image和textarea)和select elements会继承所有祖先元素的左外边距之和。解决方法：通常可以在表单元素外加一个不具有layout的内联元素，如label,span，当然也可以是p块级元素。</p>
+<p><strong>对背景属性的影响</strong></p>
+<p>IE6/7 ：background-position的参考原点与是否具有layout有关。</p>
+<p>hasLayout: 则原点为包含内边距的左上角，连背景颜色也是，因此边框下面也就没有背景颜色了</p>
+<p>no hasLayout: 则原点为包含边框的左上角，背景颜色也是</p>
+<p>当然hasLayout还有其他的影响，比如对表格的影响，还请参考原文或译文。由于原文及其链接信息含量有点大以及本人作为初学者，对文章的理解还未透彻，写得不好，主要为了自己有这个总结的过程。</p>
+<p>另外一些在这几天发现的东西：</p>
+<p><strong>窗口滚动条</strong></p>
+<p>IE6 默认显示垂直滚动条，通过设置html的overflow: auto/hidden/visible取消。当设置为auto时，若页面宽度为100%，则当高度大于一竖屏时，即出现垂直滚动条时，横向滚动条也会出现。</p>
+<p><strong>清理浮动</strong></p>
+<p>IE6/7清理浮动时不像其他浏览器用外边距填充，而是直接凭空清理，浮动元素之前有同胞元素时，浮动元素与清理元素之间会复制浮动元素之前的同胞元素的下外边距。</p>
+<p><strong>使用:first-letter或:first-line</strong></p>
+<p>IE6中，对标签&lt;a&gt;使用:first-letter或:first-line似乎会激活activate状态或者下面对a:link or a:visited应用样式时可能无效，因此如果要兼容IE6，最好别用first-letter或first-line伪元素，利用&lt;span class=”first-letter”&gt;&lt;/span&gt;或&lt;span class=”first-line”&gt;&lt;/span&gt;等代替。</p>
+<p><strong>边框样式(border-style):</strong></p>
+<p>dotted: 在IE6-8,FF 中为圆点，IE中边缘锯齿明显，在SF/Ch/Op中表现为方点,因此，不要使用很宽的此类边框</p>
+<p>dashed: 均是长条，但长度、密度、以及角交界处处理均不同，主要表现在IE与其他浏览器的不同，SF/Ch最相似，可能是同一核心的缘故吧</p>
+<p>double: IE两条线间距小，也就是两条线较粗</p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/ie6/">ie6</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/layout/">layout</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/布局/">布局</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/what-to-learn-from-on-having-layout.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-what-to-learn-from-on-having-layout" data-title="从“On having layout”可以学到什么" data-url="http://www.xiaocaoge.com/what-to-learn-from-on-having-layout.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/MDN/" style="font-size: 12.00px;">MDN</a><a href="/tag/Mac/" style="font-size: 12.00px;">Mac</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/OSX/" style="font-size: 12.00px;">OSX</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2015 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js" type="text/javascript"></script>
+
+</body>
+</html>
