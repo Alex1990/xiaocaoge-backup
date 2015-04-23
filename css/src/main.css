@@ -540,10 +540,18 @@ h1.article-title {
           transition: .4s;
 }
 
+.lt-ie9 .sidebar {
+  margin-left: -400px;
+}
+
 .sidebar-active .sidebar {
   -webkit-transform: translate(0, 0);
       -ms-transform: translate(0, 0);
           transform: translate(0, 0);
+}
+
+.lt-ie9 .sidebar-active .sidebar {
+  margin-left: 0;
 }
 
 .top-btn-group {
@@ -558,7 +566,7 @@ h1.article-title {
   padding: 0;
   width: 32px;
   height: 32px;
-  line-height: 36px;
+  line-height: 32px;
   text-align: center;
   vertical-align: top;
   background-color: transparent;
