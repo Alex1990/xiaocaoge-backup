@@ -262,10 +262,18 @@ code {
           transition: .4s;
 }
 
+.lt-ie9 .main {
+  margin-left: 0;
+}
+
 .sidebar-active .main {
   -webkit-transform: translate(400px, 0);
       -ms-transform: translate(400px, 0);
           transform: translate(400px, 0);
+}
+
+.lt-ie9 .sidebar-active .main {
+  margin-left: 400px;
 }
 
 .content .article {
