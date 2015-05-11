@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.xiaocaoge.com/"/>
-  <updated>2015-04-28T11:23:17.094Z</updated>
+  <updated>2015-05-11T12:47:31.486Z</updated>
   <id>http://www.xiaocaoge.com/</id>
   
   <author>
@@ -13,6 +13,60 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[MDN翻译小总结]]></title>
+    <link href="http://www.xiaocaoge.com/mdn-translation-summary.html"/>
+    <id>http://www.xiaocaoge.com/mdn-translation-summary.html</id>
+    <published>2015-04-28T12:17:54.000Z</published>
+    <updated>2015-04-28T12:17:54.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="加入MDN翻译">加入MDN翻译</h2>
+<p>一开始学习前端时经常查的手册是 <a href="http://www.w3school.com.cn" target="_blank" rel="external">www.w3school.com.cn</a> 和 <a href="http://css.doyoe.com" target="_blank" rel="external">css.doyoe.com</a>，后来在金山的招聘信息中看到了很多新的前端技术名词，其中有 MDN。发现 MDN 上面的要更详细些，尤其是 DOM 方面，好吧其实是很多方面，所以经常会在午休甚至上班时间学习 MDN 上面的基础知识。为啥说在午休及甚至上班呢？这是我第一份前端工作，特点是：工资少，加班多。</p>
+<p>大概过了四五个月之后，2014年五月份换了一份工作，在学习怎么输出格式化的 JSON 数据时，在 MDN 上了解到了 <code>JSON.stringify()</code> 方法的第二第三个参数，顺便也学习了<code>JSON.parse()</code>方法。突然发觉自己能翻译这两个页面时，就顺便翻译了。第二天看到紫云飞修改了一下，我就查看改了哪些，发现自己确实没翻译好，那两个方法没有理解透。不过 MDN 翻译之路已经起步了，慢慢总结需要改进的地方。</p>
+<p>然后，我加入了 MDN 中文翻译的 Leader 紫云飞创建的一个群，这个群联系方式页面太难找了，以至于我再找时都找不到了，我加入群里时算上我只有三个人。正好换的工作双休、不加班，且工作不繁忙，我就晚上用来学习及翻译 MDN 上面的文档，主要是 JavaScript 内置对象的属性和方法。翻译的速度并不算快，因为我要先技术过关，即使以前学过，但是一些细节需要学习，而且有些句子并不好翻译。快的话，10分钟能翻译一个页面，慢的话一晚上可能都翻译不完一个页面。七八两个月份是高产期，到九月份之后，工作忙了，晚上大部分时间学习 seajs、nodejs、hexo 等其他知识了，翻译就慢下来了。而且有时候会想翻译 MDN 有什么意义，因为我怀疑会有多少人看 MDN 的中文页面呢，基础的前端 JavaScript 知识可以通过《JavaScript权威指南》和《JavaScript高级程序设计》来学习，而且也有国内的参考手册。当然我没有页面浏览的数据，所以觉得人少只是自己的臆测。另外，对我自己来说还是有意义的，一来学习基础知识，二来增加点儿翻译经验。</p>
+<h2 id="几个方面的总结：">几个方面的总结：</h2>
+<h3 id="我的翻译流程：">我的翻译流程：</h3>
+<ol>
+<li>通读英文文档，并练习，有不少是以前学过，但是学得不细的；</li>
+<li>如果有插入超链接，复制Source并把“en-US”替换为“zh-CN”，这是紫云飞教的，我一直手动一个个改的，反正也不多；</li>
+<li>先把标题快速翻译完；</li>
+<li>从头开始往下翻译，不断查字典，不断做练习等，直到翻译完；</li>
+<li>通读一遍查看错别字及格式错误；</li>
+<li>提交，再浏览一遍确认。</li>
+</ol>
+<h3 id="MDN文档编辑器">MDN文档编辑器</h3>
+<p>需要调整格式的地方并不多，只需保留英文文档格式通常就可以了。经常用的格式也就是<code>H2</code>、<code>H3</code>、<code>p</code>、<code>Code</code>，以及插入链接和代码块。我以前遇到的最大麻烦就是插入代码块老是有问题，不是没有高亮效果，就是高亮嵌套高亮了，后来明白了选择<code>Syntax Highlighter</code>下拉列表对应的编程语言，初始化一个代码块，然后将英文的代码块复制粘贴到初始化的代码块中，但必须粘贴<strong>纯文本</strong>。</p>
+<p>另外一个要学习的地方就是 MDN 的宏标记，或者叫宏标签，英文称为“Custom macros”，可以查看 <a href="https://developer.mozilla.org/en-US/docs/MDN/Contribute/Content/Custom_macros" target="_blank" rel="external">Custom macros</a>，比如<code>{{APIRef(&quot;DOM Events&quot;)}}</code>用来显示文档左侧的树形导航，比如<code>{{jsxref(&quot;Boolean&quot;)}}</code>用来插入链接到<code>Boolean</code>对象页面的超链接，且语言为当前文档采用的语言。还可以查看相应宏标记的源码：<a href="https://developer.mozilla.org/en-US/docs/Template:jsxref" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Template:jsxref</a>。</p>
+<h3 id="中英文混合编辑">中英文混合编辑</h3>
+<p>主要有两个问题：一是中文和英文之间是否有空格；二是标点符号的使用，主要就是引号、括号、中文顿号与英文逗号。我参考了知乎上面的回答，我自己选择加空格，文章以中文为主时，也以中文标点为主。请查看知乎的讨论：</p>
+<ul>
+<li><a href="http://www.zhihu.com/question/19587406" target="_blank" rel="external">中英文混排时中文与英文之间是否要有空格？</a></li>
+<li><a href="http://www.zhihu.com/question/19695720" target="_blank" rel="external">中英文混排的时候如何使用标点符号？</a></li>
+<li><a href="http://www.zhihu.com/question/20488833" target="_blank" rel="external">中英文文本混排时，园括号该用中文括号还是西文括号？</a></li>
+</ul>
+<p>当然，这个问题以及排版问题对我来说很复杂，涉及很多细节，我只是统一了自己的风格。MDN 上面各人编辑的风格也不同，目前没有统一的规范供参考。</p>
+<h3 id="术语管理">术语管理</h3>
+<p>这里的术语主要包括前端技术术语以及标题。前端技术术语一部分自然属于计算机科学与技术，另一部分是前端独有的，甚至会出现创造的词汇。我个人对于那些翻译很固定的词汇才会只保留中文，对于其他的会在括号里面注明英文，毕竟有部分英文术语可能有两种或多种中文翻译，怕拿捏不准；对于新出现的词汇一定保留英文，有些感觉一时很难翻译，或者一句话才能讲清楚。</p>
+<p>而对于标题，主要是一二级标题，因为这些是文档之间公用的，而且又是很多人在翻译，所以还是要统一管理的。虽然 MDN 提供了术语的管理页面，但是极少查看，作用不大。</p>
+<p>国内有计算机技术相关的术语库：<a href="http://www.cnctst.cn/" target="_blank" rel="external">国家科技名词审查委员会</a>和<a href="http://www.microsoft.com/Language/zh-cn/Search.aspx" target="_blank" rel="external">微软的术语库</a>。但是这两个只是供参考用的，既无法解决术语的统一性，也无法解决前端技术的快速发展。所以我有时会参考《JavaScript高级程序设计》这本书的一些术语翻译，之所以会参考这本，因为手头上没有其他相关的前端书，这本书的翻译质量高，读的人多。当然我确实应该参考更多的前端及其他计算机编程书籍的，另外也经常查有道词典。</p>
+<p>所以，我期待能有个专门管理术语的网站，就像 github 一样，可以在翻译某个项目时建立一个术语库，可以在翻译某本书时建立一个术语库，也可以专门为前端建立一个权威的术语库，人人都可以建立，最终马太效应会让术语变得统一，我想这也符合语言的发展规律吧，统一才能交流。不仅仅计算机领域，各行各业都要翻译，也不仅仅英语翻译为中文，日语、韩语、俄语都需要。</p>
+<h3 id="中文翻译贡献者">中文翻译贡献者</h3>
+<p>以前紫云飞做过一个 2014 年<a href="http://weibo.com/p/1001603800332185524370" target="_blank" rel="external">统计</a>，大概有 400 个人都翻译过。不过，70%都只翻译了一个页面，这其中又有不少只翻译了一句话。我也不知道为什么他们只翻译一个页面就不再翻译了。我猜想可能的原因：翻译比较枯燥，只是尝鲜的，编辑器不好用，觉得难翻译的，只是顺手翻译的等等。我突然觉得贡献者翻译的页数跟一些 github 上面的项目提交记录一样，会有几个贡献特别多的，但是贡献少的也是需要的。</p>
+<p>今年，紫云飞会把新来的翻译者邀请到QQ群，QQ群以前几乎没人说话的，现在稍微活跃了点儿，每月翻译的页面似乎比去年增加了一点儿。我自己翻译的速度也慢了，每月只有几个页面，也不知道自己何时会停止，我想着把最常需要的翻译完。MDN 上面有些文档质量低，有些就直接照搬的 W3C 上面的规范，有些又缺 <a href="help.dottoro.com">help.dottoro.com</a> 上面的细节，而我的英文写作能力又渣，自己不想完善英文文档，也不太想翻译这些了。</p>
+<p>对于 2015 年，如果工作不忙的话，我还是想着继续翻译 MDN 的文档，想着翻译 CSS 与 SVG 方面的，并尝试做几个相关的小工具。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="加入MDN翻译">加入MDN翻译</h2>
+<p>一开始学习前端时经常查的手册是 <a href="http://www.w3school.com.cn" target="_blank" rel="external">www.w3school.com.cn</a>]]>
+    </summary>
+    
+      <category term="MDN" scheme="http://www.xiaocaoge.com/tag/MDN/"/>
+    
+      <category term="翻译" scheme="http://www.xiaocaoge.com/tag/%E7%BF%BB%E8%AF%91/"/>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Mac上手]]></title>
@@ -97,60 +151,6 @@
       <category term="OSX" scheme="http://www.xiaocaoge.com/tag/OSX/"/>
     
       <category term="其他" scheme="http://www.xiaocaoge.com/category/%E5%85%B6%E4%BB%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[MDN翻译小总结]]></title>
-    <link href="http://www.xiaocaoge.com/mdn-translation-summary.html"/>
-    <id>http://www.xiaocaoge.com/mdn-translation-summary.html</id>
-    <published>2015-04-02T11:08:04.000Z</published>
-    <updated>2015-04-02T11:08:04.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="加入MDN翻译">加入MDN翻译</h2>
-<p>一开始学习前端时经常查的手册是 <a href="http://www.w3school.com.cn" target="_blank" rel="external">www.w3school.com.cn</a> 和 <a href="http://css.doyoe.com" target="_blank" rel="external">css.doyoe.com</a>，后来在金山的招聘信息中看到了很多新的前端技术名词，其中有 MDN。发现 MDN 上面的要更详细些，尤其是 DOM 方面，好吧其实是很多方面，所以经常会在午休甚至上班时间学习 MDN 上面的基础知识。为啥说在午休及甚至上班呢？这是我第一份前端工作，特点是：工资少，加班多。</p>
-<p>大概过了四五个月之后，2014年五月份换了一份工作，在学习怎么输出格式化的 JSON 数据时，在 MDN 上了解到了 <code>JSON.stringify()</code> 方法的第二第三个参数，顺便也学习了<code>JSON.parse()</code>方法。突然发觉自己能翻译这两个页面时，就顺便翻译了。第二天看到紫云飞修改了一下，我就查看改了哪些，发现自己确实没翻译好，那两个方法没有理解透。不过 MDN 翻译之路已经起步了，慢慢总结需要改进的地方。</p>
-<p>然后，我加入了 MDN 中文翻译的 Leader 紫云飞创建的一个群，这个群联系方式页面太难找了，以至于我再找时都找不到了，我加入群里时算上我只有三个人。正好换的工作双休、不加班，且工作不繁忙，我就晚上用来学习及翻译 MDN 上面的文档，主要是 JavaScript 内置对象的属性和方法。翻译的速度并不算快，因为我要先技术过关，即使以前学过，但是一些细节需要学习，而且有些句子并不好翻译。快的话，10分钟能翻译一个页面，慢的话一晚上可能都翻译不完一个页面。七八两个月份是高产期，到九月份之后，工作忙了，晚上大部分时间学习 seajs、nodejs、hexo 等其他知识了，翻译就慢下来了。而且有时候会想翻译 MDN 有什么意义，因为我怀疑会有多少人看 MDN 的中文页面呢，基础的前端 JavaScript 知识可以通过《JavaScript权威指南》和《JavaScript高级程序设计》来学习，而且也有国内的参考手册。当然我没有页面浏览的数据，所以觉得人少只是自己的臆测。另外，对我自己来说还是有意义的，一来学习基础知识，二来增加点儿翻译经验。</p>
-<h2 id="几个方面的总结：">几个方面的总结：</h2>
-<h3 id="我的翻译流程：">我的翻译流程：</h3>
-<ol>
-<li>通读英文文档，并练习，有不少是以前学过，但是学得不细的；</li>
-<li>如果有插入超链接，复制Source并把“en-US”替换为“zh-CN”，这是紫云飞教的，我一直手动一个个改的，反正也不多；</li>
-<li>先把标题快速翻译完；</li>
-<li>从头开始往下翻译，不断查字典，不断做练习等，直到翻译完；</li>
-<li>通读一遍查看错别字及格式错误；</li>
-<li>提交，再浏览一遍确认。</li>
-</ol>
-<h3 id="MDN文档编辑器">MDN文档编辑器</h3>
-<p>需要调整格式的地方并不多，只需保留英文文档格式通常就可以了。经常用的格式也就是<code>H2</code>、<code>H3</code>、<code>p</code>、<code>Code</code>，以及插入链接和代码块。我以前遇到的最大麻烦就是插入代码块老是有问题，不是没有高亮效果，就是高亮嵌套高亮了，后来明白了选择<code>Syntax Highlighter</code>下拉列表对应的编程语言，初始化一个代码块，然后将英文的代码块复制粘贴到初始化的代码块中，但必须粘贴<strong>纯文本</strong>。</p>
-<p>另外一个要学习的地方就是 MDN 的宏标记，或者叫宏标签，英文称为“Custom macros”，可以查看 <a href="https://developer.mozilla.org/en-US/docs/MDN/Contribute/Content/Custom_macros" target="_blank" rel="external">Custom macros</a>，比如<code>{{APIRef(&quot;DOM Events&quot;)}}</code>用来显示文档左侧的树形导航，比如<code>{{jsxref(&quot;Boolean&quot;)}}</code>用来插入链接到<code>Boolean</code>对象页面的超链接，且语言为当前文档采用的语言。还可以查看相应宏标记的源码：<a href="https://developer.mozilla.org/en-US/docs/Template:jsxref" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Template:jsxref</a>。</p>
-<h3 id="中英文混合编辑">中英文混合编辑</h3>
-<p>主要有两个问题：一是中文和英文之前是否有空格；二是标点符号的使用，主要就是引号、括号、中文顿号与英文逗号。我参考了知乎上面的回答，我自己选择加空格，文章以中文为主时，也以中文标点为主。请查看知乎的讨论：</p>
-<ul>
-<li><a href="http://www.zhihu.com/question/19587406" target="_blank" rel="external">中英文混排时中文与英文之间是否要有空格？</a></li>
-<li><a href="http://www.zhihu.com/question/19695720" target="_blank" rel="external">中英文混排的时候如何使用标点符号？</a></li>
-<li><a href="http://www.zhihu.com/question/20488833" target="_blank" rel="external">中英文文本混排时，园括号该用中文括号还是西文括号？</a></li>
-</ul>
-<p>当然，这个问题以及排版问题对我来说很复杂，涉及很多细节，我只是统一了自己的风格。MDN 上面各人编辑的风格也不同，目前没有统一的规范供参考。</p>
-<h3 id="术语管理">术语管理</h3>
-<p>这里的术语主要包括前端技术术语以及标题。前端技术术语一部分自然属于计算机科学与技术，另一部分是前端独有的，甚至会出现创造的词汇。我个人对于那些翻译很固定的词汇才会只保留中文，对于其他的会在括号里面注明英文，毕竟有部分英文术语可能有两种或多种中文翻译，怕拿捏不准；对于新出现的词汇一定保留英文，有些感觉一时很难翻译，或者一句话才能讲清楚。</p>
-<p>而对于标题，主要是一二级标题，因为这些是文档之间公用的，而且又是很多人在翻译，所以还是要统一管理的。虽然 MDN 提供了术语的管理页面，但是极少查看，作用不大。</p>
-<p>国内有计算机技术相关的术语库：<a href="http://www.cnctst.cn/" target="_blank" rel="external">国家科技名词审查委员会</a>和<a href="http://www.microsoft.com/Language/zh-cn/Search.aspx" target="_blank" rel="external">微软的术语库</a>。但是这两个只是供参考用的，既无法解决术语的统一性，也无法解决前端技术的快速发展。所以我有时会参考《JavaScript高级程序设计》这本书的一些术语翻译，之所以会参考这本，因为手头上没有其他相关的前端书，这本书的翻译质量高，读的人多。当然我确实应该参考更多的前端及其他计算机编程书籍的，另外也经常查有道词典。</p>
-<p>所以，我期待能有个专门管理术语的网站，就像 github 一样，可以在翻译某个项目时建立一个术语库，可以在翻译某本书时建立一个术语库，也可以专门为前端建立一个权威的术语库，人人都可以建立，最终马太效应会让术语变得统一，我想这也符合语言的发展规律吧，统一才能交流。不仅仅计算机领域，各行各业都要翻译，也不仅仅英语翻译为中文，日语、韩语、俄语都需要。</p>
-<h3 id="中文翻译贡献者">中文翻译贡献者</h3>
-<p>以前紫云飞做过一个 2014 年<a href="http://weibo.com/p/1001603800332185524370" target="_blank" rel="external">统计</a>，大概有 400 个人都翻译过。不过，70%都只翻译了一个页面，这其中又有不少只翻译了一句话。我也不知道为什么他们只翻译一个页面就不再翻译了。我猜想可能的原因：翻译比较枯燥，只是尝鲜的，编辑器不好用，觉得难翻译的，只是顺手翻译的等等。我突然觉得贡献者翻译的页数跟一些 github 上面的项目提交记录一样，会有几个贡献特别多的，但是贡献少的也是需要的。</p>
-<p>今年，紫云飞会把新来的翻译者邀请到QQ群，QQ群以前几乎没人说话的，现在稍微活跃了点儿，每月翻译的页面似乎比去年增加了一点儿。我自己翻译的速度也慢了，每月只有几个页面，也不知道自己何时会停止，我想着把最常需要的翻译完。MDN 上面有些文档质量低，有些就直接照搬的 W3C 上面的规范，有些又缺 <a href="help.dottoro.com">help.dottoro.com</a> 上面的细节，而我的英文写作能力又渣，自己不想完善英文文档，也不太想翻译这些了。</p>
-<p>对于 2015 年，如果工作不忙的话，我还是想着继续翻译 MDN 的文档，想着翻译 CSS 与 SVG 方面的，并尝试做几个相关的小工具。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="加入MDN翻译">加入MDN翻译</h2>
-<p>一开始学习前端时经常查的手册是 <a href="http://www.w3school.com.cn" target="_blank" rel="external">www.w3school.com.cn</a>]]>
-    </summary>
-    
-      <category term="MDN" scheme="http://www.xiaocaoge.com/tag/MDN/"/>
-    
-      <category term="翻译" scheme="http://www.xiaocaoge.com/tag/%E7%BF%BB%E8%AF%91/"/>
-    
-      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
     
   </entry>
   
@@ -313,12 +313,12 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
     <link href="http://www.xiaocaoge.com/build-linux-workspace.html"/>
     <id>http://www.xiaocaoge.com/build-linux-workspace.html</id>
     <published>2014-05-18T03:37:42.000Z</published>
-    <updated>2015-03-27T13:39:34.000Z</updated>
+    <updated>2015-04-28T12:05:56.000Z</updated>
     <content type="html"><![CDATA[<p>最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。</p>
 <p>电脑本来装着的是Debian，我以前没见过，本来也不会什么Linux，结果很抗拒它的桌面系统，呵呵。刚开始老大给了我一个Ubuntu 12.04的安装U盘，然后我在网上查了半天怎么把U盘挂载到Debian，我试了很多命令或方法，发现就是没反应。后来同事说主机前面的USB接口可能不能用，我心想：怪不得我试任何命令都没反应。于是我换到了主机后面的接口，一插上去就自动挂载了，很兴奋地可以从U盘启动了，出现了安装引导界面，但是在从U盘读取镜像文件时一直报错，我又查了半天，折腾了半天，最后说什么MD5错误。好吧就这样半天过去了，后来老大又给我下载了Ubuntu 14.04，果然只用半个多小时就安装好了。就这样半天过去，下班了。</p>
 <p><strong>第二天，我开始安装并配置我经常使用的软件：</strong></p>
 <ul>
-<li>输入法：ibus +小鹤 双拼</li>
+<li>输入法：ibus + 小鹤双拼</li>
 <li>浏览器：Chrome</li>
 <li>编辑器：Sublime Text 2</li>
 <li>翻墙工具：goagent</li>
@@ -335,17 +335,17 @@ grub rescue&gt;<span class="keyword">normal</span><span class="comment"> // 进�
 <li>本地服务器：Nginx</li>
 </ul>
 <p>我发现安装这些软件基本上很顺利，也花不了多少时间，就是配置或者遇到意外问题时会花很多很多时间，其中有些问题到现在都没有很好解决。</p>
-<p><strong>ibus小鹤双拼：</strong>我在自己电脑的Ubuntu 12.04上用得很好，到Ubuntu 14.04就发现an、en、ou等不符合小鹤的编码规则，这些变成了an-&gt;oj、en-&gt;of等。另一个问题就是只巧一个字母时，不会出现任何候选字，比如敲d，应该出现”的“，另外还要查查怎么安装鹤形辅码。ibus也没有云猜测功能，总之与Windows下的QQ、搜狗拼音差距很远，当然ibus人力财力也和他们差很远，而且已经两年没有更新了。我越来越觉得商业软件还是会占据主流，且使用方面也不一定比开源免费的差，这里商业软件指那些为实现商业价值而开发的软件，不一定收费。</p>
+<p><strong>ibus小鹤双拼：</strong>我在自己电脑的Ubuntu 12.04上用得很好，到Ubuntu 14.04就发现an、en、ou等不符合小鹤的编码规则，这些变成了an-&gt;oj、en-&gt;of等。另一个问题就是只敲一个字母时，不会出现任何候选字，比如敲d，应该出现”的“，另外还要查查怎么安装鹤形辅码。ibus也没有云猜测功能，总之与Windows下的QQ、搜狗拼音差距很远，当然ibus人力财力也和他们差很远，而且已经两年没有更新了。我越来越觉得商业软件还是会占据主流，且使用方面也不一定比开源免费的差，这里商业软件指那些为实现商业价值而开发的软件，不一定收费。</p>
 <p><strong>Chrome的Flashplayer插件：</strong>我安装了Ubuntu软件管理中心里面的flashplayer但是，打开的很多网页都会出现flashplayer的问题，问我是否安装。我又查了半天，试了变天，幸而最后终于解决了。</p>
 <p><strong>Sublime：</strong>安装很顺利，就是再把Windows里面的个人配置复制到这里面时费了一段时间，首先我得知道Ubuntu下的Sublime配置文件放哪里。然后在使用Emmet时，发现不起作用，弹出一个让我安装其依赖PyV8的窗口，然后查了下，才知道PyV8不同操作系统有不同版本，还得专门下Linux的，而Windows下的当然没用了。然后在输入汉字时，发现ibus根本就没反应，网上一查属于Sublime对CJK输入支持不友好的问题，似乎Fcitx输入法可用，但ibus就只能安装一个InputHelper插件了，输入也很不方便。不支持GBK，然后下载了支持GBK的插件。</p>
-<p><strong>DBank：</strong>公司屏蔽了官网域名，我下载客户端都没法下，虽然可翻墙，但是我不想什么都翻墙，后来发现几乎所有网盘都被公司屏蔽了，这是个啥意思呢？正好我在Windows下的Dbank客户端已经一个月不能同步了，华为都没啥回应，到时搞什么企业云计算和移动端网盘很上心啊，我决定放弃华为的DBank了。再说我用它主要就是同步源码用的，我决定用github来同步源码，至于网盘我决定换一家可靠的，比如Dropbox。</p>
+<p><strong>DBank：</strong>公司屏蔽了官网域名，我下载客户端都没法下，虽然可翻墙，但是我不想什么都翻墙，后来发现几乎所有网盘都被公司屏蔽了，这是个啥意思呢？正好我在Windows下的Dbank客户端已经一个月不能同步了，华为都没啥回应，到是搞什么企业云计算和移动端网盘很上心啊，我决定放弃华为的DBank了。再说我用它主要就是同步源码用的，我决定用github来同步源码，至于网盘我决定换一家可靠的，比如Dropbox。</p>
 <p><strong>Virtualbox：</strong>还别说这个也费了几个小时，我打算安装Windows7的，但总是出现cdrom=0 cdrom=d的问题，查了半天才反应过来是镜像有问题。于是就先安装XP了，我安装虚拟机的一个重要目的就是安装QQ，结果公司屏蔽了QQ，不知道个什么屏蔽法，使用代理可以上WebQQ，但是不可以用QQ客户端。</p>
-<p>至于Filezilla和NodeJS安装没什么大问题，到时NPM安装Grunt时，全局安装要使用root权限，而且安装源总是有问题一样，安装了三四次才成功，后来我知道可以将下载失败的包从其官网手动下载拷贝到相应目录里。</p>
+<p>至于Filezilla和NodeJS安装没什么大问题，到是NPM安装Grunt时，全局安装要使用root权限，而且安装源总是有问题一样，安装了三四次才成功，后来我知道可以将下载失败的包从其官网手动下载拷贝到相应目录里。</p>
 <p><strong>Thunderbird：</strong>在配置公司邮箱的时候出现了问题，应该是配置SMTP和POP时某个选项应该选择none，但是它之前总是提示我帐号和密码有问题。</p>
 <p><strong>Eclipse：</strong>这个在安装svnclipse时一直下载到一段失败，后来不知道怎么弄的终于弄好了，然后是需要从SVN下载源码，再然后是配置resin，当然这些基本都是同事帮忙弄的，要是我估计得半天才能弄好吧。</p>
 <p><strong>Nginx：</strong>安装之后要配置下本地端口，是同事帮忙弄得。</p>
 <p>才安装了以上这些软件就花了一天多，配置永远是最花时间的。还有其他不少东西都需要花时间尝试，比如字体设置、桌面设置、截图工具、查看图片工具、图片简单编辑工具、词典等等很多都需要学，而且很多软件不如Windows下的软件操作简单方便。</p>
-<p>还有Linux下文件与目录管理、权限管理、账户管理、Bash等等很多都需要学习，于是开始了我读《鸟哥的私房菜》的历程。</p>
+<p>还有Linux下文件与目录管理、权限管理、账户管理、Bash等等很多都需要学习，于是我开始了读《鸟哥的私房菜》的历程。</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。</p>
