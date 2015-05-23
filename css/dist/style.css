@@ -740,13 +740,13 @@ h1.article-title {
 }
 
 .article-entry h2 {
-  margin-top: 2em;
+  margin-top: 1.5em;
   margin-bottom: 1em;
-  font-size: 1.75em;
+  font-size: 2em;
 }
 
 .article-entry h3 {
-  margin-top: 1.5em;
+  margin-top: 1.25em;
   margin-bottom: .75em;
   font-size: 1.5em;
 }
