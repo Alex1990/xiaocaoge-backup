@@ -43,10 +43,10 @@
       <div class="content">
         <section class="wrapper">
   
-    <article id="post-mdn-translation-summary" class="article article-type-post" itemprop="blogPost">
+    <article id="post-migrate-to-hexo-from-wordpress" class="article article-type-post" itemprop="blogPost">
   <div class="article-meta clearfix">
     <div class="article-date fl">
-  <time datetime="2015-04-28T12:17:54.000Z" itemprop="datePublished">2015-4-28</time>
+  <time datetime="2015-05-23T09:58:00.000Z" itemprop="datePublished">2015-5-23</time>
 </div>
     
   <div class="article-category fl">
@@ -60,7 +60,7 @@
       
   
     <h1 itemprop="name">
-      <a class="article-title" href="/mdn-translation-summary.html">MDN翻译小总结</a>
+      <a class="article-title" href="/migrate-to-hexo-from-wordpress.html">从WordPress迁移博客到Hexo</a>
     </h1>
   
 
@@ -69,12 +69,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         
-        加入MDN翻译
-一开始学习前端时经常查的手册是 www.w3school.com.cn 和 css.doyoe.com，后来在金山的招聘信息中看到了很多新的前端技术名词，其中有 MDN。发现 MDN 上面的要更详细些，尤其是 DOM 方面，好吧其实是很多方面，所以经常会在午休甚至上班时间学习 MDN 上面的基础知识。为啥说在午休及甚至上班呢？这是我第一份前端工作，特点是：工资少，加班多。
-大概过了四五个月之后，2014年五月份换了一份工作，在学习怎么输出格式化的 JSON 数据时，在 MDN 上了解到了 JSON.stringify() 方法的第二第三个参数，顺便也学习了JSON.parse(
+        为什么迁移？
+实际上，迁移博客的决定大半年前，大概 2014 年 7 月份就已经决定了。当时考虑到托管在 Github 上面的静态博客有这么几种优势：
+
+采用 Markdown 方式书写，可采用任何自己喜欢的编辑器，含有代码块，书写方便，甚至以后写数学公式也可以采用 TeX 语法。当然，WordPress 也可以，不过总觉得安装插件不太直接。
+Github Pages 免费，可以节省每年 200 大洋的虚拟主机费用，且托管在 Github 很放心。
+静态页面速度快，不过这个现在体现不出来了，国内访问 Github Pages 网速慢。
+不得不说我受到了流行趋势的影响，看到很多人采用了这种方式，
         
           <p class="article-more-link">
-            <a href="/mdn-translation-summary.html#more">更多</a>
+            <a href="/migrate-to-hexo-from-wordpress.html#more">更多</a>
           </p>
         
       
@@ -89,7 +93,7 @@
     <article id="post-get-started-on-using-mac" class="article article-type-post" itemprop="blogPost">
   <div class="article-meta clearfix">
     <div class="article-date fl">
-  <time datetime="2015-04-13T14:16:35.000Z" itemprop="datePublished">2015-4-13</time>
+  <time datetime="2015-04-13T14:22:00.000Z" itemprop="datePublished">2015-4-13</time>
 </div>
     
   <div class="article-category fl">
@@ -131,6 +135,49 @@ OSX系统
 
 
   
+    <article id="post-mdn-translation-summary" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2015-04-02T14:22:00.000Z" itemprop="datePublished">2015-4-2</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/mdn-translation-summary.html">MDN翻译小总结</a>
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        加入MDN翻译
+一开始学习前端时经常查的手册是 www.w3school.com.cn 和 css.doyoe.com，后来在金山的招聘信息中看到了很多新的前端技术名词，其中有 MDN。发现 MDN 上面的要更详细些，尤其是 DOM 方面，好吧其实是很多方面，所以经常会在午休甚至上班时间学习 MDN 上面的基础知识。为啥说在午休及甚至上班呢？这是我第一份前端工作，特点是：工资少，加班多。
+大概过了四五个月之后，2014年五月份换了一份工作，在学习怎么输出格式化的 JSON 数据时，在 MDN 上了解到了 JSON.stringify() 方法的第二第三个参数，顺便也学习了JSON.parse(
+        
+          <p class="article-more-link">
+            <a href="/mdn-translation-summary.html#more">更多</a>
+          </p>
+        
+      
+    </div>
+    
+  </div>
+  
+</article>
+
+
+  
     <article id="post-repair-grub-and-some-useful-tools" class="article article-type-post" itemprop="blogPost">
   <div class="article-meta clearfix">
     <div class="article-date fl">
@@ -157,8 +204,8 @@ OSX系统
     <div class="article-entry" itemprop="articleBody">
       
         
-        今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是“crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows7 要靠 grub 引导，自然也进不去了。
-想着先利用分区工具修复 Windows7 的 MBR（到最后发现这个思路走远了），然后从网上或同事那里弄一个 crypto.mod 放进去试试。但是，发现U盘启动盘不见了，应该没带，只好向同事借了一个，里面还没有我需要的工具，只是一个 CentOS 安装盘。由于我不会在 Linux
+        今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是 “crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows7 要靠 grub 引导，自然也进不去了。
+想着先利用分区工具修复 Windows7 的 MBR（到最后发现这个思路走远了），然后从网上或同事那里弄一个 crypto.mod 放进去试试。但是，发现U盘启动盘不见了，应该没带，只好向同事借了一个，里面还没有我需要的工具，只是一个 CentOS 安装盘。由于我不会在 Linu
         
           <p class="article-more-link">
             <a href="/repair-grub-and-some-useful-tools.html#more">更多</a>
@@ -440,48 +487,6 @@ CSS Sprites历史悠久，大概在2004年之前就出现了，Dave Shea 在这�
 
 
   
-    <article id="post-markdown-syntax" class="article article-type-post" itemprop="blogPost">
-  <div class="article-meta clearfix">
-    <div class="article-date fl">
-  <time datetime="2014-04-08T20:14:17.000Z" itemprop="datePublished">2014-4-9</time>
-</div>
-    
-  <div class="article-category fl">
-    <a class="article-category-link" href="/category/前端/">前端</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/markdown-syntax.html">Markdown语法学习</a>
-    </h1>
-  
-
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        简介
-Markdown是一种为了提高文档易读性与易写性的纯文本格式规范，其可以转换成HTML，从而可以利用CSS定制其样式。Markdown语法非常简单，而且语法符号也是为了快速书写文本而设计。Markdown发布已经很久了，其初由John Gruber与Aaron Swartz于2004年合作发布，最初的发布版本。直到现在，并没有一个统一的标准规范，各个实现版本会有些不同，不过基础的语法基本是相同的。Markdown已经应用在很多地方，如Github、Stackoverflow、reddit等网站，也应用于项目的ReadMe文件、一些论坛、写邮件、博客等地方。有多种实现的语言版本，也有多个系
-        
-          <p class="article-more-link">
-            <a href="/markdown-syntax.html#more">更多</a>
-          </p>
-        
-      
-    </div>
-    
-  </div>
-  
-</article>
-
-
-  
   
     <nav class="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/archive/page/2/">2</a><a class="page-number" href="/archive/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/archive/page/5/">5</a><a class="extend next" rel="next" href="/archive/page/2/">Next</a>
@@ -572,7 +577,7 @@ Markdown是一种为了提高文档易读性与易写性的纯文本格式规范
   <div class="widget-wrap widget-tagcloud">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget widget-tagcloud-list">
-      <a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/MDN/" style="font-size: 12.00px;">MDN</a><a href="/tag/Mac/" style="font-size: 12.00px;">Mac</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/OSX/" style="font-size: 12.00px;">OSX</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a><a href="/tag/Web学习/" style="font-size: 12.00px;">Web学习</a><a href="/tag/auto/" style="font-size: 12.00px;">auto</a><a href="/tag/blog/" style="font-size: 12.00px;">blog</a>
+      <a href="/tag/Blog/" style="font-size: 12.00px;">Blog</a><a href="/tag/CSS/" style="font-size: 20.00px;">CSS</a><a href="/tag/CSS-Sprites/" style="font-size: 12.00px;">CSS Sprites</a><a href="/tag/Class/" style="font-size: 12.00px;">Class</a><a href="/tag/DOOM/" style="font-size: 12.00px;">DOOM</a><a href="/tag/DataURI/" style="font-size: 12.00px;">DataURI</a><a href="/tag/Github/" style="font-size: 12.00px;">Github</a><a href="/tag/Hexo/" style="font-size: 12.00px;">Hexo</a><a href="/tag/ID/" style="font-size: 12.00px;">ID</a><a href="/tag/Image-Replacement/" style="font-size: 12.00px;">Image Replacement</a><a href="/tag/Javascript/" style="font-size: 14.67px;">Javascript</a><a href="/tag/Joel/" style="font-size: 12.00px;">Joel</a><a href="/tag/Linux/" style="font-size: 12.00px;">Linux</a><a href="/tag/MDN/" style="font-size: 12.00px;">MDN</a><a href="/tag/Mac/" style="font-size: 12.00px;">Mac</a><a href="/tag/Markdown/" style="font-size: 12.00px;">Markdown</a><a href="/tag/Markdown语法/" style="font-size: 12.00px;">Markdown语法</a><a href="/tag/MySQL/" style="font-size: 12.00px;">MySQL</a><a href="/tag/OSX/" style="font-size: 12.00px;">OSX</a><a href="/tag/PHP/" style="font-size: 14.67px;">PHP</a><a href="/tag/PHP入门/" style="font-size: 12.00px;">PHP入门</a><a href="/tag/Photoshop/" style="font-size: 12.00px;">Photoshop</a><a href="/tag/PrintConductor/" style="font-size: 12.00px;">PrintConductor</a><a href="/tag/Responsive/" style="font-size: 12.00px;">Responsive</a><a href="/tag/SlideJS/" style="font-size: 12.00px;">SlideJS</a><a href="/tag/Sublime/" style="font-size: 12.00px;">Sublime</a><a href="/tag/Sublime-Text-2/" style="font-size: 12.00px;">Sublime Text 2</a><a href="/tag/Tab面板/" style="font-size: 12.00px;">Tab面板</a><a href="/tag/Ubuntu/" style="font-size: 17.33px;">Ubuntu</a><a href="/tag/Web/" style="font-size: 12.00px;">Web</a>
     </div>
   </div>
 
