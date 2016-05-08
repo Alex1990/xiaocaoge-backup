@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>变量命名 | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css">
+  <script src="/js/modernizr-custom.min.js"></script>
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-naming-variable" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2015-11-21T09:32:00.000Z" itemprop="datePublished">2015-11-21</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      变量命名
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>我想有点儿代码洁癖的人，在编写代码的过程中，或多或少地想过“如何给一个变量起一个好名？”的问题。然而，一般的编程书或代码规范都不会详细地讲这个问题，也就是一两句话带过。比如全局变量或常量全大写字母，变量名采用小驼峰。这里不仅指变量命名，还有函数或方法名、常量名、类名、对象名、文件名等。我以前也多次思考过如何缩写变量名，发现不少人采用取辅音字母方法不错，然而没有深入学习过如何给变量命名，经常起变量名时比较纠结。直到读了《代码大全》的“变量名的力量”一章发现这正是我一直想读而未读的内容，也将我以前学习的有关变量命名的内容串联起来了。</p>
+<h2 id="为什么要起一个好的名字？"><a href="#为什么要起一个好的名字？" class="headerlink" title="为什么要起一个好的名字？"></a>为什么要起一个好的名字？</h2><p>如果代码只是一个人写，如果代码写完之后再也不看了，那起一个好的名字并不是必需的事情。然后很多情况下，不仅别人会看我们的代码，写完之后我们还会阅读自己的代码。这个时候就需要有变量命名方面的统一风格，对于那些几十上百人合作的大型多语言项目，命名方面需要规定的更细致。</p>
+<h2 id="命名注意事项"><a href="#命名注意事项" class="headerlink" title="命名注意事项"></a>命名注意事项</h2><p>《代码大全》给出了多条命名时考虑的问题及指导建议，其中不少我都考虑过，然后都是零碎地思考过。</p>
+<h3 id="最重要的注意事项"><a href="#最重要的注意事项" class="headerlink" title="最重要的注意事项"></a>最重要的注意事项</h3><p><strong>变量名应该准确地反映出它所代表的事物</strong>，由于自己英语比较渣，母语不是英语，所以查字典也不一定能选择准确的名字，还是要靠积累。</p>
+<h3 id="命名风格"><a href="#命名风格" class="headerlink" title="命名风格"></a>命名风格</h3><p>这个好多书或规范都会提到，常见的风格：</p>
+<ul>
+<li>小驼峰：首字母小写，后面所有单词首字母大写，如<code>userName</code>；</li>
+<li>大驼峰：与小驼峰唯一区别时首字母也大写，如<code>UserName</code>；</li>
+<li>下划线分隔：包括变量或函数常用的全小写字母、下划线分隔，如<code>create_box</code>，也包括全局常量的全大写字母、下划线分隔，如<code>NAME_MAX_LEN</code>；</li>
+<li>匈牙利命名法：曾经在 Windows API 中为主流形式，目前少见；</li>
+</ul>
+<p>另外还有些针对特定类型名字的风格，比如 JavaScript 私有成员命名以下划线开头，数组名字用复数形式。</p>
+<h3 id="名字长度"><a href="#名字长度" class="headerlink" title="名字长度"></a>名字长度</h3><p>《代码大全》上面说 8 ~ 20 个字符最好，意思是最好不要超过 20 个字符，代码中也不要有很多长的名字。另外作用域对变量名也有影响，如果是不常用的全局变量可能长些，如果是临时用的局部变量就会短一些。可能最短的就是循环语句当中的索引变量，而且常用<code>i</code>、<code>j</code>、<code>k</code>。</p>
+<h3 id="对仗词"><a href="#对仗词" class="headerlink" title="对仗词"></a>对仗词</h3><p>即那些互为反义词的单词，还是会经常用到的，大部分都是简单的英文单词。</p>
+<ul>
+<li>begin/end, start/end</li>
+<li>first/last</li>
+<li>min/max</li>
+<li>previous/next</li>
+<li>old/new</li>
+<li>visible/invisible</li>
+<li>source/target</li>
+<li>open/close</li>
+<li>show/hide</li>
+<li>on/off</li>
+<li>up/down</li>
+<li>…</li>
+</ul>
+<h3 id="一些特定类型变量的命名"><a href="#一些特定类型变量的命名" class="headerlink" title="一些特定类型变量的命名"></a>一些特定类型变量的命名</h3><ul>
+<li>循环索引：尽量用<code>i</code>、<code>j</code>、<code>k</code>，这已经是约定俗成，绝大多数程序员都熟悉的了；</li>
+<li>状态变量：我觉得应该使用形容词，比如<code>closed</code>、<code>hidden</code>等；</li>
+<li>临时变量：书中作者说尽量不要使用<code>temp</code>/<code>tmp</code>这种含义太泛的名字，应该使用所指代的含义，我觉得两个变量交换时经常使用<code>temp</code>/<code>tmp</code>可能是个例外；</li>
+<li>布尔变量：变量隐含”真/假”含义，并且不要使用<code>isFound</code>、<code>isError</code>这种形式，我自己倒是经常使用<code>is</code>作为前缀；</li>
+<li>枚举类型：JavaScript 中没有真正的枚举类型，但是枚举也就是一组相关的变量，可以用数组或对象表示的，使用复数形式。</li>
+<li>常量：全大写字母，下划线分隔形式。但是全大写字母对于非母语的国内程序员来说可读性其实并不好，我在 JavaScript 中见得也不多，倒是觉得<code>g_</code>作为前缀这种形式更好一些。另外 C 语言中全大写字母似乎是主流形式，可能还得采用。</li>
+</ul>
+<p>书中还给出了 C、C++、Java 命名规则示例，区分的比较细致，比如局部变量、成员变量、函数等都要区分，自己写代码时区分的没这么细致。可能和 JavaScript 语言本身有关，或者自己没有编写过大中型项目有关。</p>
+<p>另外书中提到了一种很好的思路：</p>
+<blockquote>
+<p>可以通过命名方面的约定来增强某种语言的功能，从而弥补该语言自身的缺陷。</p>
+</blockquote>
+<p>JavaScript 当中使用下划线<code>_</code>开头的命名表示私有成员正是这种思路的体现啊。</p>
+<h2 id="标准前缀"><a href="#标准前缀" class="headerlink" title="标准前缀"></a>标准前缀</h2><p>用户自定义一些单词的缩写形式作为命名的前缀，这样通过较短的名字传达更多的信息，但是会增加记忆这些前缀的成本。</p>
+<h2 id="如何缩写"><a href="#如何缩写" class="headerlink" title="如何缩写"></a>如何缩写</h2><p>书中列举了一些指导原则，个人常见的：</p>
+<ul>
+<li>标准缩写，即词典中的缩写</li>
+<li>去掉所有非前置元音字母</li>
+<li>取前几位字母</li>
+<li>取所有单词首字母</li>
+<li>参考一些开源项目当中常见的缩写形式</li>
+</ul>
+<p>我觉得应该有一份 JavaScript Web 开发方面常用变量缩写形式参考表，我一般会参考一些书中或著名的开源项目中的缩写形式。比如元素<code>element</code>的缩写有<code>elem</code>、<code>el</code>，事件对象<code>event</code>的缩写形式为<code>evt</code>、<code>e</code>，但是遇到<code>ele</code>、<code>ev</code>的形式后就感觉内心很不舒服，可能就像密集恐惧症患者见到含有密集物的图片一样，恨不得撕碎它。当然，也有可能是我孤陋寡闻了。</p>
+<h2 id="避免的名字"><a href="#避免的名字" class="headerlink" title="避免的名字"></a>避免的名字</h2><ul>
+<li>避免使用含义完全无关的名字</li>
+<li>避免使用过于简短的名字：最讨厌使用一个字母变量的形式了；</li>
+<li>避免使用在名字中使用数字：这个我常见到一些人用<code>2</code>表示<code>to</code>，用<code>4</code>表示<code>for</code>，个人不太喜欢这种形式；</li>
+<li>避免单词拼写错误：这也是我最讨厌的错误了，花个十几秒查下词典就行了，对于那些开放 API 当中的拼写错误最应该避免了；</li>
+<li>不要使用标准类型、变量和子程序的名字：每种语言都有一些内置的类型、方法，尽量不要冲突；</li>
+<li>易混淆的名字：典型的就是<code>I</code>、<code>1</code>、<code>l</code>三个字符在某些字体下很难区分。</li>
+</ul>
+<p>另外，个人认为尽量不用汉语拼音作为变量，所以这也就要英语词汇量丰富些，也要针对某方面，比如图形编程方面可能对几何、坐标、向量等方面的英文词汇要熟悉些。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>代码风格与变量命名风格并不是永久不变的，那些著名开源项目似乎能影响代码风格和变量命名的主流形式。项目的代码风格或变量命名尽量和主流形式一致，但也并非强制要求。</p>
+<p>当然，对于某些连基本的代码风格都不太注意的人，更别提变量命名的风格了，这些很多书都不会讲，似乎全凭自觉了或者项目负责人的规定了。</p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/变量名/">变量名</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/名字/">名字</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/可读性/">可读性</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/naming-variable.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-naming-variable" data-title="变量命名" data-url="http://www.xiaocaoge.com/naming-variable.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/Blog/" style="font-size: 12px;">Blog</a> <a href="/tag/CSS/" style="font-size: 20px;">CSS</a> <a href="/tag/CSS-Sprites/" style="font-size: 12px;">CSS Sprites</a> <a href="/tag/Class/" style="font-size: 12px;">Class</a> <a href="/tag/DOOM/" style="font-size: 12px;">DOOM</a> <a href="/tag/DataURI/" style="font-size: 12px;">DataURI</a> <a href="/tag/Github/" style="font-size: 12px;">Github</a> <a href="/tag/Hexo/" style="font-size: 12px;">Hexo</a> <a href="/tag/ID/" style="font-size: 12px;">ID</a> <a href="/tag/Image-Replacement/" style="font-size: 12px;">Image Replacement</a> <a href="/tag/Javascript/" style="font-size: 16px;">Javascript</a> <a href="/tag/Joel/" style="font-size: 12px;">Joel</a> <a href="/tag/Linux/" style="font-size: 12px;">Linux</a> <a href="/tag/MDN/" style="font-size: 12px;">MDN</a> <a href="/tag/Mac/" style="font-size: 12px;">Mac</a> <a href="/tag/Markdown/" style="font-size: 12px;">Markdown</a> <a href="/tag/Markdown语法/" style="font-size: 12px;">Markdown语法</a> <a href="/tag/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tag/OSX/" style="font-size: 12px;">OSX</a> <a href="/tag/PHP/" style="font-size: 16px;">PHP</a> <a href="/tag/PHP入门/" style="font-size: 12px;">PHP入门</a> <a href="/tag/Photoshop/" style="font-size: 12px;">Photoshop</a> <a href="/tag/PrintConductor/" style="font-size: 12px;">PrintConductor</a> <a href="/tag/Responsive/" style="font-size: 12px;">Responsive</a> <a href="/tag/SSE/" style="font-size: 12px;">SSE</a> <a href="/tag/Server-Push/" style="font-size: 12px;">Server Push</a> <a href="/tag/SlideJS/" style="font-size: 12px;">SlideJS</a> <a href="/tag/Sublime/" style="font-size: 12px;">Sublime</a> <a href="/tag/Sublime-Text-2/" style="font-size: 12px;">Sublime Text 2</a> <a href="/tag/Tab/" style="font-size: 12px;">Tab</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2016 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js"></script>
+</body>
+</html>

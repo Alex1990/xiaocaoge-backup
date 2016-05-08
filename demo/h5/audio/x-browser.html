@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <audio id="audio" controls>
+        <source src="7days.mp3" type="audio/mp3"></source>
+        <source src="7days.ogg" type="audio/ogg"></source>
+        <object class="flashplayer" data="player_mp3_mini.swf" 
+            type="application/x-shockwave-flash" width="200" height="30">
+            <param name="movie" value="player_mp3_mini.swf">
+            <param name="bgcolor" value="#085c68">
+            <param name="FlashVars" value="mp3=7days.mp3">
+            <embed href="player_mp3_mini.swf" bgcolor="#085c68" width="200" 
+                height="30" name="moview" align="" 
+                type="application/x-shockwave-flash"
+                flashvars="mp3=7days.mp3">
+            </embed>
+        </object>
+    </audio>
+
+    <div id="player_fallback"></div>
+    <div id="player" style="display:none">
+        <button onclick="document.getElementById('audio').play()")>Play</button>
+        <button onclick="document.getElementById('audio').pause()")>pause</button>
+    </div>
+
+    <script src="js/swfobject.js"></script>
+    <script>
+    if (document.createElement('audio').canPlayType) {
+        if (!document.createElement('audio').canPlayType('audio/mpeg')) {
+            swfObject.embedSWF(
+                'player_mp3_mini.swf',
+                'player_fallback',
+                '200',
+                '30',
+                '9.0.0',
+                '',
+                {'mp3': 'test.mp3'},
+                {'bgcolor': '#085c68'});
+        } else {
+            document.getElementById('player').display = 'block';
+        }
+    }
+    </script>
+</body>
+</html>

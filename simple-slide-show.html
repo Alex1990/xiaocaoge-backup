@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>一个简单的图片播放（jQuery版） | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css">
+  <script src="/js/modernizr-custom.min.js"></script>
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-simple-slide-show" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-05-06T13:57:20.000Z" itemprop="datePublished">2013-5-6</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      一个简单的图片播放（jQuery版）
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>通过Jqurey只需要几行代码就可以实现最简单的图片循环播放，非常容易实现。</p>
+<h3 id="基础版"><a href="#基础版" class="headerlink" title="基础版"></a>基础版</h3><p>HTML:</p>
+<pre><code>&lt;div id=&quot;slideshow&quot;&gt;
+    &lt;img src=&quot;images/1.jpg&quot; alt=&quot;&quot; /&gt;
+    &lt;img src=&quot;images/2.jpg&quot; alt=&quot;&quot; /&gt;
+    &lt;img src=&quot;images/3.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;/div&gt;
+</code></pre><p>CSS:</p>
+<pre><code>#slideshow {
+    position: relative;
+    width: 512px;
+    height: 384px;
+    overflow: hidden;
+}
+#slideshow img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 512px; /* 统一图片宽度 */
+    z-index:1;
+}
+#slideshow img.active {
+    z-index: 3; /* 当前图片处于最前（上）层 */
+}
+</code></pre><ol>
+<li>从第一张播放到第N（N=3）张</li>
+</ol>
+<p>先导入jquery.js，然后添加以下代码：</p>
+<pre><code>function slideSwitch(){
+    var $active = $(&apos;#slideshow img.active&apos;);
+    var $next =  $active.next();
+
+    $next.addClass(&apos;active&apos;)
+    $active.removeClass(&apos;active&apos;);
+}
+
+$(function(){
+    setInterval(slideSwitch, 3000);
+}
+</code></pre><ol>
+<li>从第N（N=3）张到第一张</li>
+</ol>
+<p>首先有一个判断当前显示图片是否为第N张，也就是最后一张的语句，若为最后一张，则设置下一张为第一张，则$next改成如下：</p>
+<pre><code>var $next = $active.next().length ? $active.next() : $(&apos;#slideshow img:first&apos;);
+</code></pre><p>至此实现了一个最简单的图片轮播效果。</p>
+<h3 id="加入渐变切换效果"><a href="#加入渐变切换效果" class="headerlink" title="加入渐变切换效果"></a>加入渐变切换效果</h3><p>通过改变图片的透明度即可实现，而且Jqurey可以兼容IE6。实现思路就是先让当前显示图片不透明度为0，然后逐渐增加到100，代码如下</p>
+<pre><code>function slideSwitch(){
+    var $active = $(&apos;#slideshow img.active&apos;);
+    var $next = $active.next().length ? $active.next() : $(&apos;#slideshow img:first&apos;);
+
+    $next.css({opacity: 0}
+    .addClass(&apos;active&apos;)
+    .animate({opacity: 1}, 1000, function(){
+        $active.removeClass(&apos;active&apos;);
+    });
+}
+
+$(function(){
+    setInterval(slideSwitch, 3000);
+}
+</code></pre><p>然后会发现从最后一张切换到第一张时没有渐变效果，突然就跳到第一张，其过程见下图所示，第一和第三张都具有类active时（z-index相同），因第三张在文档流的后面，会在第一张上面。<br><a href="http://www.xiaocaoge.com/uploads/2013/02/1893763643409314700.jpg"><img src="http://www.xiaocaoge.com/uploads/2013/02/1893763643409314700.jpg" alt="1893763643409314700"></a><br>因此在第一张设置不透明度为0之前可以使第三张z-index减小，从而在第一张下面，但又必须大于第二张的，这里添加一个类last-active，并设置其z-index为2。这样第一张从透明逐渐出现时就可以看的着了，示意图如下：<br><a href="http://www.xiaocaoge.com/uploads/2013/02/1672805786691448946.png"><img src="http://www.xiaocaoge.com/uploads/2013/02/1672805786691448946.png" alt="1672805786691448946"></a><br>完整的代码如下</p>
+<p>CSS:</p>
+<pre><code>#slideshow img.last-active {
+    z-index: 2;
+}
+</code></pre><p>JavaScript:</p>
+<pre><code>function slideSwitch(){
+    var $active = $(&apos;#slideshow img.active&apos;);
+    var $next = $active.next().length ? $active.next() : $(&apos;#slideshow img:first&apos;);
+    $active.addClass(&apos;last-active&apos;);
+    $next.css({opacity: 0.0})
+        .addClass(&apos;active&apos;)
+        .animate({opacity: 1.0}, 1000, function(){
+            $active.removeClass(&apos;active last-active&apos;);
+        });
+    }
+}
+
+$(function(){
+    setInterval(slideSwitch, 3000);
+});
+</code></pre><h3 id="加入鼠标悬停效果"><a href="#加入鼠标悬停效果" class="headerlink" title="加入鼠标悬停效果"></a>加入鼠标悬停效果</h3><p>即鼠标悬浮在图片上面时，图片停止切换，移开之后有恢复自动切换。停止切换，显然可以通过clearInterval()方法，而鼠标移开之后再次调用setInterval(slideSwitch, 3000)即可，代码如下：</p>
+<pre><code>$(function(){
+    var clear = setInterval(slideSwitch, 3000);
+    $(&apos;#slideshow img&apos;).hover(
+    function(){
+        clearInterval(clear);
+    },
+    function(){
+        clear = setInterval(slideSwitch, 3000);
+    });
+});
+</code></pre><h3 id="加入编号按钮"><a href="#加入编号按钮" class="headerlink" title="加入编号按钮"></a>加入编号按钮</h3><p>加入对应每张图片的编号按钮，通过一个列表实现，并且在鼠标悬停在按钮上面时，显示对应图片，且图片停止切换；移开鼠标之后，图标恢复自动切换。本质上同上一个效果相似，除了要利用CSS设置列表的样式之外。代码如下：</p>
+<p>HTML:</p>
+<pre><code>&lt;div id=&quot;slideshow&quot;&gt;
+    &lt;ul id=&quot;slide-list&quot;&gt;
+        &lt;li id=&quot;0&quot;&gt;1&lt;/li&gt;
+        &lt;li id=&quot;1&quot;&gt;2&lt;/li&gt;
+        &lt;li id=&quot;2&quot;&gt;3&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;img src=&quot;images/1.jpg&quot; alt=&quot;&quot; /&gt;
+    &lt;img src=&quot;images/2.jpg&quot; alt=&quot;&quot; /&gt;
+    &lt;img src=&quot;images/3.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;/div&gt;
+</code></pre><p>CSS:</p>
+<pre><code>#slide-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    z-index: 4;
+}
+#slide-list li {
+    float: left;
+    display: inline-block;
+    margin: 0 3px;
+    padding: 3px;
+    width: 1em;
+    font: 16px/1 Arial, sans-serif;
+    text-align: center;
+    vertical-align: baseline;
+    color: #fff;
+    background: #555;
+    cursor: pointer;
+}
+#slide-list li:hover,
+#slide-list li.hover {
+    background: #888;
+}
+</code></pre><p>JavaScript:</p>
+<pre><code>function slideSwitch(){
+    var $active = $(&apos;#slideshow img.active&apos;);
+    var $next = $active.next().length ? $active.next() : $(&apos;#slideshow img:first&apos;);
+    $active.addClass(&apos;last-active&apos;);
+    $next.css({opacity: 0.0})
+        .addClass(&apos;active&apos;)
+        .animate({opacity: 1.0}, 1000, function(){
+            $(&apos;#slide-list li&apos;).eq($next.index(&apos;#slideshow img&apos;))
+                .addClass(&apos;hover&apos;)
+                .siblings().removeClass(&apos;hover&apos;);
+            $active.removeClass(&apos;active last-active&apos;);
+        });
+ }
+
+$(function(){
+    var clear = setInterval(slideSwitch, 3000);
+
+    $(&apos;#slideshow img&apos;).hover(function(){
+         clearInterval(clear);
+    },function(){
+        clear = setInterval(slideSwitch, 3000);
+    });
+
+    $(&apos;#slide-list li&apos;).hover(function(){
+        clearInterval(clear);
+        $(this).addClass(&apos;hover&apos;);
+        $(&apos;#slideshow img&apos;).eq($(this).attr(&apos;id&apos;))
+            .addClass(&apos;active last-active&apos;)
+            .siblings().removeClass(&apos;active last-active&apos;);
+    }, function(){
+        $(this).removeClass(&apos;hover&apos;);
+        clear = setInterval(slideSwitch, 3000);
+    });
+});
+</code></pre><p><strong>最终DEMO：</strong><a href="http://xiaocaoge.com/demo/Simple-Slideshow/Simple-Slideshow.html" target="_blank" rel="external">Simple Slideshow</a></p>
+<p><strong>源代码下载：</strong><a href="http://xiaocaoge.com/demo/Simple-Slideshow.zip" target="_blank" rel="external">simple slideshow</a></p>
+<p>(兼容IE6-IE8，Chrome, Firefox, Safari, Opera)</p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/slideshow/">slideshow</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/图片轮播/">图片轮播</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/焦点图/">焦点图</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/simple-slide-show.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-simple-slide-show" data-title="一个简单的图片播放（jQuery版）" data-url="http://www.xiaocaoge.com/simple-slide-show.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/Blog/" style="font-size: 12px;">Blog</a> <a href="/tag/CSS/" style="font-size: 20px;">CSS</a> <a href="/tag/CSS-Sprites/" style="font-size: 12px;">CSS Sprites</a> <a href="/tag/Class/" style="font-size: 12px;">Class</a> <a href="/tag/DOOM/" style="font-size: 12px;">DOOM</a> <a href="/tag/DataURI/" style="font-size: 12px;">DataURI</a> <a href="/tag/Github/" style="font-size: 12px;">Github</a> <a href="/tag/Hexo/" style="font-size: 12px;">Hexo</a> <a href="/tag/ID/" style="font-size: 12px;">ID</a> <a href="/tag/Image-Replacement/" style="font-size: 12px;">Image Replacement</a> <a href="/tag/Javascript/" style="font-size: 16px;">Javascript</a> <a href="/tag/Joel/" style="font-size: 12px;">Joel</a> <a href="/tag/Linux/" style="font-size: 12px;">Linux</a> <a href="/tag/MDN/" style="font-size: 12px;">MDN</a> <a href="/tag/Mac/" style="font-size: 12px;">Mac</a> <a href="/tag/Markdown/" style="font-size: 12px;">Markdown</a> <a href="/tag/Markdown语法/" style="font-size: 12px;">Markdown语法</a> <a href="/tag/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tag/OSX/" style="font-size: 12px;">OSX</a> <a href="/tag/PHP/" style="font-size: 16px;">PHP</a> <a href="/tag/PHP入门/" style="font-size: 12px;">PHP入门</a> <a href="/tag/Photoshop/" style="font-size: 12px;">Photoshop</a> <a href="/tag/PrintConductor/" style="font-size: 12px;">PrintConductor</a> <a href="/tag/Responsive/" style="font-size: 12px;">Responsive</a> <a href="/tag/SSE/" style="font-size: 12px;">SSE</a> <a href="/tag/Server-Push/" style="font-size: 12px;">Server Push</a> <a href="/tag/SlideJS/" style="font-size: 12px;">SlideJS</a> <a href="/tag/Sublime/" style="font-size: 12px;">Sublime</a> <a href="/tag/Sublime-Text-2/" style="font-size: 12px;">Sublime Text 2</a> <a href="/tag/Tab/" style="font-size: 12px;">Tab</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2016 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js"></script>
+</body>
+</html>

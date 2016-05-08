@@ -1,0 +1,1273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>小曹哥的博客</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://www.xiaocaoge.com/"/>
+  <updated>2016-05-08T17:58:22.000Z</updated>
+  <id>http://www.xiaocaoge.com/</id>
+  
+  <author>
+    <name>Alex Chao</name>
+    <email>alexchao1990@gmail.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用 Server-Sent Events</title>
+    <link href="http://www.xiaocaoge.com/server-sent-events.html"/>
+    <id>http://www.xiaocaoge.com/server-sent-events.html</id>
+    <published>2016-05-08T10:21:00.000Z</published>
+    <updated>2016-05-08T17:58:22.000Z</updated>
+    
+    <content type="html">&lt;p&gt;最近在做一个需要不断更新状态的功能时，简单对比了下轮询、Comet、SSEs（Server-Sent Events）以及 WebSocket 几种方案之后，选择了实现起来简单的 SSEs 方案。如果不是之前听同事介绍过，恐怕不知道何时才能了解这种技术，我发现这个实现简单的技术在网上的资源并不是很多，看过的几篇文章是三五年前写的。在实际的使用过程中加深了其设计的理解以及踩了一些坑。&lt;/p&gt;
+&lt;h2 id=&quot;为什么选用-Server-Sent-Events&quot;&gt;&lt;a href=&quot;#为什么选用-Server-Sent-Events&quot; class=&quot;headerlink&quot; title=&quot;为什么选用 Server-Sent Events&quot;&gt;&lt;/a&gt;为什么选用 Server-Sent Events&lt;/h2&gt;&lt;p&gt;关于 SSEs 的简单使用可以参考 &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Using server-sent events&lt;/a&gt;，详细的介绍可以阅读 &lt;a href=&quot;http://www.html5rocks.com/en/tutorials/eventsource/basics/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Stream Updates with Server-Sent Events&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;轮询&lt;/strong&gt;作为一种经典的数据更新技术，通过不断发送 AJAX 请求来实现，其明显的缺点有：一是发送无用的请求；二是服务端数据更新时，客户端不能即时更新。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Comet&lt;/strong&gt;是轮询的升级版，避免了其明显的两个缺点，但与 SSEs 相比较还是存在缺点，其实现方式比较 Hack，而且不是浏览器厂商特意设计出来的，对连接错误处理不可靠。详细介绍可参考 [Reverse Ajax, Part 1: Introduction to Comet)[Reverse Ajax, Part 1: Introduction to Comet)。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;WebSocket&lt;/strong&gt;是专门用来实现双通道通信的，对于只需要服务端更新数据的应用来说有点儿杀鸡用牛刀的意思，而且其实现比较复杂，需要服务器支持。而 SSEs 不需要服务器做特殊处理，同时 IE8+ 及现代浏览器都支持或有兼容性方案。&lt;/p&gt;
+&lt;p&gt;可能还有一个选择 SSEs 的原因，我想尝试下这种技术。&lt;/p&gt;
+&lt;h2 id=&quot;接口&quot;&gt;&lt;a href=&quot;#接口&quot; class=&quot;headerlink&quot; title=&quot;接口&quot;&gt;&lt;/a&gt;接口&lt;/h2&gt;&lt;p&gt;浏览器端通过全局的 &lt;strong&gt;&lt;a href=&quot;https://html.spec.whatwg.org/multipage/comms.html#the-eventsource-interface&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;EventSource&lt;/a&gt;&lt;/strong&gt; 构造函数来创建到服务端的 SSEs 连接。&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; ev = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; EventSource(&lt;span class=&quot;string&quot;&gt;&#39;/sseapi&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;默认情况下请求遵循同源策略，如果要建立跨域连接，需要设置第二个参数：&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; ev = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; EventSource(&lt;span class=&quot;string&quot;&gt;&#39;//api.domain.com/sse&#39;&lt;/span&gt;, &amp;#123; withCredentity: &lt;span class=&quot;literal&quot;&gt;true&lt;/span&gt; &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;兼容性方案&quot;&gt;&lt;a href=&quot;#兼容性方案&quot; class=&quot;headerlink&quot; title=&quot;兼容性方案&quot;&gt;&lt;/a&gt;兼容性方案&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;http://caniuse.com/#feat=eventsource&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Can I Use&lt;/a&gt; 显示主要 IE 及 Android 2.1~4.3 是不支持 EventSource。&lt;/p&gt;
+&lt;p&gt;尽管&lt;a href=&quot;https://github.com/Modernizr/Modernizr/wiki/HTML5-Cross-Browser-Polyfills#eventsource&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt;列出了多个 Polyfills，但是从最近提交记录、测试等考量后，自己选用了 &lt;a href=&quot;https://github.com/amvtek/EventSource&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/amvtek/EventSource&lt;/a&gt;，支持 IE8+ 及 Android Browser 2.1+。&lt;/p&gt;
+&lt;h2 id=&quot;实例&quot;&gt;&lt;a href=&quot;#实例&quot; class=&quot;headerlink&quot; title=&quot;实例&quot;&gt;&lt;/a&gt;实例&lt;/h2&gt;&lt;h3 id=&quot;浏览器端&quot;&gt;&lt;a href=&quot;#浏览器端&quot; class=&quot;headerlink&quot; title=&quot;浏览器端&quot;&gt;&lt;/a&gt;浏览器端&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;sse-example.html&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;charset&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;utf-8&quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Server-Sent Events Example&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;style&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;css&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;selector-tag&quot;&gt;form&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;attribute&quot;&gt;font-size&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;16px&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;attribute&quot;&gt;margin-bottom&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1em&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;selector-tag&quot;&gt;button&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;attribute&quot;&gt;font-size&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;16px&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;attribute&quot;&gt;cursor&lt;/span&gt;: pointer;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;style&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;form&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;type&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;button&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;id&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;close&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;关闭连接&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;button&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;form&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;id&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;message&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;id&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;result&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;script&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;javascript&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; ev = &lt;span class=&quot;keyword&quot;&gt;new&lt;/span&gt; EventSource(&lt;span class=&quot;string&quot;&gt;&#39;/sseapi&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 打印`ev`&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;ev:&#39;&lt;/span&gt;, ev);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ev.addEventListener(&lt;span class=&quot;string&quot;&gt;&#39;message&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;e&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;// 打印事件对象`e`&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;e:&#39;&lt;/span&gt;, e);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; message = &lt;span class=&quot;built_in&quot;&gt;document&lt;/span&gt;.getElementById(&lt;span class=&quot;string&quot;&gt;&#39;message&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    message.innerHTML = e.data;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ev.addEventListener(&lt;span class=&quot;string&quot;&gt;&#39;init&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;e&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; result = &lt;span class=&quot;built_in&quot;&gt;document&lt;/span&gt;.getElementById(&lt;span class=&quot;string&quot;&gt;&#39;result&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; data = &lt;span class=&quot;built_in&quot;&gt;JSON&lt;/span&gt;.parse(e.data);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    result.innerHTML = &lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;p&amp;gt;Username: &amp;lt;span id=&quot;username&quot;&amp;gt;&#39;&lt;/span&gt; +&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      data.username + &lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;/span&amp;gt;&amp;lt;br&amp;gt;&#39;&lt;/span&gt; +&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      &lt;span class=&quot;string&quot;&gt;&#39;Score: &amp;lt;span id=&quot;score&quot;&amp;gt;&#39;&lt;/span&gt; +&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                      data.score + &lt;span class=&quot;string&quot;&gt;&#39;&amp;lt;/span&amp;gt;&amp;lt;/p&amp;gt;&#39;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ev.addEventListener(&lt;span class=&quot;string&quot;&gt;&#39;update&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;e&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; data = &lt;span class=&quot;built_in&quot;&gt;JSON&lt;/span&gt;.parse(e.data);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; score = &lt;span class=&quot;built_in&quot;&gt;document&lt;/span&gt;.getElementById(&lt;span class=&quot;string&quot;&gt;&#39;score&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    score.innerHTML = data.score;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ev.addEventListener(&lt;span class=&quot;string&quot;&gt;&#39;open&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;e&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Connection was opened.&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  ev.addEventListener(&lt;span class=&quot;string&quot;&gt;&#39;error&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;e&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.error(&lt;span class=&quot;string&quot;&gt;&#39;Connection came across an error.&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; closeBtn = &lt;span class=&quot;built_in&quot;&gt;document&lt;/span&gt;.getElementById(&lt;span class=&quot;string&quot;&gt;&#39;close&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  closeBtn.addEventListener(&lt;span class=&quot;string&quot;&gt;&#39;click&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;e&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ev.close();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;EventSource was closed.&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;ev:&#39;&lt;/span&gt;, ev);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;literal&quot;&gt;false&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;script&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;服务端&quot;&gt;&lt;a href=&quot;#服务端&quot; class=&quot;headerlink&quot; title=&quot;服务端&quot;&gt;&lt;/a&gt;服务端&lt;/h3&gt;&lt;p&gt;使用 NodeJS 及 Express 实现。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;sse-server.js&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight js&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; express = &lt;span class=&quot;built_in&quot;&gt;require&lt;/span&gt;(&lt;span class=&quot;string&quot;&gt;&#39;express&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; app = express();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; PORT = &lt;span class=&quot;number&quot;&gt;8020&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Serve static file sse-example.html&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;app.get(&lt;span class=&quot;string&quot;&gt;&#39;/&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;req, res, next&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; fileName = &lt;span class=&quot;string&quot;&gt;&#39;sse-example.html&#39;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.sendFile(fileName, &amp;#123; root: __dirname &amp;#125;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;err&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (err) &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(err);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      res.status(err.status).end();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;      &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Sent: &#39;&lt;/span&gt;, fileName);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;// Server-sent events api&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;app.get(&lt;span class=&quot;string&quot;&gt;&#39;/sseapi&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;req, res, next&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 设置 HTTP Status Code 与 HTTP Headers&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.writeHead(&lt;span class=&quot;number&quot;&gt;200&lt;/span&gt;, &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    Connection: &lt;span class=&quot;string&quot;&gt;&#39;keep-alive&#39;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;Content-Type&#39;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&#39;text/event-stream&#39;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;Cache-Control&#39;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&#39;no-cache&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 设定浏览器在连接断开后延迟多长时间重新建立连接&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 通过 retry 字段控制，其单位为毫秒&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.write(&lt;span class=&quot;string&quot;&gt;&#39;retry: 10000\n&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 通过 data 字段发送所要传输的数据，冒号后面的空格字符被忽略，&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 必须以两个换行符结尾才会发送一个 Event&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.write(&lt;span class=&quot;string&quot;&gt;&#39;data: Test default event name\n\n&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; score = &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 如果不指定 event，其默认为 &quot;message&quot;，即客户端需要监听的事件名称&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.write(&lt;span class=&quot;string&quot;&gt;&#39;event: init\n&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.write(&lt;span class=&quot;string&quot;&gt;&#39;data: &amp;#123;&quot;username&quot;: &quot;Alex Chao&quot;, &quot;score&quot;: &#39;&lt;/span&gt; + score + &lt;span class=&quot;string&quot;&gt;&#39; &amp;#125;\n\n&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  res.flushHeaders();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; timerId = setInterval(&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    score++;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    res.write(&lt;span class=&quot;string&quot;&gt;&#39;event: update\n&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    res.write(&lt;span class=&quot;string&quot;&gt;&#39;data: &amp;#123; &quot;score&quot;: &#39;&lt;/span&gt; + score + &lt;span class=&quot;string&quot;&gt;&#39; &amp;#125;\n\n&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    res.flushHeaders();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;, &lt;span class=&quot;number&quot;&gt;3000&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;comment&quot;&gt;// 连接关闭后清除定时器&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  req.connection.on(&lt;span class=&quot;string&quot;&gt;&#39;close&#39;&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Connection was closed.&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    clearInterval(timerId);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;app.listen(PORT, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;function&lt;/span&gt; (&lt;span class=&quot;params&quot;&gt;&lt;/span&gt;) &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;span class=&quot;built_in&quot;&gt;console&lt;/span&gt;.log(&lt;span class=&quot;string&quot;&gt;&#39;Server listening on: http://127.0.0.1:%s&#39;&lt;/span&gt;, PORT);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/Alex1990/sse-example&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Github 下载代码&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;注意事项&quot;&gt;&lt;a href=&quot;#注意事项&quot; class=&quot;headerlink&quot; title=&quot;注意事项&quot;&gt;&lt;/a&gt;注意事项&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;服务端在连接关闭后应该中止任务，防止可能的内存泄露。&lt;/li&gt;
+&lt;li&gt;如果浏览器到服务器端存在代理，则代理服务器转发 HTTP chunk 时可能会出现问题，比如 Nginx 会立即将接受到的数据包转发出去，此时可配置&lt;code&gt;proxy_buffer off;&lt;/code&gt;，可参考 &lt;a href=&quot;http://stackoverflow.com/questions/13672743/eventsource-server-sent-events-through-nginx&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;EventSource/Server-Sent Events through Nginx&lt;/a&gt;。&lt;/li&gt;
+&lt;li&gt;网上有提到某些杀毒软件会阻止 event streaming data chunks，我是用的 OSX 系统安装了 Microsoft Endpoint Protection，没有发现有影响。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;参考&quot;&gt;&lt;a href=&quot;#参考&quot; class=&quot;headerlink&quot; title=&quot;参考&quot;&gt;&lt;/a&gt;参考&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Using server-sent events&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.ibm.com/developerworks/library/wa-reverseajax1/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Reverse Ajax, Part 1: Introduction to Commet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.html5rocks.com/en/tutorials/eventsource/basics/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Stream Updates with Server-Sent Events&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://html.spec.whatwg.org/multipage/comms.html#server-sent-events&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Serve-sent events specification&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://caniuse.com/#feat=eventsource&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Server-sent events support&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近在做一个需要不断更新状态的功能时，简单对比了下轮询、Comet、SSEs（Server-Sent Events）以及 WebSocket 几种方案之后，选择了实现起来简单的 SSEs 方案。如果不是之前听同事介绍过，恐怕不知道何时才能了解这种技术，我发现这个实现简单的技
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="SSE" scheme="http://www.xiaocaoge.com/tag/SSE/"/>
+    
+      <category term="Server Push" scheme="http://www.xiaocaoge.com/tag/Server-Push/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>变量命名</title>
+    <link href="http://www.xiaocaoge.com/naming-variable.html"/>
+    <id>http://www.xiaocaoge.com/naming-variable.html</id>
+    <published>2015-11-21T09:32:00.000Z</published>
+    <updated>2015-11-21T11:51:56.000Z</updated>
+    
+    <content type="html">&lt;p&gt;我想有点儿代码洁癖的人，在编写代码的过程中，或多或少地想过“如何给一个变量起一个好名？”的问题。然而，一般的编程书或代码规范都不会详细地讲这个问题，也就是一两句话带过。比如全局变量或常量全大写字母，变量名采用小驼峰。这里不仅指变量命名，还有函数或方法名、常量名、类名、对象名、文件名等。我以前也多次思考过如何缩写变量名，发现不少人采用取辅音字母方法不错，然而没有深入学习过如何给变量命名，经常起变量名时比较纠结。直到读了《代码大全》的“变量名的力量”一章发现这正是我一直想读而未读的内容，也将我以前学习的有关变量命名的内容串联起来了。&lt;/p&gt;
+&lt;h2 id=&quot;为什么要起一个好的名字？&quot;&gt;&lt;a href=&quot;#为什么要起一个好的名字？&quot; class=&quot;headerlink&quot; title=&quot;为什么要起一个好的名字？&quot;&gt;&lt;/a&gt;为什么要起一个好的名字？&lt;/h2&gt;&lt;p&gt;如果代码只是一个人写，如果代码写完之后再也不看了，那起一个好的名字并不是必需的事情。然后很多情况下，不仅别人会看我们的代码，写完之后我们还会阅读自己的代码。这个时候就需要有变量命名方面的统一风格，对于那些几十上百人合作的大型多语言项目，命名方面需要规定的更细致。&lt;/p&gt;
+&lt;h2 id=&quot;命名注意事项&quot;&gt;&lt;a href=&quot;#命名注意事项&quot; class=&quot;headerlink&quot; title=&quot;命名注意事项&quot;&gt;&lt;/a&gt;命名注意事项&lt;/h2&gt;&lt;p&gt;《代码大全》给出了多条命名时考虑的问题及指导建议，其中不少我都考虑过，然后都是零碎地思考过。&lt;/p&gt;
+&lt;h3 id=&quot;最重要的注意事项&quot;&gt;&lt;a href=&quot;#最重要的注意事项&quot; class=&quot;headerlink&quot; title=&quot;最重要的注意事项&quot;&gt;&lt;/a&gt;最重要的注意事项&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;变量名应该准确地反映出它所代表的事物&lt;/strong&gt;，由于自己英语比较渣，母语不是英语，所以查字典也不一定能选择准确的名字，还是要靠积累。&lt;/p&gt;
+&lt;h3 id=&quot;命名风格&quot;&gt;&lt;a href=&quot;#命名风格&quot; class=&quot;headerlink&quot; title=&quot;命名风格&quot;&gt;&lt;/a&gt;命名风格&lt;/h3&gt;&lt;p&gt;这个好多书或规范都会提到，常见的风格：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;小驼峰：首字母小写，后面所有单词首字母大写，如&lt;code&gt;userName&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;大驼峰：与小驼峰唯一区别时首字母也大写，如&lt;code&gt;UserName&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;下划线分隔：包括变量或函数常用的全小写字母、下划线分隔，如&lt;code&gt;create_box&lt;/code&gt;，也包括全局常量的全大写字母、下划线分隔，如&lt;code&gt;NAME_MAX_LEN&lt;/code&gt;；&lt;/li&gt;
+&lt;li&gt;匈牙利命名法：曾经在 Windows API 中为主流形式，目前少见；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外还有些针对特定类型名字的风格，比如 JavaScript 私有成员命名以下划线开头，数组名字用复数形式。&lt;/p&gt;
+&lt;h3 id=&quot;名字长度&quot;&gt;&lt;a href=&quot;#名字长度&quot; class=&quot;headerlink&quot; title=&quot;名字长度&quot;&gt;&lt;/a&gt;名字长度&lt;/h3&gt;&lt;p&gt;《代码大全》上面说 8 ~ 20 个字符最好，意思是最好不要超过 20 个字符，代码中也不要有很多长的名字。另外作用域对变量名也有影响，如果是不常用的全局变量可能长些，如果是临时用的局部变量就会短一些。可能最短的就是循环语句当中的索引变量，而且常用&lt;code&gt;i&lt;/code&gt;、&lt;code&gt;j&lt;/code&gt;、&lt;code&gt;k&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;对仗词&quot;&gt;&lt;a href=&quot;#对仗词&quot; class=&quot;headerlink&quot; title=&quot;对仗词&quot;&gt;&lt;/a&gt;对仗词&lt;/h3&gt;&lt;p&gt;即那些互为反义词的单词，还是会经常用到的，大部分都是简单的英文单词。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;begin/end, start/end&lt;/li&gt;
+&lt;li&gt;first/last&lt;/li&gt;
+&lt;li&gt;min/max&lt;/li&gt;
+&lt;li&gt;previous/next&lt;/li&gt;
+&lt;li&gt;old/new&lt;/li&gt;
+&lt;li&gt;visible/invisible&lt;/li&gt;
+&lt;li&gt;source/target&lt;/li&gt;
+&lt;li&gt;open/close&lt;/li&gt;
+&lt;li&gt;show/hide&lt;/li&gt;
+&lt;li&gt;on/off&lt;/li&gt;
+&lt;li&gt;up/down&lt;/li&gt;
+&lt;li&gt;…&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;一些特定类型变量的命名&quot;&gt;&lt;a href=&quot;#一些特定类型变量的命名&quot; class=&quot;headerlink&quot; title=&quot;一些特定类型变量的命名&quot;&gt;&lt;/a&gt;一些特定类型变量的命名&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;循环索引：尽量用&lt;code&gt;i&lt;/code&gt;、&lt;code&gt;j&lt;/code&gt;、&lt;code&gt;k&lt;/code&gt;，这已经是约定俗成，绝大多数程序员都熟悉的了；&lt;/li&gt;
+&lt;li&gt;状态变量：我觉得应该使用形容词，比如&lt;code&gt;closed&lt;/code&gt;、&lt;code&gt;hidden&lt;/code&gt;等；&lt;/li&gt;
+&lt;li&gt;临时变量：书中作者说尽量不要使用&lt;code&gt;temp&lt;/code&gt;/&lt;code&gt;tmp&lt;/code&gt;这种含义太泛的名字，应该使用所指代的含义，我觉得两个变量交换时经常使用&lt;code&gt;temp&lt;/code&gt;/&lt;code&gt;tmp&lt;/code&gt;可能是个例外；&lt;/li&gt;
+&lt;li&gt;布尔变量：变量隐含”真/假”含义，并且不要使用&lt;code&gt;isFound&lt;/code&gt;、&lt;code&gt;isError&lt;/code&gt;这种形式，我自己倒是经常使用&lt;code&gt;is&lt;/code&gt;作为前缀；&lt;/li&gt;
+&lt;li&gt;枚举类型：JavaScript 中没有真正的枚举类型，但是枚举也就是一组相关的变量，可以用数组或对象表示的，使用复数形式。&lt;/li&gt;
+&lt;li&gt;常量：全大写字母，下划线分隔形式。但是全大写字母对于非母语的国内程序员来说可读性其实并不好，我在 JavaScript 中见得也不多，倒是觉得&lt;code&gt;g_&lt;/code&gt;作为前缀这种形式更好一些。另外 C 语言中全大写字母似乎是主流形式，可能还得采用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;书中还给出了 C、C++、Java 命名规则示例，区分的比较细致，比如局部变量、成员变量、函数等都要区分，自己写代码时区分的没这么细致。可能和 JavaScript 语言本身有关，或者自己没有编写过大中型项目有关。&lt;/p&gt;
+&lt;p&gt;另外书中提到了一种很好的思路：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;可以通过命名方面的约定来增强某种语言的功能，从而弥补该语言自身的缺陷。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;JavaScript 当中使用下划线&lt;code&gt;_&lt;/code&gt;开头的命名表示私有成员正是这种思路的体现啊。&lt;/p&gt;
+&lt;h2 id=&quot;标准前缀&quot;&gt;&lt;a href=&quot;#标准前缀&quot; class=&quot;headerlink&quot; title=&quot;标准前缀&quot;&gt;&lt;/a&gt;标准前缀&lt;/h2&gt;&lt;p&gt;用户自定义一些单词的缩写形式作为命名的前缀，这样通过较短的名字传达更多的信息，但是会增加记忆这些前缀的成本。&lt;/p&gt;
+&lt;h2 id=&quot;如何缩写&quot;&gt;&lt;a href=&quot;#如何缩写&quot; class=&quot;headerlink&quot; title=&quot;如何缩写&quot;&gt;&lt;/a&gt;如何缩写&lt;/h2&gt;&lt;p&gt;书中列举了一些指导原则，个人常见的：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;标准缩写，即词典中的缩写&lt;/li&gt;
+&lt;li&gt;去掉所有非前置元音字母&lt;/li&gt;
+&lt;li&gt;取前几位字母&lt;/li&gt;
+&lt;li&gt;取所有单词首字母&lt;/li&gt;
+&lt;li&gt;参考一些开源项目当中常见的缩写形式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我觉得应该有一份 JavaScript Web 开发方面常用变量缩写形式参考表，我一般会参考一些书中或著名的开源项目中的缩写形式。比如元素&lt;code&gt;element&lt;/code&gt;的缩写有&lt;code&gt;elem&lt;/code&gt;、&lt;code&gt;el&lt;/code&gt;，事件对象&lt;code&gt;event&lt;/code&gt;的缩写形式为&lt;code&gt;evt&lt;/code&gt;、&lt;code&gt;e&lt;/code&gt;，但是遇到&lt;code&gt;ele&lt;/code&gt;、&lt;code&gt;ev&lt;/code&gt;的形式后就感觉内心很不舒服，可能就像密集恐惧症患者见到含有密集物的图片一样，恨不得撕碎它。当然，也有可能是我孤陋寡闻了。&lt;/p&gt;
+&lt;h2 id=&quot;避免的名字&quot;&gt;&lt;a href=&quot;#避免的名字&quot; class=&quot;headerlink&quot; title=&quot;避免的名字&quot;&gt;&lt;/a&gt;避免的名字&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;避免使用含义完全无关的名字&lt;/li&gt;
+&lt;li&gt;避免使用过于简短的名字：最讨厌使用一个字母变量的形式了；&lt;/li&gt;
+&lt;li&gt;避免使用在名字中使用数字：这个我常见到一些人用&lt;code&gt;2&lt;/code&gt;表示&lt;code&gt;to&lt;/code&gt;，用&lt;code&gt;4&lt;/code&gt;表示&lt;code&gt;for&lt;/code&gt;，个人不太喜欢这种形式；&lt;/li&gt;
+&lt;li&gt;避免单词拼写错误：这也是我最讨厌的错误了，花个十几秒查下词典就行了，对于那些开放 API 当中的拼写错误最应该避免了；&lt;/li&gt;
+&lt;li&gt;不要使用标准类型、变量和子程序的名字：每种语言都有一些内置的类型、方法，尽量不要冲突；&lt;/li&gt;
+&lt;li&gt;易混淆的名字：典型的就是&lt;code&gt;I&lt;/code&gt;、&lt;code&gt;1&lt;/code&gt;、&lt;code&gt;l&lt;/code&gt;三个字符在某些字体下很难区分。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外，个人认为尽量不用汉语拼音作为变量，所以这也就要英语词汇量丰富些，也要针对某方面，比如图形编程方面可能对几何、坐标、向量等方面的英文词汇要熟悉些。&lt;/p&gt;
+&lt;h2 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h2&gt;&lt;p&gt;代码风格与变量命名风格并不是永久不变的，那些著名开源项目似乎能影响代码风格和变量命名的主流形式。项目的代码风格或变量命名尽量和主流形式一致，但也并非强制要求。&lt;/p&gt;
+&lt;p&gt;当然，对于某些连基本的代码风格都不太注意的人，更别提变量命名的风格了，这些很多书都不会讲，似乎全凭自觉了或者项目负责人的规定了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我想有点儿代码洁癖的人，在编写代码的过程中，或多或少地想过“如何给一个变量起一个好名？”的问题。然而，一般的编程书或代码规范都不会详细地讲这个问题，也就是一两句话带过。比如全局变量或常量全大写字母，变量名采用小驼峰。这里不仅指变量命名，还有函数或方法名、常量名、类名、对象名
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="变量名" scheme="http://www.xiaocaoge.com/tag/%E5%8F%98%E9%87%8F%E5%90%8D/"/>
+    
+      <category term="名字" scheme="http://www.xiaocaoge.com/tag/%E5%90%8D%E5%AD%97/"/>
+    
+      <category term="可读性" scheme="http://www.xiaocaoge.com/tag/%E5%8F%AF%E8%AF%BB%E6%80%A7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>个人读书感悟</title>
+    <link href="http://www.xiaocaoge.com/choosing-and-reading-books.html"/>
+    <id>http://www.xiaocaoge.com/choosing-and-reading-books.html</id>
+    <published>2015-07-07T13:30:00.000Z</published>
+    <updated>2015-07-12T16:20:16.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;大学时代&quot;&gt;&lt;a href=&quot;#大学时代&quot; class=&quot;headerlink&quot; title=&quot;大学时代&quot;&gt;&lt;/a&gt;大学时代&lt;/h2&gt;&lt;p&gt;大学以前，我几乎没有考虑过如何选书的问题，因为读的书差不多就是课本、班里传阅的课外书及很普通的小书店里的书。而且读的书也杂，小说、杂志、科普、鸡汤（励志）、军事等等，可以说几乎没有读过专业且有深度的书。也没有想过这些，就只是看遇到的书，感兴趣可能读一下，或者说真的没有其他有趣的事来做，也只好读这些书了。&lt;/p&gt;
+&lt;p&gt;而到大学以后，图书馆有数百万的书可供选择，无论是畅销的小说，还是专业的书籍，你只知道永远都不可能读完的。这时，就得考虑选择哪些书的问题。而我保持了一贯地爱读鸡汤书的爱好，选择几本名人传记，另外借阅过几本编程、Photoshop、小说、经管等方面的书，我几乎都是根据书名选择书的。准确地说，我大四以前是根据书名及扫上几眼选择书的，尤其钟爱从入门到精通系列。读下来的书也就一二十本，课外加上逃课时间基本上都用来玩游戏、看电影、睡觉了，这些都是高中时认为浪费时间的事情，还玩得不专业，实在是浑浑噩噩的几年。&lt;/p&gt;
+&lt;p&gt;直到大四时，因为马上毕业找工作了，也因为玩得很无聊了，想着自己该学点儿什么。大四想过学好 PPT 设计，也正好开始使用豆瓣了。然后就是学习过程中不断查找 PPT 的&lt;strong&gt;资源&lt;/strong&gt;，比如博客、网络教程、书籍等。使用&lt;strong&gt;资源&lt;/strong&gt;这个抽象的词来指代这些很关键，尽管我很早就知道，但是从来没有稍微深入自学过任何方面的知识，哪怕是游戏。&lt;/p&gt;
+&lt;h2 id=&quot;毕业三年&quot;&gt;&lt;a href=&quot;#毕业三年&quot; class=&quot;headerlink&quot; title=&quot;毕业三年&quot;&gt;&lt;/a&gt;毕业三年&lt;/h2&gt;&lt;p&gt;大四上学期慢慢在脑中酝酿，并最终决定学习前端这个方向，尽管实际上这时对前端知之甚少。过年期间，家人、朋友、关系不错的同学在询问我以后的打算时，我回答了这一决定，并且这次没有指望 21 天从入门到精通，比较实际地预估花两三年才能学成。从大四毕业实习时开始了自学前端，当然学习资源只能靠自己来找，而书籍方面通过豆瓣、博客文章选择，差不多就是豆瓣评价 8.0 分以上的 HTML、CSS 和 JavaScript 方面的书籍。然后从入门的开始读，先 HTML，再 CSS，然后 JavaScript，这中间还读了其他方面的书。甚至觉得这些调味用的书带给我的影响更深远：&lt;/p&gt;
+&lt;h3 id=&quot;《失控》&quot;&gt;&lt;a href=&quot;#《失控》&quot; class=&quot;headerlink&quot; title=&quot;《失控》&quot;&gt;&lt;/a&gt;《失控》&lt;/h3&gt;&lt;p&gt;我只读了前面几章，现在只留下了自组织形成的模糊描写，甚至忘记了出没出现过“自组织”这个词，但是自组织形成的简单描写对我自学过程的思考很有帮助。在我自学前端前，我对前端方面的知识只限于拼写 HTML、CSS 和 JavaScript 这几个单词。这时，我还没有听过浮动、弹性布局、闭包、DOM、jQuery等等这些概念，即使听过也完全不知道它们究竟意味着什么。所以，我把我掌握的前端知识体系想象成一个自组织系统，而不断学习的过程，就是这个自组织系统不断形成的过程。我列一个前端书单，然后遍历这个书单，我发现书上的相关链接或者我想搜索的问题，我就搜索，我在阅读搜索文章的过程中，又发现了相关链接或不懂的地方，然后继续搜索，最后堆栈溢出，忘记自己刚开始学的是什么了。扯远了，我的意思是概念的掌握是自下而上的，一点一点相关细节的积累，然后觉得应该归类或者起个名字来指代了，然后形成了概念。我这里的描述可能随便了点儿。&lt;/p&gt;
+&lt;h3 id=&quot;《DOOM启示录》&quot;&gt;&lt;a href=&quot;#《DOOM启示录》&quot; class=&quot;headerlink&quot; title=&quot;《DOOM启示录》&quot;&gt;&lt;/a&gt;《DOOM启示录》&lt;/h3&gt;&lt;p&gt;读的电子档，是在一个漆黑的夜晚，一个人上着夜班，守着 RoHS 测试仪器，边工作边通过手机阅读，读的过程中内心热血沸腾，真的不是鸡汤，胜似鸡汤。这本书很明显给了我坚持自学前端的动力，当时的自己，工作很不理想，完全是一个人自学，生活上也可能算无趣的很。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;只要有一台便宜的二手电脑，一张 Linux 光盘和一个互联网账户，你就已经拥有了把自己提升到任何级别的编程水平所需的全部工具。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;是的，现在的前端学习资源更是这样，只不过现在才知道具体有哪些资源也是需要学习与积累的。另外就是，很多人知道有哪些资源，也知道该学哪些，但是往往低估了其重要性，尤其是长期价值。翻墙与英语算是学习编程中的基础，我也不知道我从什么时候以及从哪里逐渐形成的这种观点，反正不是凭空冒出来的。我很庆幸我对这种观点一开始就没有抵触过，当我某天想学 GAE 翻墙时，发现比我想象地顺利多了，当我开始读英文文章时，虽然吃力，但连蒙带猜能看懂大概在说什么吧，当然遇到的大部分生词都查有道字典了。我发现有些人这两项掌握不好的原因有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;臆测：&lt;/strong&gt;一旦不能在自己臆测的时间内掌握就退缩了，没认识到学习都是一点点儿积累的，事物之间有着自己的运行规则，也许开始难，但是以后难度就不一定了。我感觉一位 Dota 解说，09 说得一句话能表达我的意思：“The truth is what it is, not what you see”。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;低估长期价值：&lt;/strong&gt;可能因为这个，觉得 VPN 每月几十块很不值得，而且说实话，是英语学习资源重要，Google 搜索只是用来搜索这些的，所以我个人认为中文网络学习资源质量也影响了百度搜索结果。另外，我也常常这样，比如之前想着补计算机编程核心课程的（不单单是课本，是指涉及到的知识体系），但是总觉得与现阶段工作联系不大而一再拖延。就在刚刚，我突然觉得与现阶段工作关系不大，可能是我想错了，因为自己以前想做的几个小工具需要编译、树结构、网络相关的知识，但是要学这些又要花费时间，而且这些难于上手一样，就半途而废了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;《软件随想录》&quot;&gt;&lt;a href=&quot;#《软件随想录》&quot; class=&quot;headerlink&quot; title=&quot;《软件随想录》&quot;&gt;&lt;/a&gt;《软件随想录》&lt;/h3&gt;&lt;p&gt;现在只是隐约记得作者提到了自己公司开发的一个软件，使用了一种迭代统计方法，然后我结合自己多年制定小计划的习惯，发现自己制定的计划有很大缺陷，就是把事物运行规则假设为线性的了。比如，我要学习某本书，然后就有点儿毫无根据地规定两个月看完，然后看下书有多少页内容，然后算算每天应该看多少页，这样就算计划好了，每天只要看完计划好的页数就算完成了，看不完心里就觉得这下完了。但实际上，对于技术书籍，至少是我读过的技术书籍来说，每章每节的难度都是不同的，往往前几章简单，后面就难了。也因此，每章甚至每页花费的时间都是不同的，不应该以每天读多少页，多长时间读完为目标，除非是为了完成特别紧急的事情，而应该以理解知识为目标。从书名、目录、前几章或者豆瓣上的评论都只能大体上估计一本书的好坏，另外适不适合自己现阶段读就是另一回事了。&lt;/p&gt;
+&lt;p&gt;不过从我这几年的读书及学习经验来看，从来就没有一本&lt;strong&gt;书&lt;/strong&gt;能够使人精通某一方面技能，书只是作者的经验总结，只是作者所掌握能力的冰山一角，大部分时间还是要花在实际的编码、思考上。我甚至觉得技术书只分两种：入门和高级入门，书只不过是用来入门某个领域或细分领域的，这些领域还是人为划分的。后来，这一观念，再加上前 Node 界的知名大神 TJ 说自己没有上过大学，也很少读书，就是从源码学习，想着“How it works”，我就差点走向了一个极端，我也要不读书，从源码中学习，真是作死。于是又想到，也有很多很多其他的大神都要通过读书吸取知识的啊，每个人都有适合自己的学习方法，我还是得好好读书，先把编程基础打好再说吧，虽然只读书是远远不够的。&lt;/p&gt;
+&lt;h2 id=&quot;翻译与原版&quot;&gt;&lt;a href=&quot;#翻译与原版&quot; class=&quot;headerlink&quot; title=&quot;翻译与原版&quot;&gt;&lt;/a&gt;翻译与原版&lt;/h2&gt;&lt;p&gt;不知道其他方面的书籍如何，就我了解到的计算机方面的，国人写得好的书，不多。我在学前端早期，根据豆瓣上的评分与评论，大致弄了两份书单，一份前端方面，一份计算机科学方面，几乎没有国人写的，都是翻译的。有能力的还是直接看原版英文的好，除了以后接触的学习资源以英文为主外，翻译的不能 100% 传达原作者要表达的，有些英文也比较难翻译，在加上翻译者不认真的话，有些句子读起来不如英文好理解些。当然，就目前国内能进行高质量翻译的人翻译这些书也获取不到多少版税，应该比他们的工资差远了吧，毕竟他们只图名，不图利。后面这句话开玩笑的，这些书还是帮助了不少国内的学习者的，特别是像我这种一开始读英文吃力的人。&lt;/p&gt;
+&lt;p&gt;这半年来，我又逐渐地意识到我之前高估了读英文原著的难度，或者因为我英文阅读能力进步了吧。记得一开始读 John Resig 写得那本《Secrets of the JavaScript Ninja》真的很吃力，也留下了恐惧的第一阴影，导致后来长时间不敢读，不过说实话这里面确实多一些生词和不好理解的句式，现在也是一知半解。读英文原版的好处也是有很多的，可以第一时间就学习，不需要等别人翻译，不用担心翻译质量，也能够直接看到作者说得话。另外一个读英文原版的好处是：建立一个英文概念构成的知识体系，有助于使用 Google 搜索时，知道该使用什么关键词。所以下一步的方向就是增大读书量，尤其要尝试读些英文原著。&lt;/p&gt;
+&lt;h2 id=&quot;结语&quot;&gt;&lt;a href=&quot;#结语&quot; class=&quot;headerlink&quot; title=&quot;结语&quot;&gt;&lt;/a&gt;结语&lt;/h2&gt;&lt;p&gt;写得有点儿乱，这些都是零碎的感悟，平日里也不写这些文章的，感觉自己语言表达能力还需提升啊。其实，实际的思考过程，更零碎，也更跳跃，感觉用自己的语言表达不出来一样，觉得需要有相似的经历才好理解。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;大学时代&quot;&gt;&lt;a href=&quot;#大学时代&quot; class=&quot;headerlink&quot; title=&quot;大学时代&quot;&gt;&lt;/a&gt;大学时代&lt;/h2&gt;&lt;p&gt;大学以前，我几乎没有考虑过如何选书的问题，因为读的书差不多就是课本、班里传阅的课外书及很普通的小书店里的书。而且读的书也杂，
+    
+    </summary>
+    
+      <category term="其他" scheme="http://www.xiaocaoge.com/category/%E5%85%B6%E4%BB%96/"/>
+    
+    
+      <category term="选书" scheme="http://www.xiaocaoge.com/tag/%E9%80%89%E4%B9%A6/"/>
+    
+      <category term="读书" scheme="http://www.xiaocaoge.com/tag/%E8%AF%BB%E4%B9%A6/"/>
+    
+      <category term="书" scheme="http://www.xiaocaoge.com/tag/%E4%B9%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>标签页操作与快捷键</title>
+    <link href="http://www.xiaocaoge.com/tab-operations-and-shortcuts.html"/>
+    <id>http://www.xiaocaoge.com/tab-operations-and-shortcuts.html</id>
+    <published>2015-07-04T16:16:00.000Z</published>
+    <updated>2015-12-31T13:11:19.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;标签的操作&quot;&gt;&lt;a href=&quot;#标签的操作&quot; class=&quot;headerlink&quot; title=&quot;标签的操作&quot;&gt;&lt;/a&gt;标签的操作&lt;/h2&gt;&lt;p&gt;在开发过程中，几个经常使用的工具会采用标签机制，目前有三个工具：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;浏览器&lt;/strong&gt;：经常查找资料或其他上网活动时会打开几个，甚至十几二十几个标签页。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;编辑器&lt;/strong&gt;：自己主用 Sublime，但是其他我见过的所有代码编辑器都支持标签页的，在敲代码时也会打开几个或十几个文件，就连以前操作 Word 时也安装个支持标签页的插件。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;终端&lt;/strong&gt;：开发者也要经常使用命令行进行多种操作，也会打开几个或更多标签页。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而标签页通常有着固定的几个操作，可能不同软件名字不一样，不过实质一样：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;创建&lt;/li&gt;
+&lt;li&gt;关闭&lt;/li&gt;
+&lt;li&gt;选择前一个&lt;/li&gt;
+&lt;li&gt;选择后一个&lt;/li&gt;
+&lt;li&gt;选择第N个&lt;/li&gt;
+&lt;li&gt;重新打开上一个关闭的&lt;/li&gt;
+&lt;li&gt;关闭其他所有&lt;/li&gt;
+&lt;li&gt;重新排序&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;标签操作的快捷键&quot;&gt;&lt;a href=&quot;#标签操作的快捷键&quot; class=&quot;headerlink&quot; title=&quot;标签操作的快捷键&quot;&gt;&lt;/a&gt;标签操作的快捷键&lt;/h2&gt;&lt;p&gt;这些操作通常比较常用，也会对应一些快捷键，很重要的一点就是：&lt;strong&gt;在同一系统平台下，虽然软件不同，但是这些操作对应的快捷键都是大同小异的&lt;/strong&gt;。具体来说，Windows 与 Ubuntu 一样，而 Mac 通常只是把&lt;code&gt;Ctrl&lt;/code&gt;换成了&lt;code&gt;Command&lt;/code&gt;。这样就可以显著降低学习成本，我不知道有没有什么规范，但是觉得软件开发者也应该遵循这些惯例。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tab操作与三大系统平台上快捷键&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Tab操作&lt;/th&gt;
+&lt;th&gt;Window/Linux&lt;/th&gt;
+&lt;th&gt;Mac&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;创建&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+T&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+T&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;关闭&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+W&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+W&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;选择前一个&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+Tab&lt;/code&gt;或&lt;br&gt;&lt;code&gt;Ctrl+PageUp&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+{&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;选择后一个&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+Shift+Tab&lt;/code&gt;或&lt;br&gt;&lt;code&gt;Ctrl+PageDown&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+}&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;选择第N个（N&amp;lt;=8）&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+[1-8]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+[1-8]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;选择最后一个&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+9&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+9&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;重新打开上次关闭的&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Ctrl+Shift+T&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Command+Shift+T&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;关闭其他所有&lt;/td&gt;
+&lt;td&gt;无快捷键&lt;/td&gt;
+&lt;td&gt;无快捷键&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;重新排序&lt;/td&gt;
+&lt;td&gt;鼠标拖动，或 Ubuntu Gnome Terminal&lt;br&gt;可以使用&lt;code&gt;Ctrl+Shift+PageUp/PageDown&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;鼠标拖动&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;备注：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;这里的快捷键不是所有软件都完全支持。&lt;/li&gt;
+&lt;li&gt;Chrome或其他软件的Tab操作可能比这里列出的多几个，如关闭右边所有的、固定当前。&lt;/li&gt;
+&lt;li&gt;“关闭其他所有”没有默认的快捷键，但是可以通过插件来设置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h2&gt;&lt;p&gt;这里只是简单地列出了标签的操作与快捷键，而标签机制属于 GUI 设计范畴，称之为 TDI（Tabbed Document Interface），与之相关的概念还有：窗口（Window）、MDI（Multiple Document Interface）、SDI（Single Document Interface），细节请查看参考链接。&lt;/p&gt;
+&lt;h2 id=&quot;参考链接&quot;&gt;&lt;a href=&quot;#参考链接&quot; class=&quot;headerlink&quot; title=&quot;参考链接&quot;&gt;&lt;/a&gt;参考链接&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Tab_(GUI&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GUI Tab&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_document_interface&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;MDI (Multiple Document Interface)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Desktop_metaphor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Desktop metaphor&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;标签的操作&quot;&gt;&lt;a href=&quot;#标签的操作&quot; class=&quot;headerlink&quot; title=&quot;标签的操作&quot;&gt;&lt;/a&gt;标签的操作&lt;/h2&gt;&lt;p&gt;在开发过程中，几个经常使用的工具会采用标签机制，目前有三个工具：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;浏览器&lt;
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="标签页" scheme="http://www.xiaocaoge.com/tag/%E6%A0%87%E7%AD%BE%E9%A1%B5/"/>
+    
+      <category term="快捷键" scheme="http://www.xiaocaoge.com/tag/%E5%BF%AB%E6%8D%B7%E9%94%AE/"/>
+    
+      <category term="Tab" scheme="http://www.xiaocaoge.com/tag/Tab/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从WordPress迁移博客到Hexo</title>
+    <link href="http://www.xiaocaoge.com/migrate-to-hexo-from-wordpress.html"/>
+    <id>http://www.xiaocaoge.com/migrate-to-hexo-from-wordpress.html</id>
+    <published>2015-05-23T09:58:00.000Z</published>
+    <updated>2015-05-23T10:48:04.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;为什么迁移？&quot;&gt;&lt;a href=&quot;#为什么迁移？&quot; class=&quot;headerlink&quot; title=&quot;为什么迁移？&quot;&gt;&lt;/a&gt;为什么迁移？&lt;/h2&gt;&lt;p&gt;实际上，迁移博客的决定大半年前，大概 2014 年 7 月份就已经决定了。当时考虑到托管在 Github 上面的静态博客有这么几种优势：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;采用 Markdown 方式书写，可采用任何自己喜欢的编辑器，含有代码块，书写方便，甚至以后写数学公式也可以采用 TeX 语法。当然，WordPress 也可以，不过总觉得安装插件不太直接。&lt;/li&gt;
+&lt;li&gt;Github Pages 免费，可以节省每年 200 大洋的虚拟主机费用，且托管在 Github 很放心。&lt;/li&gt;
+&lt;li&gt;静态页面速度快，不过这个现在体现不出来了，国内访问 Github Pages 网速慢。&lt;/li&gt;
+&lt;li&gt;不得不说我受到了流行趋势的影响，看到很多人采用了这种方式，我就想尝试下。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;大致就是以上几点原因使我最终决定迁移博客到 Github Pages。&lt;/p&gt;
+&lt;h2 id=&quot;选择静态博客系统&quot;&gt;&lt;a href=&quot;#选择静态博客系统&quot; class=&quot;headerlink&quot; title=&quot;选择静态博客系统&quot;&gt;&lt;/a&gt;选择静态博客系统&lt;/h2&gt;&lt;p&gt;一开始，我先听说的 Jekyll，在尝试时，发现要安装自己不熟悉的工具，因为它是 Ruby 写成的，而且我当时用的 Windows 系统，最终闲它麻烦而放弃。然后就搜索了一些其他的静态博客，发现各种语言写的都有，最后发现了 &lt;a href=&quot;http://hexo.io&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt; 这个用 NodeJS 写的，而且是一个台湾人写的，发现已有不少人在用。当时自己也有学习一些 NodeJS 的知识，想着用了 Hexo 也可以顺便学习下别人怎么写的，于是就这样决定选择 Hexo 了。&lt;/p&gt;
+&lt;h2 id=&quot;有点后悔选择-Hexo-了&quot;&gt;&lt;a href=&quot;#有点后悔选择-Hexo-了&quot; class=&quot;headerlink&quot; title=&quot;有点后悔选择 Hexo 了&quot;&gt;&lt;/a&gt;有点后悔选择 Hexo 了&lt;/h2&gt;&lt;p&gt;我感觉 Hexo 有几点不足，&lt;strong&gt;纯属个人拙见&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;主题质量低&quot;&gt;&lt;a href=&quot;#主题质量低&quot; class=&quot;headerlink&quot; title=&quot;主题质量低&quot;&gt;&lt;/a&gt;主题质量低&lt;/h3&gt;&lt;p&gt;我查看了所有的主题，发现大部分简直就是半成品，质量太低了，只有几个还可以。似乎缺乏用心的，且有设计能力的人来写 Hexo 主题。刚开始时，主题都只给主题源码的 Github 链接，没有截图，所以选择成本很高，有些链接失效了也没人管理。当然，Hexo 几乎只有一个人在管理所有的事情，所以很难忙得过来的，得多人协作。&lt;/p&gt;
+&lt;h3 id=&quot;早期代码组织乱&quot;&gt;&lt;a href=&quot;#早期代码组织乱&quot; class=&quot;headerlink&quot; title=&quot;早期代码组织乱&quot;&gt;&lt;/a&gt;早期代码组织乱&lt;/h3&gt;&lt;p&gt;我只读了一些 2.8.* 时代的代码，感觉读懂代码好吃力，打断点调试都得同时打开很多个文件。读了一两个星期，才弄懂了一点点，当然这和我水平低也有很大关系。不过还是学到好多小的知识的，到 3.* 时代发现代码进行了大的重构，已经放弃阅读了。&lt;/p&gt;
+&lt;h3 id=&quot;其他-N-多小问题&quot;&gt;&lt;a href=&quot;#其他-N-多小问题&quot; class=&quot;headerlink&quot; title=&quot;其他 N 多小问题&quot;&gt;&lt;/a&gt;其他 N 多小问题&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;只针对 2.8.3 版本，3.0.0 以后不太了解&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;不支持一篇文章多个分类目录，我在 WordPress 用到了一篇文章多个分类目录，结果 Hexo 不支持，我不得不把所有文章都变成一个分类目录。有人解释说可以使用标签，但是我认为分类属于相对固定的，而标签术语文章的几个核心关键词。另外，前端一些文章经常同时涉及到 CSS 和 JavaScript，这就决定一篇文章属于两个分类目录是很合理的，总不能都概括为前端吧。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Markdown 代码块必须使用四个空格缩进语法，用 ‘```’ 就不行，这还得自己写脚本转换已有的文章。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;使用 highlightjs 的 theme 时，需要修改 CSS，去掉 ‘hljs-‘，不知道为什么 Hexo 默认这样选择，且没法配置。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;分类目录&lt;code&gt;list_categories()&lt;/code&gt;没法控制汉字排序，而且没法像 WordPress 方便获取一个目录列表，然后自己定制排序。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;README.md 文件的渲染和删除，现在好像可以配置路径来过滤了。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;文章更新日期当成创建日期，结果首页文章顺序发生了变化，需要自己手动日期。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;写一个-Hexo-主题&quot;&gt;&lt;a href=&quot;#写一个-Hexo-主题&quot; class=&quot;headerlink&quot; title=&quot;写一个 Hexo 主题&quot;&gt;&lt;/a&gt;写一个 Hexo 主题&lt;/h2&gt;&lt;p&gt;一开始规划时，什么 Off-Canvas、响应式、社交网站链接、自定义字体、动画效果、兼容到IE8等都整上去，后来实际做时，发现每个都要花不少时间。而且很长时间没有写过什么 CSS，导致水平下降，写起来不熟练啊。&lt;/p&gt;
+&lt;p&gt;做有关设计方面的决定时，内心很纠结，比如超链接四种状态下的颜色选择、标题或内容的颜色、侧边栏的布局等，每次写主题时感觉这些好难做决定。主题的大致颜色是参考的原来的主题配色，网站整体布局参考了其他人的，而且这种布局不少见。每写一个主题，都被自己渣一样的设计能力虐心，也越来越倾向于不要这些布局了，就文章列表就行了。&lt;/p&gt;
+&lt;p&gt;另外，花时间的还有要了解 Hexo 写主题的一些 Helpers，主题的代码结构等，幸好是参考官网的一款主题，自己从头开始写更麻烦了。&lt;/p&gt;
+&lt;p&gt;虽然每次写博客主题时，感觉特别虐心，不过当渐渐完成之时，都会感觉比上一个主题有进步。另外，写博客主题必然要写文章的 CSS 样式，文章在很多网站都会呈现，写好这个很关键，要注意很多细节或者说临界情况。&lt;/p&gt;
+&lt;h2 id=&quot;将-WordPress-的内容迁移到-Hexo&quot;&gt;&lt;a href=&quot;#将-WordPress-的内容迁移到-Hexo&quot; class=&quot;headerlink&quot; title=&quot;将 WordPress 的内容迁移到 Hexo&quot;&gt;&lt;/a&gt;将 WordPress 的内容迁移到 Hexo&lt;/h2&gt;&lt;p&gt;首先可以按照官网文档来操作，不过之后还有一些工作要做：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;所有的超链接确保正确，包括图片、DEMO 等的链接；&lt;/li&gt;
+&lt;li&gt;代码块高亮，以前用的 WordPress 一个插件，然后自己用 Node 写个脚本替换下或者使用 Sublime 自带的正则替换功能；&lt;/li&gt;
+&lt;li&gt;修复在转 Markdown 时的错误，确实有一些要自己调整，主要是加粗、列表；&lt;/li&gt;
+&lt;li&gt;有发现了不少文章中的错别字，顺便修正了；&lt;/li&gt;
+&lt;li&gt;DEMO文件、图片文件、附件等目录要放到所采用主题的&lt;code&gt;source&lt;/code&gt;目录下；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;部署到-Github-及配置自定义域名&quot;&gt;&lt;a href=&quot;#部署到-Github-及配置自定义域名&quot; class=&quot;headerlink&quot; title=&quot;部署到 Github 及配置自定义域名&quot;&gt;&lt;/a&gt;部署到 Github 及配置自定义域名&lt;/h2&gt;&lt;p&gt;Github Pages 分两种：User or organization site 和 Project site。我见到的很多人的博客都是前一种，而且前一种设置及配置自定义域名比较简便，跟着官方的文档和帮助说明就可以了。但是，有一个问题，所有其他项目的 Github Pages 页面的域名也会都跳转到你博客的域名下面，成为一个目录，如：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://username.github.io/someproject&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;跳转到&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://www.yourblogdomain.com/someproject&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这不是我想要的结果，我不希望博客域名影响到 Github 上面的项目链接。所以，我只好采用后一种：Project site，这种设置起来也难一点儿，主要是配置自定义域名。&lt;/p&gt;
+&lt;p&gt;设置步骤（我是采用 DNSPod 来解析域名）：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;为自己的博客创建一个 Repository，并创建&lt;code&gt;gh-pages&lt;/code&gt;分支；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在 DNS 服务商处配置自己的 DNS，需要添加一条 A 记录和一条 CNAME 记录：&lt;/p&gt;
+&lt;p&gt;添加 A 记录，查找你 Github 子域名地址的静态 IP 地址：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ nslookup alex1990.github.io
+Server:        211.162.96.1
+Address:    211.162.96.1#53
+
+Non-authoritative answer:
+alex1990.github.io    canonical name = github.map.fastly.net.
+Name:    github.map.fastly.net
+Address: 103.245.222.133
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A 记录主机记录字段选择&lt;code&gt;@&lt;/code&gt;，记录值（填写IP地址的地方）填写使用&lt;code&gt;nslookup&lt;/code&gt;查找到的地址，此处为：&lt;code&gt;103.245.222.133&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;添加 CNAME 记录，是为了能解析&lt;code&gt;www&lt;/code&gt;域名。主机记录字段选择&lt;code&gt;www&lt;/code&gt;，记录值填写自己的 Github 域名，此处为&lt;code&gt;alex1990.github.io&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;在 Repository 根目录下创建一个文件&lt;code&gt;CNAME&lt;/code&gt;，其内容&lt;code&gt;www.xiaocaoge.com&lt;/code&gt;，带&lt;code&gt;www&lt;/code&gt;时，Github 会将&lt;code&gt;xiaocaoge.com&lt;/code&gt; 跳到 &lt;code&gt;www.xiaocaoge.com&lt;/code&gt;，可根据自己需要选择带或不带，将创建的文件 Push 到 Github 上面，等待几分钟以便 Github 刷新域名的跳转。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;另外要注意的是，如果先前建立过 User Pages，则所有的 Project Pages 域名仍然跳转，此时需要更新所有项目的&lt;code&gt;gh-pages&lt;/code&gt;分支，即提交来刷新缓存。如果还不行，可尝试下面措施：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;清理浏览器缓存&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;chrome://net-internals#dns&lt;/code&gt; 点击&lt;code&gt;clear host cache&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在实际的配置过程中，我花了两个晚上，看了十几个网页的教程，试了 N 多次，看了一篇文章 &lt;a href=&quot;https://larry-price.com/blog/2014/02/12/custom-domain-with-github-pages&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Custom Domain With Github Pages&lt;/a&gt; 才尝试成功。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;为什么迁移？&quot;&gt;&lt;a href=&quot;#为什么迁移？&quot; class=&quot;headerlink&quot; title=&quot;为什么迁移？&quot;&gt;&lt;/a&gt;为什么迁移？&lt;/h2&gt;&lt;p&gt;实际上，迁移博客的决定大半年前，大概 2014 年 7 月份就已经决定了。当时考虑到托管在 Github 上
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="WordPress" scheme="http://www.xiaocaoge.com/tag/WordPress/"/>
+    
+      <category term="Hexo" scheme="http://www.xiaocaoge.com/tag/Hexo/"/>
+    
+      <category term="Blog" scheme="http://www.xiaocaoge.com/tag/Blog/"/>
+    
+      <category term="Github" scheme="http://www.xiaocaoge.com/tag/Github/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Mac上手</title>
+    <link href="http://www.xiaocaoge.com/get-started-on-using-mac.html"/>
+    <id>http://www.xiaocaoge.com/get-started-on-using-mac.html</id>
+    <published>2015-04-13T14:22:00.000Z</published>
+    <updated>2015-05-23T10:26:27.000Z</updated>
+    
+    <content type="html">&lt;p&gt;使用 Mac OSX 小半年了，记录下上手历程，虽然还是用得不好。&lt;/p&gt;
+&lt;h2 id=&quot;购买&quot;&gt;&lt;a href=&quot;#购买&quot; class=&quot;headerlink&quot; title=&quot;购买&quot;&gt;&lt;/a&gt;购买&lt;/h2&gt;&lt;p&gt;不知道从什么时候开始关注起 Mac 的，可能是在QQ群、招聘信息、知乎等地方不断接触到 Mac 相关的信息，所以就开始关注。甚至，潜移默化的形成了“Mac 是最适合前端的电脑，主要是 OSX 系统”这种观念，然后就想尝试一下。于是就办了张招行信用卡，没敢狠心买 MacBook Pro，就从官网买了中配的 Mac mini。显示器是优派的带 HDMI 接口的，键鼠是随便选的一款 PC 无线键鼠。&lt;/p&gt;
+&lt;h2 id=&quot;OSX系统&quot;&gt;&lt;a href=&quot;#OSX系统&quot; class=&quot;headerlink&quot; title=&quot;OSX系统&quot;&gt;&lt;/a&gt;OSX系统&lt;/h2&gt;&lt;p&gt;硬件安装对于我来说没有什么难度，插好电源、网线、HDMI数据线等之后直接开机。初次开机要求设置用户名与密码，可以直接使用 Apple ID 登录，官网购买时就要 Apple ID 的。然后设置地区/语言之后等一小会儿就直接进入桌面了。&lt;/p&gt;
+&lt;h3 id=&quot;桌面&quot;&gt;&lt;a href=&quot;#桌面&quot; class=&quot;headerlink&quot; title=&quot;桌面&quot;&gt;&lt;/a&gt;桌面&lt;/h3&gt;&lt;p&gt;底部是一排 Dock 图标，顶部的 menu bar 和 Ubuntu 采用的 Unity 桌面挺像的。左上角的苹果 Logo 按钮里面可以设置系统偏好，类似于 Windows 的控制面板，里面可以设置鼠标、键盘、网络、语言等。还有关机与睡眠命令，我一般只用睡眠命令，可以快速唤醒，经常十几天才重启一次。&lt;/p&gt;
+&lt;h3 id=&quot;复制、粘贴与剪切快捷键&quot;&gt;&lt;a href=&quot;#复制、粘贴与剪切快捷键&quot; class=&quot;headerlink&quot; title=&quot;复制、粘贴与剪切快捷键&quot;&gt;&lt;/a&gt;复制、粘贴与剪切快捷键&lt;/h3&gt;&lt;p&gt;不管是文件和文件夹，还是文本，原来的快捷键按起来不大习惯，不知道是不是因为用惯了 Windows 的缘故，反正这三个快捷键是最常用，但按起来很别扭。所以，我就根据网上的一篇文章改成了和 Windows/Ubuntu 一样的。&lt;/p&gt;
+&lt;h3 id=&quot;光标控制快捷键&quot;&gt;&lt;a href=&quot;#光标控制快捷键&quot; class=&quot;headerlink&quot; title=&quot;光标控制快捷键&quot;&gt;&lt;/a&gt;光标控制快捷键&lt;/h3&gt;&lt;p&gt;除了四个方向键以外，还有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;行首：&lt;code&gt;Control + A&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;行尾：&lt;code&gt;Control + E&lt;/code&gt; （正好这两个和我在 Sublime 中一直设置的一样）&lt;/li&gt;
+&lt;li&gt;单词间移动：Option + 左/右方向键&lt;/li&gt;
+&lt;li&gt;删除一个单词：&lt;code&gt;Option + Backspace&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Windows/Linux 下删除一个单词快捷键是&lt;code&gt;Ctrl + Backspace&lt;/code&gt;，有次发现一个同事不知道，我有点儿惊讶。&lt;/p&gt;
+&lt;h3 id=&quot;文件系统&quot;&gt;&lt;a href=&quot;#文件系统&quot; class=&quot;headerlink&quot; title=&quot;文件系统&quot;&gt;&lt;/a&gt;文件系统&lt;/h3&gt;&lt;p&gt;主要是 Finder，还没有用习惯。重命名直接按 &lt;code&gt;Return&lt;/code&gt;/&lt;code&gt;Enter&lt;/code&gt; 就可以了，确实比 Windows 的要快捷多了。但是文件的排序方式不太喜欢，首先默认情况下是不自动排序和组织文件与文件夹的，需要设置，而且我希望文件夹一起，文件一起，不要按名字混合在一起。&lt;/p&gt;
+&lt;p&gt;另外就是 Finder 窗口显示有点小，不能保持上次的大小，在上传文件时的选择文件窗口也是。&lt;/p&gt;
+&lt;h3 id=&quot;内置软件&quot;&gt;&lt;a href=&quot;#内置软件&quot; class=&quot;headerlink&quot; title=&quot;内置软件&quot;&gt;&lt;/a&gt;内置软件&lt;/h3&gt;&lt;p&gt;内置软件比 Windows 的丰富实用，即有办公处理套件 Keynote、Pages、Numbers，也有图书、图片、音乐和视频管理软件，浏览器比 IE 好吧，虽然自己最喜欢 Chrome。&lt;/p&gt;
+&lt;p&gt;Mac OSX 是基于 FreeBSD 的，属于 *nix 系的，提供了与其他 Linux 相似的命令，也自带了一些编程工具，如 Python、Ruby、git 等。&lt;/p&gt;
+&lt;h3 id=&quot;命令行&quot;&gt;&lt;a href=&quot;#命令行&quot; class=&quot;headerlink&quot; title=&quot;命令行&quot;&gt;&lt;/a&gt;命令行&lt;/h3&gt;&lt;p&gt;自己使用的自带的 Terminal，听说 iTerm2 不错，但是没怎么用过。首先用户名目录下的&lt;code&gt;.bash_profile&lt;/code&gt;是 Bash 命令的配置文件，和 Ubuntu 不一样。其次，要熟悉几个快捷键：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;新建 Tab：&lt;code&gt;Command + T&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;前一个 Tab：&lt;code&gt;Command + {&lt;/code&gt;，就是&lt;code&gt;Command + Shift + [&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;后一个 Tab：&lt;code&gt;Command + }&lt;/code&gt;，就是&lt;code&gt;Command + Shift + ]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;上一页：&lt;code&gt;Control + PageUp&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下一页：&lt;code&gt;Control + PageDown&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;另外，&lt;code&gt;Control + A&lt;/code&gt;/&lt;code&gt;Control + E&lt;/code&gt;，以及经过改键之后的&lt;code&gt;Control + C&lt;/code&gt;/&lt;code&gt;Control + V&lt;/code&gt;也能直接在 Terminal 中使用。&lt;/p&gt;
+&lt;p&gt;哦，还有一点儿要提的就是，很多软件的快捷键是相通的，软件设计人员设计时也会参考出名的软件的某些功能。比如 Tab 的创建、关闭、前一个、后一个、恢复，有几个快捷键在 Chrome/Sublime 下与 Terminal 一样的。&lt;/p&gt;
+&lt;h3 id=&quot;软件安装与卸载&quot;&gt;&lt;a href=&quot;#软件安装与卸载&quot; class=&quot;headerlink&quot; title=&quot;软件安装与卸载&quot;&gt;&lt;/a&gt;软件安装与卸载&lt;/h3&gt;&lt;p&gt;有多种安装方式：AppStore、软件官网、命令行。&lt;/p&gt;
+&lt;p&gt;AppeStore 用的不多，就几款软件是在这里安装的，比如有道翻译、WeiboX、Xcode等。对大陆用户来说挺难用的，连接速度太慢了，中国区软件就没几款质量高的，但是中国区的 Apple ID 又不能在美国区下载安装。&lt;/p&gt;
+&lt;p&gt;一些常用软件的官网都提供 &lt;code&gt;.dmg&lt;/code&gt; 格式的安装包，如 QQ、百度输入法、Chrome等。&lt;code&gt;.dmg&lt;/code&gt;格式的安装包也很容易安装，把图标拖到 Application 图标上面就可以了，其实就是放到了 Application 目录下面。&lt;/p&gt;
+&lt;p&gt;命令行对于程序员来说用得反而是最多的了，除了一些语言包管理器， 还有 Homebrew。&lt;/p&gt;
+&lt;h2 id=&quot;常用软件&quot;&gt;&lt;a href=&quot;#常用软件&quot; class=&quot;headerlink&quot; title=&quot;常用软件&quot;&gt;&lt;/a&gt;常用软件&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;输入法&lt;/strong&gt;：自己使用百度输入法，其他还有搜狗、QQ、FIT等，比 Ubuntu 上面的输入法好多了。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;QQ&lt;/strong&gt;：虽然功能没有 Windows 上面多，但也够用了，还显得简洁。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;浏览器&lt;/strong&gt;：最习惯用 Chrome，而且 Chrome 自己带了 Flash 播放组件，所以看国内一些在线视频网站是没有问题的，要不好像得用&lt;a href=&quot;https://github.com/zythum/mama2&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;妈妈计划&lt;/a&gt;提供的 HTML5 播放方式。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Alfred&lt;/strong&gt;：神器榜排行第一的软件，虽然我还没深度学习过怎么用。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;编辑器&lt;/strong&gt;：我自己常用 Sublime 与 Vim，这两款都是跨平台的，虽然 Sublime 在 Ubuntu 下不用使用 iBus 直接输入中文。而 Vim，我没有尝试使用 macvim 呢，可能以后会尝试吧。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;命令行工具&lt;/strong&gt;：就直接使用自带的终端（Terminal），目前发现最方便的一点是可以使用快捷键复制与粘贴，最不方便的是自带的 Vim 中复制到系统剪切板或从系统剪切板复制到 vim 里麻烦，网上搜索的方法只有&lt;code&gt;:1,50!pbcopy&lt;/code&gt;/&lt;code&gt;:r !pbpaste&lt;/code&gt;有用。当然也有其他命令行工具，比如 iTerm。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;笔记&lt;/strong&gt;：使用 Evernote，刚开始安装后总是不能同步，后来不知怎么自己好了。跨设备、跨平台就是我的基本要求，其实我还想要任何编辑器都可以写的呢，所以有时用编辑器+github方式记笔记。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;虚拟机&lt;/strong&gt;：使用 VirtualBox，跨平台，安装简单，就是默认不开启 USB 访问、系统剪切板共享和显卡3D（安装游戏时需要）。VMware 功能更好，但是不免费，而且记得第一次为了双开游戏安装时花费了一天一夜，心里留下了阴影。当然，听说最好的虚拟系统是 Parallels Desktop。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;音乐播放器&lt;/strong&gt;：平时不怎么听音乐，因为听音乐时老是分心，偶尔使用豆瓣FM和网易云音乐听下。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;视频播放器&lt;/strong&gt;：几乎只在优酷网看。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;词典&lt;/strong&gt;：有道词典或者自带的 Dictionary，只不过都不太方便，有道词典不可以在 Chrome 中划词翻译，好像是 Chrome 权限设置太严格。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;改键&lt;/strong&gt;：因为使用的 PC 键盘，为了接近 Mac 的键盘，就得改键，使用 Karabiner。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;手册&lt;/strong&gt;：Dash，各种语言、库等的手册，但是很少用，都是直接查官方在线的。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Xcode&lt;/strong&gt;：用来测试网页在 iOS safari 中的效果。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;双系统&quot;&gt;&lt;a href=&quot;#双系统&quot; class=&quot;headerlink&quot; title=&quot;双系统&quot;&gt;&lt;/a&gt;双系统&lt;/h2&gt;&lt;p&gt;官方提供了 Bootcamp 来安装 Windows，安装教程网上可以查到，按步骤来操作就可以了。需要注意的就是要准备至少一个优盘，用来做安装盘及下载 Bootcamp 相关的软件。遇到的一个问题就是 Bootcampe 安装的 Windows 系统与 Mac OSX 系统时间始终相差 8 小时，可以通过修改 Windows 注册表解决，原因分析及方法参考：&lt;a href=&quot;http://wenku.baidu.com/link?url=tLob_jRaLDPiVrOqqhOeHGL2FtxUGny3d3KfFhDVMvh7DajwmOrk381yvmjy7KYH3gCFyUI6N-dbkUW0GAOqPiqtoA04C0WG-WQz_8MUphq&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;完美解决苹果电脑双系统时间同步问题&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;另外，听说 Parallels Desktop 安装的虚拟机，不仅可以方便在系统间切换，而且每个系统都能充分利用硬件的性能，有银子了一定要尝试下。&lt;/p&gt;
+&lt;h2 id=&quot;科学上网&quot;&gt;&lt;a href=&quot;#科学上网&quot; class=&quot;headerlink&quot; title=&quot;科学上网&quot;&gt;&lt;/a&gt;科学上网&lt;/h2&gt;&lt;p&gt;一开始是利用 GoAgent 和修改hosts混合方式，后来两种方法总是出现问题，需要频繁更新。后来，看到同事用 VPN，还看到了 SSH Socks 方式，就想自己买个云主机玩玩。也是很早就关注到了 Linode 与 DigitalOcean 这两家，最终选择了后者，因为便宜，而且现阶段主要是用来学习及科学上网的。在建立虚拟主机（droplet）之前最好测试下连接速度，我测试之后发现 NYC2 最快，下载有三四百KB了，但是看 Youtube 视频还是巨卡。没有我同事的 VPN 速度快，同事用的专业 VPN，虽然有流量限制，但是无论打开网页，还是看视频，速度都可以。我自己是利用 PPTP 方式，这种方式手机也支持，至于如何安装与配置 pptpd，可以网上查到，也能查到 OSX 怎么连接到 VPN Server。&lt;/p&gt;
+&lt;h2 id=&quot;游戏&quot;&gt;&lt;a href=&quot;#游戏&quot; class=&quot;headerlink&quot; title=&quot;游戏&quot;&gt;&lt;/a&gt;游戏&lt;/h2&gt;&lt;p&gt;尽管很少玩游戏，以前的笔记本性能太渣，没办法玩，然后买了 Mac 之后就尝试下安装 Dota2。其过程很不顺利，除了需要使用 steam 下载外，还要设置参数以便连接到中国区。之后在绑定完美账号时，有时不显示输入框，有时输入之后又一片黑了，虽然可以去网吧完成绑定步骤，但是我懒得去，就不玩了。谁知过了一两个月之后，又尝试绑定下，竟然成功了，可能是完美修复了吧，总之能玩了。然后十几个小时上手之后，和真人匹配，不出意料的被虐了，遂删档不玩了，要玩好太费时间了。&lt;/p&gt;
+&lt;p&gt;还尝试了 CSR Racing 赛车游戏，感觉不如极品飞车好玩，提不起一点儿兴趣。当然，魔兽世界、LOL海外版提供 Mac 版的，但是感觉 Mac 下玩个游戏这么难，我这不自己跟自己过不去嘛，我不玩了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;使用 Mac OSX 小半年了，记录下上手历程，虽然还是用得不好。&lt;/p&gt;
+&lt;h2 id=&quot;购买&quot;&gt;&lt;a href=&quot;#购买&quot; class=&quot;headerlink&quot; title=&quot;购买&quot;&gt;&lt;/a&gt;购买&lt;/h2&gt;&lt;p&gt;不知道从什么时候开始关注起 Mac 的，可能是在QQ群、招
+    
+    </summary>
+    
+      <category term="其他" scheme="http://www.xiaocaoge.com/category/%E5%85%B6%E4%BB%96/"/>
+    
+    
+      <category term="Mac" scheme="http://www.xiaocaoge.com/tag/Mac/"/>
+    
+      <category term="OSX" scheme="http://www.xiaocaoge.com/tag/OSX/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MDN翻译小总结</title>
+    <link href="http://www.xiaocaoge.com/mdn-translation-summary.html"/>
+    <id>http://www.xiaocaoge.com/mdn-translation-summary.html</id>
+    <published>2015-04-02T14:22:00.000Z</published>
+    <updated>2015-05-23T10:26:15.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;加入MDN翻译&quot;&gt;&lt;a href=&quot;#加入MDN翻译&quot; class=&quot;headerlink&quot; title=&quot;加入MDN翻译&quot;&gt;&lt;/a&gt;加入MDN翻译&lt;/h2&gt;&lt;p&gt;一开始学习前端时经常查的手册是 &lt;a href=&quot;http://www.w3school.com.cn&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;www.w3school.com.cn&lt;/a&gt; 和 &lt;a href=&quot;http://css.doyoe.com&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;css.doyoe.com&lt;/a&gt;，后来在金山的招聘信息中看到了很多新的前端技术名词，其中有 MDN。发现 MDN 上面的要更详细些，尤其是 DOM 方面，好吧其实是很多方面，所以经常会在午休甚至上班时间学习 MDN 上面的基础知识。为啥说在午休及甚至上班呢？这是我第一份前端工作，特点是：工资少，加班多。&lt;/p&gt;
+&lt;p&gt;大概过了四五个月之后，2014年五月份换了一份工作，在学习怎么输出格式化的 JSON 数据时，在 MDN 上了解到了 &lt;code&gt;JSON.stringify()&lt;/code&gt; 方法的第二第三个参数，顺便也学习了&lt;code&gt;JSON.parse()&lt;/code&gt;方法。突然发觉自己能翻译这两个页面时，就顺便翻译了。第二天看到紫云飞修改了一下，我就查看改了哪些，发现自己确实没翻译好，那两个方法没有理解透。不过 MDN 翻译之路已经起步了，慢慢总结需要改进的地方。&lt;/p&gt;
+&lt;p&gt;然后，我加入了 MDN 中文翻译的 Leader 紫云飞创建的一个群，这个群联系方式页面太难找了，以至于我再找时都找不到了，我加入群里时算上我只有三个人。正好换的工作双休、不加班，且工作不繁忙，我就晚上用来学习及翻译 MDN 上面的文档，主要是 JavaScript 内置对象的属性和方法。翻译的速度并不算快，因为我要先技术过关，即使以前学过，但是一些细节需要学习，而且有些句子并不好翻译。快的话，10分钟能翻译一个页面，慢的话一晚上可能都翻译不完一个页面。七八两个月份是高产期，到九月份之后，工作忙了，晚上大部分时间学习 seajs、nodejs、hexo 等其他知识了，翻译就慢下来了。而且有时候会想翻译 MDN 有什么意义，因为我怀疑会有多少人看 MDN 的中文页面呢，基础的前端 JavaScript 知识可以通过《JavaScript权威指南》和《JavaScript高级程序设计》来学习，而且也有国内的参考手册。当然我没有页面浏览的数据，所以觉得人少只是自己的臆测。另外，对我自己来说还是有意义的，一来学习基础知识，二来增加点儿翻译经验。&lt;/p&gt;
+&lt;h2 id=&quot;几个方面的总结：&quot;&gt;&lt;a href=&quot;#几个方面的总结：&quot; class=&quot;headerlink&quot; title=&quot;几个方面的总结：&quot;&gt;&lt;/a&gt;几个方面的总结：&lt;/h2&gt;&lt;h3 id=&quot;我的翻译流程：&quot;&gt;&lt;a href=&quot;#我的翻译流程：&quot; class=&quot;headerlink&quot; title=&quot;我的翻译流程：&quot;&gt;&lt;/a&gt;我的翻译流程：&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;通读英文文档，并练习，有不少是以前学过，但是学得不细的；&lt;/li&gt;
+&lt;li&gt;如果有插入超链接，复制Source并把“en-US”替换为“zh-CN”，这是紫云飞教的，我一直手动一个个改的，反正也不多；&lt;/li&gt;
+&lt;li&gt;先把标题快速翻译完；&lt;/li&gt;
+&lt;li&gt;从头开始往下翻译，不断查字典，不断做练习等，直到翻译完；&lt;/li&gt;
+&lt;li&gt;通读一遍查看错别字及格式错误；&lt;/li&gt;
+&lt;li&gt;提交，再浏览一遍确认。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&quot;MDN文档编辑器&quot;&gt;&lt;a href=&quot;#MDN文档编辑器&quot; class=&quot;headerlink&quot; title=&quot;MDN文档编辑器&quot;&gt;&lt;/a&gt;MDN文档编辑器&lt;/h3&gt;&lt;p&gt;需要调整格式的地方并不多，只需保留英文文档格式通常就可以了。经常用的格式也就是&lt;code&gt;H2&lt;/code&gt;、&lt;code&gt;H3&lt;/code&gt;、&lt;code&gt;p&lt;/code&gt;、&lt;code&gt;Code&lt;/code&gt;，以及插入链接和代码块。我以前遇到的最大麻烦就是插入代码块老是有问题，不是没有高亮效果，就是高亮嵌套高亮了，后来明白了选择&lt;code&gt;Syntax Highlighter&lt;/code&gt;下拉列表对应的编程语言，初始化一个代码块，然后将英文的代码块复制粘贴到初始化的代码块中，但必须粘贴&lt;strong&gt;纯文本&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;另外一个要学习的地方就是 MDN 的宏标记，或者叫宏标签，英文称为“Custom macros”，可以查看 &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/MDN/Contribute/Content/Custom_macros&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Custom macros&lt;/a&gt;，比如`{{APIRef(&quot;DOM Events&quot;)}}`用来显示文档左侧的树形导航，比如`{{jsxref(&quot;Boolean&quot;)}}`用来插入链接到&lt;code&gt;Boolean&lt;/code&gt;对象页面的超链接，且语言为当前文档采用的语言。还可以查看相应宏标记的源码：&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Template:jsxref&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://developer.mozilla.org/en-US/docs/Template:jsxref&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;中英文混合编辑&quot;&gt;&lt;a href=&quot;#中英文混合编辑&quot; class=&quot;headerlink&quot; title=&quot;中英文混合编辑&quot;&gt;&lt;/a&gt;中英文混合编辑&lt;/h3&gt;&lt;p&gt;主要有两个问题：一是中文和英文之间是否有空格；二是标点符号的使用，主要就是引号、括号、中文顿号与英文逗号。我参考了知乎上面的回答，我自己选择加空格，文章以中文为主时，也以中文标点为主。请查看知乎的讨论：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.zhihu.com/question/19587406&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;中英文混排时中文与英文之间是否要有空格？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.zhihu.com/question/19695720&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;中英文混排的时候如何使用标点符号？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.zhihu.com/question/20488833&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;中英文文本混排时，园括号该用中文括号还是西文括号？&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当然，这个问题以及排版问题对我来说很复杂，涉及很多细节，我只是统一了自己的风格。MDN 上面各人编辑的风格也不同，目前没有统一的规范供参考。&lt;/p&gt;
+&lt;h3 id=&quot;术语管理&quot;&gt;&lt;a href=&quot;#术语管理&quot; class=&quot;headerlink&quot; title=&quot;术语管理&quot;&gt;&lt;/a&gt;术语管理&lt;/h3&gt;&lt;p&gt;这里的术语主要包括前端技术术语以及标题。前端技术术语一部分自然属于计算机科学与技术，另一部分是前端独有的，甚至会出现创造的词汇。我个人对于那些翻译很固定的词汇才会只保留中文，对于其他的会在括号里面注明英文，毕竟有部分英文术语可能有两种或多种中文翻译，怕拿捏不准；对于新出现的词汇一定保留英文，有些感觉一时很难翻译，或者一句话才能讲清楚。&lt;/p&gt;
+&lt;p&gt;而对于标题，主要是一二级标题，因为这些是文档之间公用的，而且又是很多人在翻译，所以还是要统一管理的。虽然 MDN 提供了术语的管理页面，但是极少查看，作用不大。&lt;/p&gt;
+&lt;p&gt;国内有计算机技术相关的术语库：&lt;a href=&quot;http://www.cnctst.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;国家科技名词审查委员会&lt;/a&gt;和&lt;a href=&quot;http://www.microsoft.com/Language/zh-cn/Search.aspx&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;微软的术语库&lt;/a&gt;。但是这两个只是供参考用的，既无法解决术语的统一性，也无法解决前端技术的快速发展。所以我有时会参考《JavaScript高级程序设计》这本书的一些术语翻译，之所以会参考这本，因为手头上没有其他相关的前端书，这本书的翻译质量高，读的人多。当然我确实应该参考更多的前端及其他计算机编程书籍的，另外也经常查有道词典。&lt;/p&gt;
+&lt;p&gt;所以，我期待能有个专门管理术语的网站，就像 github 一样，可以在翻译某个项目时建立一个术语库，可以在翻译某本书时建立一个术语库，也可以专门为前端建立一个权威的术语库，人人都可以建立，最终马太效应会让术语变得统一，我想这也符合语言的发展规律吧，统一才能交流。不仅仅计算机领域，各行各业都要翻译，也不仅仅英语翻译为中文，日语、韩语、俄语都需要。&lt;/p&gt;
+&lt;h3 id=&quot;中文翻译贡献者&quot;&gt;&lt;a href=&quot;#中文翻译贡献者&quot; class=&quot;headerlink&quot; title=&quot;中文翻译贡献者&quot;&gt;&lt;/a&gt;中文翻译贡献者&lt;/h3&gt;&lt;p&gt;以前紫云飞做过一个 2014 年&lt;a href=&quot;http://weibo.com/p/1001603800332185524370&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;统计&lt;/a&gt;，大概有 400 个人都翻译过。不过，70%都只翻译了一个页面，这其中又有不少只翻译了一句话。我也不知道为什么他们只翻译一个页面就不再翻译了。我猜想可能的原因：翻译比较枯燥，只是尝鲜的，编辑器不好用，觉得难翻译的，只是顺手翻译的等等。我突然觉得贡献者翻译的页数跟一些 github 上面的项目提交记录一样，会有几个贡献特别多的，但是贡献少的也是需要的。&lt;/p&gt;
+&lt;p&gt;今年，紫云飞会把新来的翻译者邀请到QQ群，QQ群以前几乎没人说话的，现在稍微活跃了点儿，每月翻译的页面似乎比去年增加了一点儿。我自己翻译的速度也慢了，每月只有几个页面，也不知道自己何时会停止，我想着把最常需要的翻译完。MDN 上面有些文档质量低，有些就直接照搬的 W3C 上面的规范，有些又缺 &lt;a href=&quot;help.dottoro.com&quot;&gt;help.dottoro.com&lt;/a&gt; 上面的细节，而我的英文写作能力又渣，自己不想完善英文文档，也不太想翻译这些了。&lt;/p&gt;
+&lt;p&gt;对于 2015 年，如果工作不忙的话，我还是想着继续翻译 MDN 的文档，想着翻译 CSS 与 SVG 方面的，并尝试做几个相关的小工具。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;加入MDN翻译&quot;&gt;&lt;a href=&quot;#加入MDN翻译&quot; class=&quot;headerlink&quot; title=&quot;加入MDN翻译&quot;&gt;&lt;/a&gt;加入MDN翻译&lt;/h2&gt;&lt;p&gt;一开始学习前端时经常查的手册是 &lt;a href=&quot;http://www.w3school.com.c
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="MDN" scheme="http://www.xiaocaoge.com/tag/MDN/"/>
+    
+      <category term="翻译" scheme="http://www.xiaocaoge.com/tag/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>修复 grub 及相关工具</title>
+    <link href="http://www.xiaocaoge.com/repair-grub-and-some-useful-tools.html"/>
+    <id>http://www.xiaocaoge.com/repair-grub-and-some-useful-tools.html</id>
+    <published>2014-08-13T13:49:17.000Z</published>
+    <updated>2016-05-08T17:54:17.000Z</updated>
+    
+    <content type="html">&lt;p&gt;今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是 “crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Windows7 要靠 grub 引导，自然也进不去了。&lt;/p&gt;
+&lt;p&gt;想着先利用分区工具修复 Windows7 的 MBR（到最后发现这个思路走远了），然后从网上或同事那里弄一个 crypto.mod 放进去试试。但是，发现U盘启动盘不见了，应该没带，只好向同事借了一个，里面还没有我需要的工具，只是一个 CentOS 安装盘。由于我不会在 Linux 下面制作启动盘，只好借了一位同事的 Windows 电脑，是利用U启动这款软件来制作的，功能挺全，就是有点大，300多M。很快我就制作好了，并利用里面的图形分区工具 DiskGenius 重新安装了 MBR，从而可以进入 Windows7 系统了。&lt;/p&gt;
+&lt;p&gt;我一开始是想从网上下载 crypto.mod 的，但是只有源代码，我想下载一个 minGW 来编译一下，但是我怕编译后的文件不能用于 Linux 系统下（话说到底能用吗），然后从同事那里复制了一个。哦，说明一下，上周我装双系统 Windows7 时，已经知道了 Ext2Fsd 这款工具可以让 Windows 系统读写 Linux 的 Ext2/3/4 分区，通过设置就可以像操作 Windows 分区那样操作 Linux 下的分区（另外一款相似工具 Ext2explore 在我的电脑上只能读，不能写，而且界面类似于很多 FTP 工具那样的，我是不大喜欢）。这样我就可以把 crypto.mod 拷贝到 Ubuntu 中了。&lt;/p&gt;
+&lt;p&gt;重启电脑，这次倒是没有进入 grub rescue 模式，反而进入了 grub4dos，当时我就晕了，这个 grub4dos 是什么工具呢？这个当然百度一下就知道了，grub4dos 是一个系统引导软件，grub 的分支，这个看名字也能猜出和 grub 有关系。然后我就根据网上查到的在 grub4dos 里面设置 root、kernel、initrd，然后执行 boot 命令，我没有期望这样就能进入 Ubuntu，当然它确实也没进去。因为某种原因失败了，然后进入到了 busybox 里面，并且提示可以执行几十个常见的 Linux 命令。经搜索知道了 busybox 是一个集成了一百多个常用 Linux 命令及一些常用工具的迷你版 Linux，在嵌入式开发中很常用。当然我也试着搜索“ubuntu busybox”，“busybox 引导 Ubuntu”，“busybox 安装 grub”，但是打开几个网页没有找到想要的结果，试了几个 StackOverflow 上面的回答，但是因为问题不完全一样中途失败了。&lt;/p&gt;
+&lt;p&gt;另外 SO 上面也说了第一选择是利用 Ubuntu 的 Live CD 版来修复该问题，而我考虑到本地硬盘没有，Ubuntu 体积大，公司网络下载慢，所以就把这个作为最后的尝试了。当然经过上面的一系列折腾、失败，时间也从早上九点到了下午三点左右了，我这一天啥都没干呢，就为了修复 grub 升级失败。更悲催的是下载 Ubuntu 的速度慢的超出我的预料，我是从官网下的，无论是直接下，还是通过 goagent 代理下，都只有 20KB 的均速，经常下了快 100M 时就变成 0 了。看来还是自己电脑里有才是王道，网络不可靠，我只好下载 1.5G 的 Ubuntu Kylin 了，经过一个多小时下载好了。&lt;/p&gt;
+&lt;p&gt;然后就是做一个 Ubuntu Kylin 的 Live USB 版，毕竟这年头光盘少啊。经过查询有好几款工具都可以制作：LinuxLive USB Creator，Unetbootin，grub4dos 等，见此文&lt;a href=&quot;http://www.360doc.com/content/12/1109/10/5698935_246765552.shtml&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;U盘启动 Ubuntu 的 Live USB&lt;/a&gt;。原来 grub4dos 也可以制作啊，但是操作可能复杂，最后我选择了简单的 LinuxLive USB Creator。从官网下载软件后，按照软件操作步骤即可，非常简单，需要注意的是有一步是要选择固定系统模式的大小，这一步保持默认的 0 就可以了，结果我选择了2040M，这样最后一步应该是对这个 2040M 的空间特殊处理了，费了较长时间。U盘毕竟不是 USB 3.0 的，写入1.5G 也要好长时间呢，还好顺利地制作了 Ubuntu Kylin 的 Live USB 版。&lt;/p&gt;
+&lt;p&gt;现在可以重启电脑，进入 Live Ubuntu Kylin 系统中了，加载确实比硬盘安装慢多了。进入系统之后，需要重新安装 grub，详请可参考 &lt;a href=&quot;http://blog.csdn.net/haoyunsheng_1201/article/details/7266941&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;LiveCD 安装 Ubuntu 开机引导 grub&lt;/a&gt;。关键的步骤：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo -i&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mkdir /media/tempdir&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;mount /dev/sda2 /media/tempdir&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;grub-install --root-directory=/media/tempdir /dev/sda&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后，重启就可以进入到 grub 启动菜单了，如果启动菜单里面没有 windows，则需要进入到 Ubuntu 中，并执行下面命令就可以了。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;sudo update-grub2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;修复完之后，已经快下班了，用了半天多时间，最后发现其实只要有 LiveCD 或 LiveUSB 版的 Ubuntu 就可以在十分钟内搞定了，而我偏偏绕了很大一个圈子。看来修复系统这事，必须准备齐全工具才行，可以节省非常多的时间。比如这次的问题，我最理想的情况是有个 LiveUSB 版的 Ubuntu，次一点自己或别人硬盘里面存着 Ubuntu ISO 文件，再次一点针对 Windows 系统的 U盘启动盘得有个吧。就当这些都没有，网速够快也可以吧，偏偏所有这些都没有，而我当时也不知道 Live 版是最简单直接的修复方式，所有这些结合就导致我今天花费近一天时间。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天在升级 Ubuntu 时，到 grub 处卡住了，自带的升级管理器窗口变黑了，一直没有反应，然后我强制关闭了，重启之后发现杯具了。进入了 grub rescue 模式，说是 “crypto.mod” 未找到。我装的双系统，另外一个是 Windows7，由于 Window
+    
+    </summary>
+    
+      <category term="后端" scheme="http://www.xiaocaoge.com/category/%E5%90%8E%E7%AB%AF/"/>
+    
+    
+      <category term="Ubuntu" scheme="http://www.xiaocaoge.com/tag/Ubuntu/"/>
+    
+      <category term="grub" scheme="http://www.xiaocaoge.com/tag/grub/"/>
+    
+      <category term="系统引导" scheme="http://www.xiaocaoge.com/tag/%E7%B3%BB%E7%BB%9F%E5%BC%95%E5%AF%BC/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu 下安装 Windows 7</title>
+    <link href="http://www.xiaocaoge.com/install-windows7-in-ubuntu.html"/>
+    <id>http://www.xiaocaoge.com/install-windows7-in-ubuntu.html</id>
+    <published>2014-08-13T13:30:41.000Z</published>
+    <updated>2016-05-08T17:55:07.000Z</updated>
+    
+    <content type="html">&lt;p&gt;由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 grub 给覆盖。&lt;/p&gt;
+&lt;p&gt;系统现状：Debian 与 Ubuntu 14.04 双系统，Debian 是前一位离职人员使用的，我安装 Ubuntu 时没有把它删除。&lt;/p&gt;
+&lt;p&gt;由于没有删除 Debian，所以 boot 分区是它所在的分区（/sda1），然后我怎么改 Ubuntu 里面的 grub 配置，都没办法使 Ubuntu 成为开机启动项的第一项，我觉得和 boot 分区是 Debian 所在分区有关。当然，这是我在直接格式化 Debian 所在的分区之后才反应过来的，因为删除之后，重启直接进入了 grub rescue 模式。至于我为什么去格式化 Debian 分区，因为我要装 Win7，我一直修改 Ubuntu 里面的 grub，总是无法让 Ubuntu 成为启动项第一，心里烦了，反正 Debian 里面有什么与我无关，反正我也不知道删除它会怎么样。&lt;/p&gt;
+&lt;p&gt;至于如何从 grub rescue 模式正常进入系统，并修复 grub 引导，先把 Win7 装好再说，毕竟这是主要目的来着。&lt;/p&gt;
+&lt;p&gt;用光盘或 U 盘启动盘安装 Win7，就像刚组装好机器安装 Win7 那样。首先应该建立 NTFS 分区，现在我该庆幸当初留着 Debian 了，这样就可以把 Win7 装到它所占的分区了，当然应该先利用分区工具把 ext4 格式分区删除，然后重新建立 Win7 要用的 NTFS 主分区。如果我当初删了 Debian 的话，估计安装 Ubuntu 时会占满这个硬盘，而且能不分区尽量不分区，现在我到觉得应该分几个区比较好，而且分区不一定非要把整个硬盘用完，反正不弄视频之类的也用不了多大容量。建立 NTFS 分区时会重写 MBR，因此就不能再进入到 grub 了。&lt;/p&gt;
+&lt;p&gt;既然已经建立了 NTFS 分区，剩下就好办了，直接把 Win7 安装到里面就行了。安装完 Win7 之后使用 EasyBCD 工具给 Win7 的启动管理器（就是启动项菜单），添加进入到 Ubuntu 的选项，该工具很好用，直接“添加项目”，并选择 Linux 类型，找到 Ubuntu 所在的分区就可以了。然后重启，就会在 Win7 的启动项菜单里面看到新添加的进入到 Ubuntu 的条目，选择进入，然后就回到了 grub rescue 模式。&lt;/p&gt;
+&lt;p&gt;如何从 grub rescue 模式进入到 Ubuntu 呢？详细可参考此文：&lt;a href=&quot;http://blog.chinaunix.net/uid-22915173-id-229241.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;grub rescue 救援模式的处理&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;grub rescue 模式下，只有几个命令可用：&lt;code&gt;ls&lt;/code&gt;、&lt;code&gt;set&lt;/code&gt;、&lt;code&gt;insmod&lt;/code&gt;、&lt;code&gt;root&lt;/code&gt;、&lt;code&gt;prefix&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;执行以下命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;grub rescue&amp;gt;set root=(hd0,msdos2) // 设定 grub 启动分区，Ubuntu 所在分区&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;grub rescue&amp;gt;set prefix=(hd0,msdos2)/boot/grub // 设定 grub 启动路径&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;grub rescue&amp;gt;set // 查看设置情况&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;grub rescue&amp;gt;insmod /boot/grub/i386-pc/normal.mod // 加载基本模块&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;grub rescue&amp;gt;normal // 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;上面需要注意 normal.mod 模块位置，我的 Ubuntu 14.04 在 &lt;code&gt;grub/i386-pc/&lt;/code&gt; 目录下，有些就在 &lt;code&gt;grub/&lt;/code&gt; 目录下。&lt;/p&gt;
+&lt;p&gt;进入到 Ubuntu 之后，还要重新安装 grub 引导，更新 grub 配置才可以。执行以下命令：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;grub-install /dev/sda&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;update-grub&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;OK，再次开机时 grub 启动项就会多一个 Windows 7 的选项了。有趣的是 grub 启动菜单选择 windows 7 进入到 Windows 启动菜单，而 Windows 启动菜单里面有前面添加的 Ubuntu 选项，然后可以回到 grub 启动菜单，然会无限轮回。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 gru
+    
+    </summary>
+    
+      <category term="后端" scheme="http://www.xiaocaoge.com/category/%E5%90%8E%E7%AB%AF/"/>
+    
+    
+      <category term="Ubuntu" scheme="http://www.xiaocaoge.com/tag/Ubuntu/"/>
+    
+      <category term="grub rescue" scheme="http://www.xiaocaoge.com/tag/grub-rescue/"/>
+    
+      <category term="windows7" scheme="http://www.xiaocaoge.com/tag/windows7/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>重新定义清除浮动</title>
+    <link href="http://www.xiaocaoge.com/redefine-clearfix-float.html"/>
+    <id>http://www.xiaocaoge.com/redefine-clearfix-float.html</id>
+    <published>2014-05-25T07:16:09.000Z</published>
+    <updated>2016-05-08T17:57:05.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;经典&quot;&gt;&lt;a href=&quot;#经典&quot; class=&quot;headerlink&quot; title=&quot;经典&quot;&gt;&lt;/a&gt;经典&lt;/h2&gt;&lt;p&gt;以前最经典的清除浮动方法是利用&lt;code&gt;:after&lt;/code&gt;伪元素，代码如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.clearfix&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:after&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;content&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;.&quot;&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;/* 元素内容后面，即元素闭合标签前面加个点 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;height&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;/* 伪元素高度为0 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;visibility&lt;/span&gt;: hidden; &lt;span class=&quot;comment&quot;&gt;/* 隐藏伪元素内容 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;display&lt;/span&gt;: block; &lt;span class=&quot;comment&quot;&gt;/* 默认是inline，所以默认clear不起作用 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;clear&lt;/span&gt;: both; &lt;span class=&quot;comment&quot;&gt;/* 清除浮动 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.clearfix&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;zoom&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;/* 针对IE6/7，触发hasLayout */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这种方法可兼容几乎所有浏览器，使用方便，不用在HTML代码中增加一个空标签，因此仍然被很多人使用。&lt;/p&gt;
+&lt;p&gt;但是，实际上针对IE6/7的方法与针对现代浏览器增加&lt;code&gt;:after&lt;/code&gt;伪元素的方法本质上是不同的。针对IE6/7的&lt;code&gt;zoom:1;&lt;/code&gt;使得元素触发了&lt;a href=&quot;http://satzansatz.de/cssd/onhavinglayout.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;hasLayout&lt;/a&gt;这个IE专有特性，从而使得元素表现得如同现代浏览器里的&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;BFC&lt;/a&gt; (Block Formatting Context)一样，比如阻止与子元素垂直方向的&lt;a href=&quot;http://www.w3school.com.cn/css/css_margin_collapsing.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;外边距叠加&lt;/a&gt;、包裹内部的浮动元素、不与浮动元素重叠。而针对现代浏览器的&lt;code&gt;:after&lt;/code&gt;伪元素方法具有了“包裹内部的浮动元素”这一功能，因此在特别的布局中会产生问题，比如被清除浮动元素与浮动元素并排时，又比如被清除浮动元素内部第一个元素具有垂直方向的外边距时，关于可能产生的问题详见这篇文章：&lt;a href=&quot;http://www.cssmojo.com/clearfix_block-formatting-context_and_hasLayout/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Everything you Know about Clearfix is Wrong&lt;/a&gt;。&lt;/p&gt;
+&lt;h2 id=&quot;增强&quot;&gt;&lt;a href=&quot;#增强&quot; class=&quot;headerlink&quot; title=&quot;增强&quot;&gt;&lt;/a&gt;增强&lt;/h2&gt;&lt;p&gt;鉴于以上问题，上面文章的作者后来在&lt;a href=&quot;http://www.yuiblog.com/blog/2010/09/27/clearfix-reloaded-overflowhidden-demystified/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;clearfix Reloaded + overflow:hidden Demystified&lt;/a&gt;一文中介绍了一种技术，利用&lt;code&gt;:before&lt;/code&gt;伪元素在被清除浮动元素的内容前面插入伪元素，并设置&lt;code&gt;overflow:hidden&lt;/code&gt;使该伪元素具有BFC，因此可以阻止与内部元素垂直方向的外边距叠加。代码如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.clearfix&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:before&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.clearfix&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:after&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;content&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;.&quot;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;display&lt;/span&gt;: block;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;height&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;overflow&lt;/span&gt;: hidden;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.clearfix&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:after&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;clear&lt;/span&gt;: both;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.clearfix&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;zoom&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;精简&quot;&gt;&lt;a href=&quot;#精简&quot; class=&quot;headerlink&quot; title=&quot;精简&quot;&gt;&lt;/a&gt;精简&lt;/h2&gt;&lt;p&gt;此后，来自Twitter的Nicolas Gallagher，也是normalize.css的作者，提出了一个更精简的实现方法，被他称为“micro clearfix”，此方法讲解可参考其写的一篇文章：&lt;a href=&quot;http://nicolasgallagher.com/micro-clearfix-hack/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;A new micro clearfix hack&lt;/a&gt;。其代码如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.cf&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:before&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.cf&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:after&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;content&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot; &quot;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;display&lt;/span&gt;: table;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.cf&lt;/span&gt;&lt;span class=&quot;selector-pseudo&quot;&gt;:after&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;clear&lt;/span&gt;: both;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.cf&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;zoom&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;该技术关键之处：一是空格默认不会显示，二是利用&lt;code&gt;display:table;&lt;/code&gt;可以产生一个&lt;code&gt;display:table-cell;&lt;/code&gt;的匿名元素，而&lt;code&gt;display:table-cell;&lt;/code&gt;可以使元素成为Block Formatting Context，从而避免了外边距叠加问题，从而和针对IE6/7的&lt;code&gt;zoom: 1;&lt;/code&gt;设置表现一致。&lt;/p&gt;
+&lt;p&gt;另外，如果不打算兼容IE6/7，则可以去掉&lt;code&gt;zoom:1;&lt;/code&gt;，也不用&lt;code&gt;:before&lt;/code&gt;伪元素，而&lt;code&gt;content:” ”&lt;/code&gt;;加一个空格是为了避免Opera里面的一个bug，但是在国内Opera的份额可以忽略不计。&lt;/p&gt;
+&lt;p&gt;另外的另外，我在&lt;a href=&quot;http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best#answer-9932508&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt;看到一个更精简的方法，兼容IE6+，代码只有三行：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.cf&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;display&lt;/span&gt;: inline-block;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;width&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;100%&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;zoom&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;参考资源&quot;&gt;&lt;a href=&quot;#参考资源&quot; class=&quot;headerlink&quot; title=&quot;参考资源&quot;&gt;&lt;/a&gt;参考资源&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;CSS 101: Block Formatting Context: &lt;a href=&quot;http://www.yuiblog.com/blog/2010/05/19/css-101-block-formatting-contexts/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.yuiblog.com/blog/2010/05/19/css-101-block-formatting-contexts/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;How To Clear Floats Without Structural Markup: &lt;a href=&quot;http://www.positioniseverything.net/easyclearing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.positioniseverything.net/easyclearing.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Which method of clearfix is best?: &lt;a href=&quot;http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://stackoverflow.com/questions/211383/which-method-of-clearfix-is-best&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;经典&quot;&gt;&lt;a href=&quot;#经典&quot; class=&quot;headerlink&quot; title=&quot;经典&quot;&gt;&lt;/a&gt;经典&lt;/h2&gt;&lt;p&gt;以前最经典的清除浮动方法是利用&lt;code&gt;:after&lt;/code&gt;伪元素，代码如下：&lt;/p&gt;
+&lt;figure class=&quot;highlig
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="CSS" scheme="http://www.xiaocaoge.com/tag/CSS/"/>
+    
+      <category term="float" scheme="http://www.xiaocaoge.com/tag/float/"/>
+    
+      <category term="清除浮动" scheme="http://www.xiaocaoge.com/tag/%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>搭建Linux工作环境之路</title>
+    <link href="http://www.xiaocaoge.com/build-linux-workspace.html"/>
+    <id>http://www.xiaocaoge.com/build-linux-workspace.html</id>
+    <published>2014-05-18T03:37:42.000Z</published>
+    <updated>2015-04-28T12:05:56.000Z</updated>
+    
+    <content type="html">&lt;p&gt;最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。&lt;/p&gt;
+&lt;p&gt;电脑本来装着的是Debian，我以前没见过，本来也不会什么Linux，结果很抗拒它的桌面系统，呵呵。刚开始老大给了我一个Ubuntu 12.04的安装U盘，然后我在网上查了半天怎么把U盘挂载到Debian，我试了很多命令或方法，发现就是没反应。后来同事说主机前面的USB接口可能不能用，我心想：怪不得我试任何命令都没反应。于是我换到了主机后面的接口，一插上去就自动挂载了，很兴奋地可以从U盘启动了，出现了安装引导界面，但是在从U盘读取镜像文件时一直报错，我又查了半天，折腾了半天，最后说什么MD5错误。好吧就这样半天过去了，后来老大又给我下载了Ubuntu 14.04，果然只用半个多小时就安装好了。就这样半天过去，下班了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二天，我开始安装并配置我经常使用的软件：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;输入法：ibus + 小鹤双拼&lt;/li&gt;
+&lt;li&gt;浏览器：Chrome&lt;/li&gt;
+&lt;li&gt;编辑器：Sublime Text 2&lt;/li&gt;
+&lt;li&gt;翻墙工具：goagent&lt;/li&gt;
+&lt;li&gt;网盘：DBank&lt;/li&gt;
+&lt;li&gt;FTP：Filezilla&lt;/li&gt;
+&lt;li&gt;虚拟机：Virtualbox&lt;/li&gt;
+&lt;li&gt;本地服务器：NodeJS及NPM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;以及公司用到的几个软件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;邮件客户端：Thunderbird&lt;/li&gt;
+&lt;li&gt;IDE：Eclipse&lt;/li&gt;
+&lt;li&gt;内部聊天：CTI&lt;/li&gt;
+&lt;li&gt;本地服务器：Nginx&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我发现安装这些软件基本上很顺利，也花不了多少时间，就是配置或者遇到意外问题时会花很多很多时间，其中有些问题到现在都没有很好解决。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ibus小鹤双拼：&lt;/strong&gt;我在自己电脑的Ubuntu 12.04上用得很好，到Ubuntu 14.04就发现an、en、ou等不符合小鹤的编码规则，这些变成了an-&amp;gt;oj、en-&amp;gt;of等。另一个问题就是只敲一个字母时，不会出现任何候选字，比如敲d，应该出现”的“，另外还要查查怎么安装鹤形辅码。ibus也没有云猜测功能，总之与Windows下的QQ、搜狗拼音差距很远，当然ibus人力财力也和他们差很远，而且已经两年没有更新了。我越来越觉得商业软件还是会占据主流，且使用方面也不一定比开源免费的差，这里商业软件指那些为实现商业价值而开发的软件，不一定收费。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Chrome的Flashplayer插件：&lt;/strong&gt;我安装了Ubuntu软件管理中心里面的flashplayer但是，打开的很多网页都会出现flashplayer的问题，问我是否安装。我又查了半天，试了变天，幸而最后终于解决了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Sublime：&lt;/strong&gt;安装很顺利，就是再把Windows里面的个人配置复制到这里面时费了一段时间，首先我得知道Ubuntu下的Sublime配置文件放哪里。然后在使用Emmet时，发现不起作用，弹出一个让我安装其依赖PyV8的窗口，然后查了下，才知道PyV8不同操作系统有不同版本，还得专门下Linux的，而Windows下的当然没用了。然后在输入汉字时，发现ibus根本就没反应，网上一查属于Sublime对CJK输入支持不友好的问题，似乎Fcitx输入法可用，但ibus就只能安装一个InputHelper插件了，输入也很不方便。不支持GBK，然后下载了支持GBK的插件。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;DBank：&lt;/strong&gt;公司屏蔽了官网域名，我下载客户端都没法下，虽然可翻墙，但是我不想什么都翻墙，后来发现几乎所有网盘都被公司屏蔽了，这是个啥意思呢？正好我在Windows下的Dbank客户端已经一个月不能同步了，华为都没啥回应，到是搞什么企业云计算和移动端网盘很上心啊，我决定放弃华为的DBank了。再说我用它主要就是同步源码用的，我决定用github来同步源码，至于网盘我决定换一家可靠的，比如Dropbox。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Virtualbox：&lt;/strong&gt;还别说这个也费了几个小时，我打算安装Windows7的，但总是出现cdrom=0 cdrom=d的问题，查了半天才反应过来是镜像有问题。于是就先安装XP了，我安装虚拟机的一个重要目的就是安装QQ，结果公司屏蔽了QQ，不知道个什么屏蔽法，使用代理可以上WebQQ，但是不可以用QQ客户端。&lt;/p&gt;
+&lt;p&gt;至于Filezilla和NodeJS安装没什么大问题，到是NPM安装Grunt时，全局安装要使用root权限，而且安装源总是有问题一样，安装了三四次才成功，后来我知道可以将下载失败的包从其官网手动下载拷贝到相应目录里。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Thunderbird：&lt;/strong&gt;在配置公司邮箱的时候出现了问题，应该是配置SMTP和POP时某个选项应该选择none，但是它之前总是提示我帐号和密码有问题。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Eclipse：&lt;/strong&gt;这个在安装svnclipse时一直下载到一段失败，后来不知道怎么弄的终于弄好了，然后是需要从SVN下载源码，再然后是配置resin，当然这些基本都是同事帮忙弄的，要是我估计得半天才能弄好吧。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Nginx：&lt;/strong&gt;安装之后要配置下本地端口，是同事帮忙弄得。&lt;/p&gt;
+&lt;p&gt;才安装了以上这些软件就花了一天多，配置永远是最花时间的。还有其他不少东西都需要花时间尝试，比如字体设置、桌面设置、截图工具、查看图片工具、图片简单编辑工具、词典等等很多都需要学，而且很多软件不如Windows下的软件操作简单方便。&lt;/p&gt;
+&lt;p&gt;还有Linux下文件与目录管理、权限管理、账户管理、Bash等等很多都需要学习，于是我开始了读《鸟哥的私房菜》的历程。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近刚入职一家公司，老大问我用什么操作系统，还推荐我用Linux操作系统，我一听这，顿时来劲，凭着我深厚的（两个星期）Ubuntu功底，坚定地对老大说：“我用Ubuntu“，于是就有了接下来两天艰辛而悲催的搭建Ubuntu工作环境之路。&lt;/p&gt;
+&lt;p&gt;电脑本来装着的是Deb
+    
+    </summary>
+    
+      <category term="后端" scheme="http://www.xiaocaoge.com/category/%E5%90%8E%E7%AB%AF/"/>
+    
+    
+      <category term="Linux" scheme="http://www.xiaocaoge.com/tag/Linux/"/>
+    
+      <category term="Ubuntu" scheme="http://www.xiaocaoge.com/tag/Ubuntu/"/>
+    
+      <category term="系统搭建" scheme="http://www.xiaocaoge.com/tag/%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>响应式图片</title>
+    <link href="http://www.xiaocaoge.com/responsive-images.html"/>
+    <id>http://www.xiaocaoge.com/responsive-images.html</id>
+    <published>2014-04-21T12:53:28.000Z</published>
+    <updated>2016-05-08T17:46:27.000Z</updated>
+    
+    <content type="html">&lt;p&gt;从定宽布局转向响应式布局的过程中，要想把PC端显示的内容显示在小屏幕的手机或平板上，首先也是最基本的就是采用流式布局，而图片的显示需要加下面一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-tag&quot;&gt;img&lt;/span&gt; &amp;#123; &lt;span class=&quot;attribute&quot;&gt;max-width&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;100%&lt;/span&gt;; &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这样图片最大宽度就不会超过小屏幕设备浏览器的宽度，但是把大图片在小屏幕设备上显示会带来额外的带宽消耗。尤其是现今移动端网络速度慢于PC端，且速度上下浮动太大，慢的是2.5G网络，快的是4G，又会经常从WiFI切换到2.5G或3G。而且对于大部分网站，图片的流量会占一半以上，因此缩减图片大小，节省带宽成为响应式图片的一大挑战。幸而开源社区已经有了很多响应式图片解决方案，但是要注意并没有完美的方案，要根据具体需要来选择合适的方案。&lt;/p&gt;
+&lt;h2 id=&quot;adaptive-images&quot;&gt;&lt;a href=&quot;#adaptive-images&quot; class=&quot;headerlink&quot; title=&quot;adaptive-images&quot;&gt;&lt;/a&gt;adaptive-images&lt;/h2&gt;&lt;p&gt;官网：&lt;a href=&quot;http://adaptive-images.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://adaptive-images.com/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这是一个服务端解决方案，优点：一是不用更改现有的HTML标签结构，因此可快捷地应用于过去的项目；二是对于任何图片，包括JS添加的，都会起作用，即图片宽度不会大于浏览器宽度，三是由于其采用服务端解决方案，兼容性很广。&lt;/p&gt;
+&lt;p&gt;但是，其缺点也是明显的：首先，其依赖Cookie和JS，这导致一些禁用或不能使用Cookie和JS的浏览器不能使用。然后是其对所有图片都起作用，这不适用于那些需要加载大图片的情形；再次，这是一个PHP解决方案，虽然也有Net方案，但还远不够用；最后，不适用于CDN，因为图片都是针对特定设备即时生成的（我觉得可以修改后端代码做到，但是我不会啊）。&lt;/p&gt;
+&lt;h2 id=&quot;picturefill&quot;&gt;&lt;a href=&quot;#picturefill&quot; class=&quot;headerlink&quot; title=&quot;picturefill&quot;&gt;&lt;/a&gt;picturefill&lt;/h2&gt;&lt;p&gt;官网：&lt;a href=&quot;http://scottjehl.github.io/picturefill/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://scottjehl.github.io/picturefill/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这是picture元素的一个polyfill，picture元素目前还没有任何浏览器实现。不过对于少量的图片，采用picturefill还是非常合适的。picturefill可以只应用于特定的图片，可以解决”Art Direction”问题，可以应用于CDN。同时应用picturefill也有些条件或限制，需要添加额外的标签，需要不同尺寸的图片，需要支持media query（可以采用&lt;a href=&quot;https://github.com/paulirish/matchMedia.js&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;matchMedia&lt;/a&gt;）。&lt;/p&gt;
+&lt;h2 id=&quot;responsive-images-js&quot;&gt;&lt;a href=&quot;#responsive-images-js&quot; class=&quot;headerlink&quot; title=&quot;responsive-images.js&quot;&gt;&lt;/a&gt;responsive-images.js&lt;/h2&gt;&lt;p&gt;官网：&lt;a href=&quot;https://github.com/kvendrik/responsive-images.js&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/kvendrik/responsive-images.js&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个与picturefill类似，不过它不依赖media query，而是通过JS检测浏览器的可见视口宽度来决定选择合适的图片，因此其兼容性很广，所有的主流浏览器。同时也不需要额外的标签，而是需要额外的属性，但是它不支持JS添加的图片，至少目前还不支持。&lt;/p&gt;
+&lt;h2 id=&quot;其他&quot;&gt;&lt;a href=&quot;#其他&quot; class=&quot;headerlink&quot; title=&quot;其他&quot;&gt;&lt;/a&gt;其他&lt;/h2&gt;&lt;p&gt;此外还有很多其他的解决方案，如拥有速度检测的foresight.js、第三方服务的src.sencha.io等等，这里有一份目前响应式图片解决方案列表：&lt;a href=&quot;https://docs.google.com/spreadsheet/ccc?key=0Al0lI17fOl9DdDgxTFVoRzFpV3VCdHk2NTBmdVI2OXc#gid=0&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Responsive Images Chart&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;相对于缩减图片大小，节省带宽的要求，我觉得Art Direction是一个更难解决或者说更麻烦的问题。Art Direction其实就是移动端与PC端是不同的图片，这增加了工作量。而且我认为响应式设计相对于为移动端专门设计网站，工作量减少的并不多，且没有专门的移动端网站要完美，毕竟屏幕大小所造成的布局以及移动与PC端网速的差别都是很大的。对于中大型互联网公司，我始终认为专门设计移动端网站才是合适的。&lt;/p&gt;
+&lt;h2 id=&quot;参考资源&quot;&gt;&lt;a href=&quot;#参考资源&quot; class=&quot;headerlink&quot; title=&quot;参考资源&quot;&gt;&lt;/a&gt;参考资源&lt;/h2&gt;&lt;p&gt;Choosing A Responsive Image Solution: &lt;a href=&quot;http://www.smashingmagazine.com/2013/07/08/choosing-a-responsive-image-solution-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.smashingmagazine.com/2013/07/08/choosing-a-responsive-image-solution-2/&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;从定宽布局转向响应式布局的过程中，要想把PC端显示的内容显示在小屏幕的手机或平板上，首先也是最基本的就是采用流式布局，而图片的显示需要加下面一行代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="Responsive" scheme="http://www.xiaocaoge.com/tag/Responsive/"/>
+    
+      <category term="响应式" scheme="http://www.xiaocaoge.com/tag/%E5%93%8D%E5%BA%94%E5%BC%8F/"/>
+    
+      <category term="响应式图片" scheme="http://www.xiaocaoge.com/tag/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%9B%BE%E7%89%87/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>图标解决方案: CSS Sprites, DataURI和@font-face</title>
+    <link href="http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face.html"/>
+    <id>http://www.xiaocaoge.com/web-icons-css-sprites-datauri-and-font-face.html</id>
+    <published>2014-04-13T10:17:56.000Z</published>
+    <updated>2015-03-27T13:39:34.000Z</updated>
+    
+    <content type="html">&lt;p&gt;很多网站都需要用到小的图标，而且不止一个，会用很多个。最先接触到（也是最早出现的）的一种解决方案是CSS Sprites，把所有图标都合并成一张大图。后来又了解了DataURI这种把图片编码成字符的方法，接着是现在大行其道的@font-face方法，将常用的图标都制作成字体。三种方法的共同点是都能减少请求数，从而提高页面加载速度，同时又各有优劣：&lt;/p&gt;
+&lt;h2 id=&quot;CSS-Sprites&quot;&gt;&lt;a href=&quot;#CSS-Sprites&quot; class=&quot;headerlink&quot; title=&quot;CSS Sprites&quot;&gt;&lt;/a&gt;CSS Sprites&lt;/h2&gt;&lt;p&gt;CSS Sprites历史悠久，大概在2004年之前就出现了，Dave Shea 在&lt;a href=&quot;http://alistapart.com/article/sprites&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这篇文章&lt;/a&gt;中提出了CSS Sprites这种技术。至于怎么应用这种技术，可以谷歌，也可以参考这两篇文章：&lt;a href=&quot;http://udc.weibo.com/2012/05/%E8%B0%88%E8%B0%88css-sprites%E6%8A%80%E6%9C%AF%E5%8F%8A%E5%85%B6%E4%BC%98%E5%8C%96/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;谈谈CSS Sprites技术及其优化&lt;/a&gt;和&lt;a href=&quot;http://css-tricks.com/css-sprites/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CSS Sprites: What They Are, Why They’re Cool, And How to Use Them&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;由于早期的浏览器并发请求数不超过2个，而减少请求数作为性能优化的第一规则，CSS Sprites也是成为了很多网站性能优化规则中的一条。由于IE6不支持PNG32透明，所以要不用GIF图片，要不就得让IE6支持PNG32透明，PNG32可以支持更丰富的色彩。除了IE6这点，其他的几乎所有平台的所有浏览器（当然不包括只能看文字的浏览器，以及非常古老的）都支持这种技术。因此色彩丰富与兼容性极佳是这种技术的突出优势。&lt;/p&gt;
+&lt;p&gt;当然，由于需要把所有小图片合并成一张大图，尤其需要知道每一个小图在大图上的坐标，以便写CSS，从而使得开发时间延长。通过将小图放到固定的网格中，再加上有很多辅助或者自动化生成CSS Sprites的工具可以大大缩短开发时间。小图在大图上的位置是死的，通常都是相关的放到一起，成为一组，而到后期如果要增加图片那么只能增加到最后面，然后邻近的图片变得不相关，位置越来越混乱，增加了维护难度。另外，图片的尺寸也是固定的，要改变大小，位置又受影响，而且也不能利用background-size来调整图片大小，所以前期的规划很重要。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;减少请求数&lt;/li&gt;
+&lt;li&gt;可以是任意的图标，也即任何色彩&lt;/li&gt;
+&lt;li&gt;兼容性极好，IE6+及其他现代浏览器，包括移动端&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;增加开发时间&lt;/li&gt;
+&lt;li&gt;增加维护成本&lt;/li&gt;
+&lt;li&gt;图片尺寸固定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;工具：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;SpriteCow: &lt;a href=&quot;http://www.spritecow.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.spritecow.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;SpritePad: &lt;a href=&quot;http://wearekiss.com/spritepad&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://wearekiss.com/spritepad&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;CSS Sprite Generator: &lt;a href=&quot;http://spritegen.website-performance.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://spritegen.website-performance.org/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;DataURI&quot;&gt;&lt;a href=&quot;#DataURI&quot; class=&quot;headerlink&quot; title=&quot;DataURI&quot;&gt;&lt;/a&gt;DataURI&lt;/h2&gt;&lt;p&gt;DataURI是利用Base64编码规范将图片转换成文本字符，不仅是图片，还可以编码JS、CSS、HTML等文件。通过将图标文件编码成文本字符，从而可以直接写在HTML/CSS文件里面，不会增加任何多余的请求。&lt;/p&gt;
+&lt;p&gt;但是DataURI的劣势也是很明显的，首先不支持IE6/7，这对于国内某些非要支持IE6的网站不可接受，至于IE8的32KB限制，我认为不能算劣势，通常一个小图标不会大于32KB。而采用Base64编码后的字符串大小要比原图片大5-10%左右，这还是经过Gzip压缩之后的。每次加载之后都需要浏览器将文本字符解码为图片，增加了客户端CPU消耗。由于每次都需要解码从而阻塞了CSS渲染，可以通过分离出一个专用的CSS文件，不过那就需要增加一个请求，那样与CSS Sprites相比没有了任何优势，也因此，在实践中不推荐这种方法。需要注意的是通过缓存CSS可以来达到缓存的目的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不增加请求数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通常比图片要大不到10%&lt;/li&gt;
+&lt;li&gt;每次加载页面都需要解码&lt;/li&gt;
+&lt;li&gt;不支持IE6/7，IE8最大支持32KB，来自&lt;a href=&quot;http://caniuse.com/datauri&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Can I use Data URIs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;难于维护&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;工具：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Image to Dat URI Convertor: &lt;a href=&quot;http://websemantics.co.uk/online_tools/image_to_data_uri_convertor/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://websemantics.co.uk/online_tools/image_to_data_uri_convertor/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Convert Images to base64: &lt;a href=&quot;http://webcodertools.com/imagetobase64converter&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://webcodertools.com/imagetobase64converter&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;font-face&quot;&gt;&lt;a href=&quot;#font-face&quot; class=&quot;headerlink&quot; title=&quot;@font-face&quot;&gt;&lt;/a&gt;@font-face&lt;/h2&gt;&lt;p&gt;这种采用@font-face技术的的方法被称为font icons，似乎是伴随着HTML5、CSS3、Bootstrap以及扁平化设计趋势流行开来的。相对于前两种技术，最显著的优势就是大小与颜色设置非常便利，不必再用Photoshop等图片工具了，大大加快开发进程和降低门槛。但也伴随着最大的劣势，图标的颜色只能为单色，虽然可以通过CSS渐变、背景色或者font layering等技术稍微丰富下色彩，却仍旧弥补不了这天生的缺陷。好在是现在越来越注重内容，扁平化也大行其道，曾经的炫丽被不断抛弃，这很大程度上掩盖了色彩单一的缺陷，突出了其优势。&lt;/p&gt;
+&lt;p&gt;至于兼容性，除了一些旧的或残的手机浏览器之外，能兼容IE6+及其他现代浏览器。哦，还有一个劣势，一般限于通用型的图标，如箭头、主页、搜索等几百个，其他要定制图标的话开发成本比较大，还不如采用CSS Sprites技术呢。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;减少请求数&lt;/li&gt;
+&lt;li&gt;可以兼容至IE6+及其他现代浏览器，几乎所有移动端浏览器，&lt;a href=&quot;http://caniuse.com/fontface&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;参考&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;大小、颜色的设置像操作字体般简单快捷&lt;/li&gt;
+&lt;li&gt;体积通常比图片小&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;只能单一色彩（font layering可以多种颜色，但兼容性难以保证）&lt;/li&gt;
+&lt;li&gt;一般限于通用型图标&lt;/li&gt;
+&lt;li&gt;不兼容旧的手机浏览器：Opera mini，Android 2.1，Windows Phone 7.5-7.8&lt;/li&gt;
+&lt;li&gt;在手机上可能与系统字体冲突&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;工具：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Font Awesome Icons: &lt;a href=&quot;http://fortawesome.github.io/Font-Awesome/icons/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://fortawesome.github.io/Font-Awesome/icons/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fontello: &lt;a href=&quot;http://fontello.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://fontello.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fontsquirrel: &lt;a href=&quot;http://www.fontsquirrel.com/tools/webfont-generator&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.fontsquirrel.com/tools/webfont-generator&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;其他&quot;&gt;&lt;a href=&quot;#其他&quot; class=&quot;headerlink&quot; title=&quot;其他&quot;&gt;&lt;/a&gt;其他&lt;/h2&gt;&lt;p&gt;当然还有其他的解决方案，比如SVG Sprites、HTML实体符号、纯CSS图标。只是纯CSS图标只能兼容最新的浏览器，对IE8及IE8以下不兼容。而HTML实体符号的显示效果很不理想，图标有点丑，且种类很少。至于SVG Sprites，还没有尝试过，&lt;a href=&quot;http://ianfeather.co.uk/ten-reasons-we-switched-from-an-icon-font-to-svg/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这篇文章&lt;/a&gt;说比@font-face方法要有优势，可以尝试一下。&lt;/p&gt;
+&lt;h2 id=&quot;参考资源&quot;&gt;&lt;a href=&quot;#参考资源&quot; class=&quot;headerlink&quot; title=&quot;参考资源&quot;&gt;&lt;/a&gt;参考资源&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;CSS Sprites Sheets: &lt;a href=&quot;http://goo.gl/mVQ6AC&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://goo.gl/mVQ6AC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;The New Bulletproof @Font-face Syntax: &lt;a href=&quot;http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.fontspring.com/blog/the-new-bulletproof-font-face-syntax&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Bulletproof Accessible Font Icons: &lt;a href=&quot;http://filamentgroup.com/lab/bulletproof_icon_fonts/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://filamentgroup.com/lab/bulletproof_icon_fonts/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Image Sprites Or Data URI?…: &lt;a href=&quot;http://benfrain.com/image-sprites-data-uris-icon-fonts-v-svgs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://benfrain.com/image-sprites-data-uris-icon-fonts-v-svgs/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;很多网站都需要用到小的图标，而且不止一个，会用很多个。最先接触到（也是最早出现的）的一种解决方案是CSS Sprites，把所有图标都合并成一张大图。后来又了解了DataURI这种把图片编码成字符的方法，接着是现在大行其道的@font-face方法，将常用的图标都制作成字体
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="CSS Sprites" scheme="http://www.xiaocaoge.com/tag/CSS-Sprites/"/>
+    
+      <category term="DataURI" scheme="http://www.xiaocaoge.com/tag/DataURI/"/>
+    
+      <category term="font-face" scheme="http://www.xiaocaoge.com/tag/font-face/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>书签管理小记</title>
+    <link href="http://www.xiaocaoge.com/bookmark-management.html"/>
+    <id>http://www.xiaocaoge.com/bookmark-management.html</id>
+    <published>2014-04-11T18:56:05.000Z</published>
+    <updated>2015-03-27T13:39:34.000Z</updated>
+    
+    <content type="html">&lt;p&gt;在大学时代，电脑基本上玩游戏了，浏览的网站无非都是些QQ空间、淘宝、人人之类，一共也就那么几个，连标签栏都占不满，也就没必要管理。后来学习PPT，发现了一些相关的博客、工具、图片资源等大概几十个网址。这也很好管理，两三个文件夹，分类管理就可以了。我想这些对于大部分学生时代的人都够用了，说真的，书签还真不用怎么管理，没多少。&lt;/p&gt;
+&lt;p&gt;后来学习前端后，书签开始持续增长。书签主要来自：百度或谷歌搜索、书上、博文或导航页面中的链接。书签虽然增长到了几百个，不过还是采用文件夹分组管理，大概就按技术来分：常用、手册、图片、前端、CSS、JS、博客、PHP、设计、待读等。&lt;/p&gt;
+&lt;p&gt;一开始学习时，经常把书中或博文中的链接都看一下（做到这个就必须学会架fan梯qiang子和提高英语阅读水平，字典是必须随时查的），看一下具体什么内容，网站主题，是否值得收藏，可谓是人工爬虫，所以收藏了很多链接。经过一年半载之后，发现有很多链接从来不再访问，即使访问也是通过搜索引擎而不是书签访问的。而且这么多链接也太占地方了，决定筛选清理一下。&lt;/p&gt;
+&lt;h2 id=&quot;常用类&quot;&gt;&lt;a href=&quot;#常用类&quot; class=&quot;headerlink&quot; title=&quot;常用类&quot;&gt;&lt;/a&gt;常用类&lt;/h2&gt;&lt;p&gt;这个包含各类网站了，豆瓣读书、淘宝、微博、知乎、github、Stackoverflow、smashingmagazine、Gmail、dribbble等。Google排在最顶级的，所以不包含在常用类。&lt;/p&gt;
+&lt;h2 id=&quot;手册类&quot;&gt;&lt;a href=&quot;#手册类&quot; class=&quot;headerlink&quot; title=&quot;手册类&quot;&gt;&lt;/a&gt;手册类&lt;/h2&gt;&lt;p&gt;像什么HTML、CSS、JavaScript、jQuery API、MDN reference、PHP Manual等会经常用到，虽然可以全部学习一遍，但是难免有些记不住，尤其一遍也学不到某些细节，或者时间久了自然会忘记一些。&lt;/p&gt;
+&lt;h2 id=&quot;在线工具类&quot;&gt;&lt;a href=&quot;#在线工具类&quot; class=&quot;headerlink&quot; title=&quot;在线工具类&quot;&gt;&lt;/a&gt;在线工具类&lt;/h2&gt;&lt;p&gt;我常用的有Base64 encode、在线压缩JS/CSS、在线生成CSS Sprites、font icons、ajaxload等。&lt;/p&gt;
+&lt;h2 id=&quot;把不适合当前读的删除&quot;&gt;&lt;a href=&quot;#把不适合当前读的删除&quot; class=&quot;headerlink&quot; title=&quot;把不适合当前读的删除&quot;&gt;&lt;/a&gt;把不适合当前读的删除&lt;/h2&gt;&lt;p&gt;比如说各大UED、大牛的博客、一些图片资源网站。我自己觉得那些大公司UED并不适合一个打基础的读，知识不系统，主题又不定。而大牛的博客与之类似，世界级大神的文章往往有深度，看得话要花时间啃。所以我决定暂时移出这些网址，如果学习某个主题的过程当中搜到了他们的文章，还是会看的，这也是我习惯的学习方式，按照某个主题疯狂的搜索文章，这方面谷歌甩百度十条街不止。至于图片资源网站，我只留一个iconfinder，其他的很少用到。&lt;/p&gt;
+&lt;h2 id=&quot;待读链接&quot;&gt;&lt;a href=&quot;#待读链接&quot; class=&quot;headerlink&quot; title=&quot;待读链接&quot;&gt;&lt;/a&gt;待读链接&lt;/h2&gt;&lt;p&gt;这里面会存放近期要（继续）读的链接，或者是一些为了写博文而准备的链接。但是这个分类经常会存好多，发现大部分决定要读的文章后来再也没读过了，弃之可惜。&lt;/p&gt;
+&lt;h2 id=&quot;将链接存到其他地方&quot;&gt;&lt;a href=&quot;#将链接存到其他地方&quot; class=&quot;headerlink&quot; title=&quot;将链接存到其他地方&quot;&gt;&lt;/a&gt;将链接存到其他地方&lt;/h2&gt;&lt;p&gt;后来发现有很多网站属于觉得对自己可能有用，或者网站有再看的价值，但是现在没机会看，就把这些用Evernote收藏了。另外我会把我读过的所有文章都收藏到Evernote中，现在没什么价值，以后可能挖掘点儿什么数据。单纯收藏链接来说，我觉得Evernote还不太方便，还是应该用专业的delicious或者自己做一个书签管理工具。&lt;/p&gt;
+&lt;h2 id=&quot;资源导航类&quot;&gt;&lt;a href=&quot;#资源导航类&quot; class=&quot;headerlink&quot; title=&quot;资源导航类&quot;&gt;&lt;/a&gt;资源导航类&lt;/h2&gt;&lt;p&gt;有时候会突然发现一些资源导航类的链接，里面有很多相关的链接，比如&lt;a href=&quot;https://docs.google.com/document/d/1kuhUEiIkAUHO0LBBNM4A1Enc5QgVZn3CDkuSoPZJR1U/edit&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTML CSS and JavaScript resources&lt;/a&gt;、&lt;a href=&quot;https://github.com/dypsilon/frontend-dev-bookmarks&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;frontend-dev-bookmarks&lt;/a&gt;，然后一个个点开，自己觉得合适的就收藏起来，也突然增加一些陌生的链接。而实际上，我以后很长一段时间又很少会点开这些链接，这些都是一些新知识，我一时没时间去学。现在我觉得把这些资源导航类链接收藏起来，其他的收藏几个对当前有用的，所有链接都熟悉下，然后以后需要了再回头看。&lt;/p&gt;
+&lt;h2 id=&quot;定期筛选清理&quot;&gt;&lt;a href=&quot;#定期筛选清理&quot; class=&quot;headerlink&quot; title=&quot;定期筛选清理&quot;&gt;&lt;/a&gt;定期筛选清理&lt;/h2&gt;&lt;p&gt;这个是必须的，就像房间一样，必须定期整理打扫才不至于又乱又脏（好吧！我房间比较乱）。我自己大概每个3-6个月筛选清理一下，但是现在的书签管理还是不便利，经过筛选留下的链接中很多还是不会看，有些链接一个就够看个把月了。混乱啊，该怎么管理是好？&lt;/p&gt;
+&lt;p&gt;最后附自己书签：&lt;a href=&quot;http://www.xiaocaoge.com/demo/re-bookmarks_4_12_14.html&quot;&gt;bookmarks&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在大学时代，电脑基本上玩游戏了，浏览的网站无非都是些QQ空间、淘宝、人人之类，一共也就那么几个，连标签栏都占不满，也就没必要管理。后来学习PPT，发现了一些相关的博客、工具、图片资源等大概几十个网址。这也很好管理，两三个文件夹，分类管理就可以了。我想这些对于大部分学生时代的
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="bookmark" scheme="http://www.xiaocaoge.com/tag/bookmark/"/>
+    
+      <category term="书签" scheme="http://www.xiaocaoge.com/tag/%E4%B9%A6%E7%AD%BE/"/>
+    
+      <category term="前端资源" scheme="http://www.xiaocaoge.com/tag/%E5%89%8D%E7%AB%AF%E8%B5%84%E6%BA%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Markdown语法学习</title>
+    <link href="http://www.xiaocaoge.com/markdown-syntax.html"/>
+    <id>http://www.xiaocaoge.com/markdown-syntax.html</id>
+    <published>2014-04-08T20:14:17.000Z</published>
+    <updated>2016-05-08T17:49:55.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Markdown&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Markdown&lt;/a&gt;是一种为了提高文档易读性与易写性的纯文本格式规范，其可以转换成HTML，从而可以利用CSS定制其样式。Markdown语法非常简单，而且语法符号也是为了快速书写文本而设计。Markdown发布已经很久了，其初由John Gruber与Aaron Swartz于2004年合作发布，&lt;a href=&quot;https://daringfireball.net/projects/markdown/basics&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;最初的发布版本&lt;/a&gt;。直到现在，并没有一个统一的标准规范，各个实现版本会有些不同，不过基础的语法基本是相同的。Markdown已经应用在很多地方，如Github、Stackoverflow、reddit等网站，也应用于项目的ReadMe文件、一些论坛、写邮件、博客等地方。有多种实现的语言版本，也有多个系统平台上的编辑器实现，在线编辑器也有，这些可以谷歌会得到很多结果。&lt;/p&gt;
+&lt;h2 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink&quot; title=&quot;语法&quot;&gt;&lt;/a&gt;语法&lt;/h2&gt;&lt;h3 id=&quot;标题&quot;&gt;&lt;a href=&quot;#标题&quot; class=&quot;headerlink&quot; title=&quot;标题&quot;&gt;&lt;/a&gt;标题&lt;/h3&gt;&lt;p&gt;标题是以&lt;code&gt;#&lt;/code&gt;开头的文本，如&lt;code&gt;#标题&lt;/code&gt;，一级标题是一个&lt;code&gt;#&lt;/code&gt;号，二级两个，直到六级，分别对应HTML当中的&lt;code&gt;h1~h6&lt;/code&gt;标签。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;#一级标题&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;##二级标题&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;###三级标题&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;…&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;######六级标题&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;段落&quot;&gt;&lt;a href=&quot;#段落&quot; class=&quot;headerlink&quot; title=&quot;段落&quot;&gt;&lt;/a&gt;段落&lt;/h3&gt;&lt;p&gt;段落就是普通的文本，空行表示换一个段落。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;这是段落一这是段落一&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;这还是段落一&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;这是段落二&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;引用&quot;&gt;&lt;a href=&quot;#引用&quot; class=&quot;headerlink&quot; title=&quot;引用&quot;&gt;&lt;/a&gt;引用&lt;/h3&gt;&lt;p&gt;引用是以&lt;code&gt;&amp;gt;&lt;/code&gt;开头的文本。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; 这是一段引用这是一段引用&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; 这和上面是同一段引用&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;gt; 这和上面是同一段引用&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;代码&quot;&gt;&lt;a href=&quot;#代码&quot; class=&quot;headerlink&quot; title=&quot;代码&quot;&gt;&lt;/a&gt;代码&lt;/h3&gt;&lt;p&gt;内嵌代码用反引号&lt;code&gt;` &lt;/code&gt;，如&lt;code&gt;`background: #fff;` &lt;/code&gt;。代码块使用四个空格或一个Tab缩进。&lt;/p&gt;
+&lt;h3 id=&quot;列表&quot;&gt;&lt;a href=&quot;#列表&quot; class=&quot;headerlink&quot; title=&quot;列表&quot;&gt;&lt;/a&gt;列表&lt;/h3&gt;&lt;p&gt;无序列表用&lt;code&gt;*&lt;/code&gt;或&lt;code&gt;+&lt;/code&gt;或&lt;code&gt;-&lt;/code&gt;开头表示：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;* 项目一&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;* 项目二&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;* 项目三&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;或&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;+ 项目一&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ 项目二&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+ 项目三&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;或&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;- 项目一&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- 项目二&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;- 项目三&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;有序列表用数字跟一个英文句点表示：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1. 项目一&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2. 项目二&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3. 项目三&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;强调&quot;&gt;&lt;a href=&quot;#强调&quot; class=&quot;headerlink&quot; title=&quot;强调&quot;&gt;&lt;/a&gt;强调&lt;/h3&gt;&lt;p&gt;包括斜体与粗体，分别对应HTML中的&lt;code&gt;em&lt;/code&gt;与&lt;code&gt;strong&lt;/code&gt;标签。斜体为两边各一个&lt;code&gt;#&lt;/code&gt;或&lt;code&gt;_&lt;/code&gt;包裹，而粗体用&lt;code&gt;##&lt;/code&gt;或&lt;code&gt;__&lt;/code&gt;包裹，斜体可与粗体嵌套，比如：&lt;code&gt;##_斜粗体_##&lt;/code&gt;。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;#斜体#&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;_斜体_&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;##粗体##&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;__粗体__&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;##_斜粗体_##`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;超链接&quot;&gt;&lt;a href=&quot;#超链接&quot; class=&quot;headerlink&quot; title=&quot;超链接&quot;&gt;&lt;/a&gt;超链接&lt;/h3&gt;&lt;p&gt;超链接文本放在&lt;code&gt;[]&lt;/code&gt;中，而超链接地址放在紧跟其后面的&lt;code&gt;()&lt;/code&gt;中。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;[百度](http://www.baidu.com)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;图片&quot;&gt;&lt;a href=&quot;#图片&quot; class=&quot;headerlink&quot; title=&quot;图片&quot;&gt;&lt;/a&gt;图片&lt;/h3&gt;&lt;p&gt;图片与超链接语法类似：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一个英文感叹号&lt;code&gt;!&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;接一个[]包裹的文本，其文本为图片无法显示时的替代文字，&lt;code&gt;![替代文字]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;接一个()包裹的图片链接，&lt;code&gt;![替代文字](http://www.domain.com/photo.jpg)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在图片链接的后面还可以跟一个鼠标悬停在图片上时显示的文字：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;![替代文字](http://www.domain.com/photo.jpg &amp;quot;鼠标悬停显示的文字&amp;quot;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;转义特殊字符&quot;&gt;&lt;a href=&quot;#转义特殊字符&quot; class=&quot;headerlink&quot; title=&quot;转义特殊字符&quot;&gt;&lt;/a&gt;转义特殊字符&lt;/h3&gt;&lt;p&gt;Markdown允许通过反斜杠&lt;code&gt;\&lt;/code&gt;来转义下面的特殊字符：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;\   反斜杠&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;`   反引号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;*   星号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;_   下划线&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&amp;#125;  花括号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;[]  方括号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;()  括号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;#   井号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;+   加号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;-   减号&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;.   英文句点&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;!   感叹号&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h2 id=&quot;更好的参考：&quot;&gt;&lt;a href=&quot;#更好的参考：&quot; class=&quot;headerlink&quot; title=&quot;更好的参考：&quot;&gt;&lt;/a&gt;更好的参考：&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Markdown Here Cheatsheet: &lt;a href=&quot;https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/adam-p/markdown-here/wiki/Markdown-Here-Cheatsheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Markdown语法说明：&lt;a href=&quot;http://wowubuntu.com/markdown/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://wowubuntu.com/markdown/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Github Markdown Basics: &lt;a href=&quot;https://help.github.com/articles/markdown-basics&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://help.github.com/articles/markdown-basics&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;What is Markdown: &lt;a href=&quot;http://whatismarkdown.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://whatismarkdown.com/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;在线编辑器&quot;&gt;&lt;a href=&quot;#在线编辑器&quot; class=&quot;headerlink&quot; title=&quot;在线编辑器&quot;&gt;&lt;/a&gt;在线编辑器&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Cmd Markdown编辑阅读器：&lt;a href=&quot;https://www.zybuluo.com/mdeditor&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://www.zybuluo.com/mdeditor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Dillinger Online Markdown Editor: &lt;a href=&quot;http://dillinger.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://dillinger.io/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Markdown&quot; target=&quot;_blank&quot; rel=&quot;e
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="Markdown" scheme="http://www.xiaocaoge.com/tag/Markdown/"/>
+    
+      <category term="Markdown语法" scheme="http://www.xiaocaoge.com/tag/Markdown%E8%AF%AD%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>理解viewport与device-width</title>
+    <link href="http://www.xiaocaoge.com/understanding-viewport-and-device-width.html"/>
+    <id>http://www.xiaocaoge.com/understanding-viewport-and-device-width.html</id>
+    <published>2014-04-08T09:39:22.000Z</published>
+    <updated>2016-05-08T17:50:50.000Z</updated>
+    
+    <content type="html">&lt;p&gt;在响应式设计或移动Web开发当中经常见到的一句代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;meta&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;viewport&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;content&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;width=device-width&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;content属性还包括initial-scale，user-scalable等，不过这里不谈，它们的意思都很容易理解。这里要谈得是：viewport代表什么？device-width又是啥？&lt;/p&gt;
+&lt;h3 id=&quot;先来理解两个概念：device-pixels与CSS-pixels。&quot;&gt;&lt;a href=&quot;#先来理解两个概念：device-pixels与CSS-pixels。&quot; class=&quot;headerlink&quot; title=&quot;先来理解两个概念：device pixels与CSS pixels。&quot;&gt;&lt;/a&gt;先来理解两个概念：device pixels与CSS pixels。&lt;/h3&gt;&lt;p&gt;device pixels指设备的物理像素，在PC端就是你在操作系统里设置的屏幕分辨率y，其值可以通过&lt;code&gt;screen.width/screen.height&lt;/code&gt;获取。在移动端下面再说。&lt;/p&gt;
+&lt;p&gt;CSS pixels指在CSS文件中设置的字体大小、元素宽度等，如&lt;code&gt;font-size: 14px;&lt;/code&gt; &lt;code&gt;width: 100px;&lt;/code&gt; 。在PC端，浏览器缩放比例为100%，也即默认情况下，1 CSS pixel = 1 device pixel。&lt;/p&gt;
+&lt;p&gt;当你放大页面到200%时，字体大小与元素宽度的像素值不会改变，是因为这些像素值是用CSS pixels表示的，实际上放大的是CSS pixels，此时 1 CSS pixel = 4 device pixels，高和宽都是200%。此时你获取&lt;code&gt;screen.width/screen.height&lt;/code&gt;的值，并没有变化，而&lt;code&gt;window.innerWidth&lt;/code&gt;和&lt;code&gt;window.innerHeight&lt;/code&gt;的值变成了原来一半，是因为&lt;code&gt;window.innerWidth/window.innerHeight&lt;/code&gt;的值也是用CSS pixels来表示的。&lt;/p&gt;
+&lt;p&gt;当你进行流式布局时，会用百分比设置元素的宽度，比如一个块级元素宽度为10%，那么你也知道10%实际上是父级元素宽度的10%。但是你并没有设置父级元素的宽度啊，好吧，你也知道父级元素的宽度与其父级元素宽度一样（通过继承得来，假设这些元素都是块级元素）。然后向上到body元素的宽度，最终为html元素的宽度，其值可以通过&lt;code&gt;document.documentElement.clientWidth&lt;/code&gt;获取。那这个宽度怎么来得呢？&lt;/p&gt;
+&lt;h3 id=&quot;Viewport&quot;&gt;&lt;a href=&quot;#Viewport&quot; class=&quot;headerlink&quot; title=&quot;Viewport&quot;&gt;&lt;/a&gt;Viewport&lt;/h3&gt;&lt;p&gt;viewport，翻译为视口，也即可视区域的大小，PC端通过&lt;code&gt;window.innerWidth&lt;/code&gt;和&lt;code&gt;window.innerHeight&lt;/code&gt;获取。&lt;/p&gt;
+&lt;p&gt;html元素也即文档的宽度，来自于viewport的宽度，在PC端要加上滚动条的宽度才会与viewport的宽度一样。因此，文档的宽度最终来自于viewport的宽度，PC端通过&lt;code&gt;window.innerWidth&lt;/code&gt;获取。&lt;/p&gt;
+&lt;h2 id=&quot;而在移动端，情况将变得复杂。&quot;&gt;&lt;a href=&quot;#而在移动端，情况将变得复杂。&quot; class=&quot;headerlink&quot; title=&quot;而在移动端，情况将变得复杂。&quot;&gt;&lt;/a&gt;而在移动端，情况将变得复杂。&lt;/h2&gt;&lt;p&gt;首先，上面提到文档的宽度来自于viewport的宽度，我们把这个viewport称为layout viewport，因为它和布局有关。在手机上面，因为手机的屏幕很小，当初iphone发布时，为了显示完整的桌面网页，就把给layout viewport设置了一个980px的值。手机上，可以通过&lt;code&gt;document.documentElement.clientWidth&lt;/code&gt;来获取，我在安卓手机上测试也是980px。&lt;/p&gt;
+&lt;p&gt;但是这样显示网页，那网页的字体、元素都很小，小到打开这样一个网页，首先要做的就是放大页面。为了提高可读性，Apple允许通meta标签来设置layout viewport的宽度，也即文章开头的那行代码。&lt;/p&gt;
+&lt;h3 id=&quot;但是，device-width又是什么呢？&quot;&gt;&lt;a href=&quot;#但是，device-width又是什么呢？&quot; class=&quot;headerlink&quot; title=&quot;但是，device-width又是什么呢？&quot;&gt;&lt;/a&gt;但是，device-width又是什么呢？&lt;/h3&gt;&lt;p&gt;第一代iphone的分辨率为320*480，屏幕尺寸为3.5寸。当时把layout viewport设置成与浏览器宽度一样（而手机上浏览器宽度与手机屏幕宽度一样）时，不用每次打开网页放大了，而且显示的字体与桌面上差不多，可读性很好。因此就定义了一个device-width，即是手机的屏幕分辨率，此时device翻译为“设备”还合适。&lt;/p&gt;
+&lt;p&gt;但是第二代iphone发布时，屏幕的分辨率变成了480*960，而屏幕尺寸仍然为3.5寸，如果device-width仍然为手机的屏幕分辨率宽度，那么字体将会比第一代小很多。所以，维持device-width的值不变将会是个很好得选择，能与前面兼容。也因此，iphone上的device-width的值一直为320，只不过device再表示“设备”已经不合适了，实际上代表的是一个中间层。而Android也采用了这一概念，其device-width的值为360的多，360=540/1.5，360=720/2。&lt;/p&gt;
+&lt;h3 id=&quot;如何获取device-width的值呢？&quot;&gt;&lt;a href=&quot;#如何获取device-width的值呢？&quot; class=&quot;headerlink&quot; title=&quot;如何获取device-width的值呢？&quot;&gt;&lt;/a&gt;如何获取device-width的值呢？&lt;/h3&gt;&lt;p&gt;浏览器并没有提供一个获取device-width的属性或方法，但是通过&lt;code&gt;window.innerWidth&lt;/code&gt;可以获取，需要注意的是，必须添加文章开头那行代码才可以跨浏览器获取。如果不添加那行代码，我自己在HTC G18/ Andoird OS 4.0.3中测试，自带浏览器/UC9.6/QQ5.0可以获取，而在Chrome33和Opera20中通过screen.width可以获取。iPhone与iPad我没测试。这是测试网页地址：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html&quot;&gt;http://www.xiaocaoge.com/demo/viewport-screen-device-width-mobile.html&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Chrome与Opera比较深入实现了中间层的概念，屏幕的实际分辨率与Web开发关系并不大，Chrome与Opera就将&lt;code&gt;screen.width&lt;/code&gt;返回中间层的宽度。这里我也不明白哪种设计更好些。&lt;/p&gt;
+&lt;p&gt;这里&lt;a href=&quot;http://viewportsizes.com/?filter=&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;有个链接&lt;/a&gt;可以查看各种手机型号的device-width/device-height大小，虽然链接称为viewport size。&lt;/p&gt;
+&lt;h2 id=&quot;参考资源：&quot;&gt;&lt;a href=&quot;#参考资源：&quot; class=&quot;headerlink&quot; title=&quot;参考资源：&quot;&gt;&lt;/a&gt;参考资源：&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;A tale of two viewports - part one: &lt;a href=&quot;http://www.quirksmode.org/mobile/viewports.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.quirksmode.org/mobile/viewports.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;A tale of two viewports - part two: &lt;a href=&quot;http://www.quirksmode.org/mobile/viewports2.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.quirksmode.org/mobile/viewports2.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;(上面译文) 两个viewport的故事 - 第一篇：&lt;a href=&quot;http://weizhifeng.net/viewports.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://weizhifeng.net/viewports.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;两个viewport的故事 - 第二篇：&lt;a href=&quot;http://weizhifeng.net/viewports2.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://weizhifeng.net/viewports2.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Using the viewport meta tag to control layout on mobile browsers: &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://developer.mozilla.org/en-US/docs/Mozilla/Mobile/Viewport_meta_tag&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;An introduction to meta viewport and viewport: &lt;a href=&quot;http://dev.opera.com/articles/view/an-introduction-to-meta-viewport-and-viewport/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://dev.opera.com/articles/view/an-introduction-to-meta-viewport-and-viewport/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;什么是viewport，为什么需要viewport：&lt;a href=&quot;http://zhanchaojiang.iteye.com/blog/1470586&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://zhanchaojiang.iteye.com/blog/1470586&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在响应式设计或移动Web开发当中经常见到的一句代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight html&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="device-width" scheme="http://www.xiaocaoge.com/tag/device-width/"/>
+    
+      <category term="meta viewport" scheme="http://www.xiaocaoge.com/tag/meta-viewport/"/>
+    
+      <category term="viewport" scheme="http://www.xiaocaoge.com/tag/viewport/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Transition height from 0 to auto</title>
+    <link href="http://www.xiaocaoge.com/transition-height-from-0-to-auto.html"/>
+    <id>http://www.xiaocaoge.com/transition-height-from-0-to-auto.html</id>
+    <published>2014-04-03T09:35:08.000Z</published>
+    <updated>2016-05-08T17:51:36.000Z</updated>
+    
+    <content type="html">&lt;p&gt;CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于&lt;code&gt;height:auto;时&lt;/code&gt;，浏览器会识别height值为0，因此无法直接从&lt;code&gt;height: 0;&lt;/code&gt;过渡到&lt;code&gt;height: auto;&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;一种简单的方法是，将过渡应用于max-height属性，通过设置一个大于元素所可能达到的最大高度值。代码如下：&lt;/p&gt;
+&lt;figure class=&quot;highlight css&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.elem&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;max-height&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;overflow&lt;/span&gt;: hidden;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;-webkit-transform&lt;/span&gt;: &lt;span class=&quot;built_in&quot;&gt;translate3d&lt;/span&gt;(0,0,0); &lt;span class=&quot;comment&quot;&gt;/* 开启硬件加速 */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;transform&lt;/span&gt;: &lt;span class=&quot;built_in&quot;&gt;translate3d&lt;/span&gt;(0,0,0);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;-webkit-transition&lt;/span&gt;: all .&lt;span class=&quot;number&quot;&gt;3s&lt;/span&gt; ease-in;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;transition&lt;/span&gt;: all .&lt;span class=&quot;number&quot;&gt;3s&lt;/span&gt; ease-in;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;selector-class&quot;&gt;.elem-show&lt;/span&gt; &amp;#123; &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;attribute&quot;&gt;max-height&lt;/span&gt;: &lt;span class=&quot;number&quot;&gt;200px&lt;/span&gt;; &lt;span class=&quot;comment&quot;&gt;/* 假如元素的最大可能高度为200px */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;缺陷是，在元素最大可能高度与实际高度相差比较大时，由于过渡总是从最大可能高度过渡到0，因此会看到过渡效果有明显延迟。查看&lt;a href=&quot;http://www.xiaocaoge.com/demo/transition-auto-delay.html&quot;&gt;DEMO&lt;/a&gt;&lt;br&gt;另一种方法是通过JS修正&lt;code&gt;height:auto;&lt;/code&gt;不能过渡的问题，从而也避免了第一种方法的缺陷。思路是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;先不设置最大可能高度，先在隐藏状态下获取该元素的实际高度，通过设置&lt;code&gt;elem.style.visibility = &amp;#39;hidden&amp;#39;;&lt;/code&gt;隐藏该元素;&lt;/li&gt;
+&lt;li&gt;要显示元素时，通过DOM2 Style的&lt;code&gt;insertRule()&lt;/code&gt;方法将所获取的高度插入到样式表中，再添加一个class，触发过渡效果；&lt;/li&gt;
+&lt;li&gt;待要隐藏元素时，再通过&lt;code&gt;deleteRule()&lt;/code&gt;把刚才添加的CSS规则移除，并去掉添加的class；&lt;br&gt;由于改变样式表，所以导致了全局重绘，性能不如第一种。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;使用两种方法写的一个下拉菜单效果：&lt;a href=&quot;http://www.xiaocaoge.com/demo/transition-height-from-0-to-auto.html&quot;&gt;DEMO&lt;/a&gt;，可查看相关源码&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;参考资源：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CSS transition height: 0; to height: auto;：&lt;a href=&quot;http://stackoverflow.com/questions/3508605/css-transition-height-0-to-height-auto&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://stackoverflow.com/questions/3508605/css-transition-height-0-to-height-auto&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;CSS transition from/to auto values: &lt;a href=&quot;http://n12v.com/css-transition-to-from-auto/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://n12v.com/css-transition-to-from-auto/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;CSS3的transition可以作用于大部分属性值为数值之类的属性，包括width、height、font-size、color、opacity等。但是将transition应用于&lt;code&gt;height:auto;时&lt;/code&gt;，浏览器会识别height值为0，因此无
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="auto" scheme="http://www.xiaocaoge.com/tag/auto/"/>
+    
+      <category term="height auto" scheme="http://www.xiaocaoge.com/tag/height-auto/"/>
+    
+      <category term="transition" scheme="http://www.xiaocaoge.com/tag/transition/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>电脑文件管理</title>
+    <link href="http://www.xiaocaoge.com/compute-files-management.html"/>
+    <id>http://www.xiaocaoge.com/compute-files-management.html</id>
+    <published>2014-04-01T08:42:17.000Z</published>
+    <updated>2015-03-27T13:39:34.000Z</updated>
+    
+    <content type="html">&lt;p&gt;随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。&lt;/p&gt;
+&lt;h2 id=&quot;首先，分析文件来源&quot;&gt;&lt;a href=&quot;#首先，分析文件来源&quot; class=&quot;headerlink&quot; title=&quot;首先，分析文件来源&quot;&gt;&lt;/a&gt;首先，分析文件来源&lt;/h2&gt;&lt;p&gt;文件的来源无非两种：本地与外部。本地主要就是各种新建、复制、剪切等产生的文件，而外部包括下载的、传送的、其他存储器拷贝的。&lt;/p&gt;
+&lt;h3 id=&quot;本地&quot;&gt;&lt;a href=&quot;#本地&quot; class=&quot;headerlink&quot; title=&quot;本地&quot;&gt;&lt;/a&gt;本地&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;文档 (doc/ppt/xls/pdf/txt) ：其中office三剑客几乎没用过了，pdf做简历，txt主要记录小的技术点，其他的笔记主要用evernote&lt;/li&gt;
+&lt;li&gt;源码 (html/css/js/php/less) ：主要就是编辑器notepad++或sublime产生的&lt;/li&gt;
+&lt;li&gt;图片 (jpg/png/gif/psd) ：来源主要是iSee图片编辑器、Photoshop、FSCapture或QQ截图工具&lt;/li&gt;
+&lt;li&gt;音频：少量的HTML5测试用的多种格式音频，经过格式工厂转换得来&lt;/li&gt;
+&lt;li&gt;视频：少量的HTML5测试用的多种格式视频，经过格式转换工具转换得来&lt;/li&gt;
+&lt;li&gt;压缩文件：通常用在QQ传送或微云上，然后应该删除本地的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;外部&quot;&gt;&lt;a href=&quot;#外部&quot; class=&quot;headerlink&quot; title=&quot;外部&quot;&gt;&lt;/a&gt;外部&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;文档 (doc/ppt/xls/pdf/txt) ：主要就是百度文库、QQ传送、Slideshare或其他网站&lt;/li&gt;
+&lt;li&gt;源码 (html/css/js/php) ：第一来源是github，其他主要是各开放源码官网，下载工具要么是Chrome，要么就是git之类的客户端吧&lt;/li&gt;
+&lt;li&gt;图片：几乎全是浏览器下载的，网站主要有Google Image、百度图片、deviantart、站酷、dribbble、iconfinder等，另外有少量的是手机的照片、手机的截图等通过QQ文件管理器传送&lt;/li&gt;
+&lt;li&gt;软件：常用的软件通过腾讯管家之类下载，Web开发相关软件通过官网下载&lt;/li&gt;
+&lt;li&gt;PS资源：主要就是笔刷、形状、渐变等资源，大部分都是在deviantart或站酷下载的&lt;/li&gt;
+&lt;li&gt;音频：酷狗下载的歌曲&lt;/li&gt;
+&lt;li&gt;视频：几部电影和测试用的视频文件&lt;/li&gt;
+&lt;li&gt;压缩文件：压缩文件只是传输用的，解压之后就删除了&lt;/li&gt;
+&lt;li&gt;字体文件：暂时很少用到吧&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;分析文件类别&quot;&gt;&lt;a href=&quot;#分析文件类别&quot; class=&quot;headerlink&quot; title=&quot;分析文件类别&quot;&gt;&lt;/a&gt;分析文件类别&lt;/h2&gt;&lt;p&gt;突然发现文件分本地与外部意义并不大，应该以类型分更有助于管理，包括文档、图片、源码、软件等。现阶段，源码和图片急需管理：&lt;/p&gt;
+&lt;h3 id=&quot;源码&quot;&gt;&lt;a href=&quot;#源码&quot; class=&quot;headerlink&quot; title=&quot;源码&quot;&gt;&lt;/a&gt;源码&lt;/h3&gt;&lt;p&gt;源码清单包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;W3School与基础的前端书籍练习与附带源码，主要来自于入门时&lt;/li&gt;
+&lt;li&gt;HTML5、CSS3、响应式设计等基础知识点练习或测试，会来自于MDN、CSS-Tricks、Stackoverflow、Google出的文章、即兴测试等&lt;/li&gt;
+&lt;li&gt;类库或插件的源码，版本管理，常用类库的个别测试尽量使用公共CDN&lt;/li&gt;
+&lt;li&gt;前端类库的入门学习，比如jQuery、Bootstrap、jQuery Mobile等&lt;/li&gt;
+&lt;li&gt;前端小库或插件的学习，比如normalize.css、Respond.js、Modernizr、jQuery plugins、lazyload、swipe、responsive-nav、mediaelement等等，将来会达到数百个，而且考虑版本问题，其中有很多要在移动端测试，这些源码大多从github下载&lt;/li&gt;
+&lt;li&gt;基础技术的兼容性测试，跨平台，跨终端&lt;/li&gt;
+&lt;li&gt;自己练习写的功能组件&lt;/li&gt;
+&lt;li&gt;工作或自己的项目文件&lt;/li&gt;
+&lt;li&gt;各种小技术或问题点的总结，写在csstips.txt、jstips.txt、phptips.txt等文本文件中&lt;/li&gt;
+&lt;li&gt;与html、css或js有关的pdf或ppt文档，集中在一起管理&lt;/li&gt;
+&lt;li&gt;下载的电子版书籍，单独放文件夹即可&lt;/li&gt;
+&lt;li&gt;后端源码&lt;/li&gt;
+&lt;li&gt;其他语言&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;图片&quot;&gt;&lt;a href=&quot;#图片&quot; class=&quot;headerlink&quot; title=&quot;图片&quot;&gt;&lt;/a&gt;图片&lt;/h3&gt;&lt;p&gt;图片清单&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;图标文件，来自于iconfinder、站酷、自己制作等&lt;/li&gt;
+&lt;li&gt;壁纸文件，大尺寸图片，可供测试用，分PC端与移动端&lt;/li&gt;
+&lt;li&gt;个人相册，博客logo、照片等&lt;/li&gt;
+&lt;li&gt;截图文件，来自于QQ截图或FSCapture&lt;/li&gt;
+&lt;li&gt;设计素材，纹理、各种事物素材&lt;/li&gt;
+&lt;li&gt;各种类别图片，如自然美景、创意、动物、植物、人物等&lt;/li&gt;
+&lt;li&gt;设计图，网站设计、UI设计、logo设计等，设计图的标注文件&lt;/li&gt;
+&lt;li&gt;字体特效，最好分文件夹建，包括相应的素材文件&lt;/li&gt;
+&lt;li&gt;工作项目，包含相应的icon、设计图等&lt;/li&gt;
+&lt;li&gt;表情图片，虽然极少&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;目测当前电脑里的文件，源码与图片文件最多，源码主要来自于编辑器或github，而图片主要来自于Google、百度、deviantart等浏览器下载。浏览器或下载软件下载的所有文件，我都放在了D盘的Downloads文件夹里，里面各种类型的文档都有，所以这是一个使用频繁的文件夹。另外三类使用频繁的文件夹为：htdocs、各技术分类对应文件夹及Pictures。htdocs为本地服务器根目录，主要用途为全栈练习、移动端测试、跨浏览器测试（在虚拟机系统中访问）。各技术分类对应文件夹包括HTML、CSS、JS、PHP、Web，为了便于访问将其直接建立在D盘下，将来可能会增加NodeJS、C等。Pictures文件夹存放图片文件。&lt;/p&gt;
+&lt;p&gt;目前的存在的问题及解决方法有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;js类库：存在于多处，Downloads、JS/jsplugin、Web、htdocs/jsplugin。应该将类库、源码等放在htdocs文件夹下，从而方便在移动端调试和集中管理。所有下载的js类库放于一处，好像本地CDN一样，并在htdocs文件夹下建一个连接到这个CDN文件夹的junction连接。而对于小的插件，不必这样，使用时直接复制一份。&lt;/li&gt;
+&lt;li&gt;图片文件：既存在于D盘下Pictures文件夹，又存在于Downloads文件夹下的Pictures文件夹，应该合并成一个（通过junction连接）。&lt;/li&gt;
+&lt;li&gt;同步策略：所有这些与工作或学习有关的文件夹（htdocs、Downloads、CSS、JS等）其实都是junction连接，真正的文件夹存在于DBank的同步盘中，从而可以实现这些文件夹的同步。&lt;/li&gt;
+&lt;li&gt;文件的查找：可以通过everything来快速查找，很快速方便。&lt;/li&gt;
+&lt;li&gt;源码文件夹结构与规划：主要是HTML、CSS、JS、PHP这些文件夹。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;现在的文件夹结构如下图，虚线框的代表junction链接&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.xiaocaoge.com/uploads/2014/04/电脑文件管理.png&quot;&gt;&lt;img src=&quot;http://www.xiaocaoge.com/uploads/2014/04/电脑文件管理.png&quot; alt=&quot;电脑文件管理&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;随着文件，尤其是新领域文件越来越多，发现电脑里面的文件又乱了，出现了很多操作不便的问题：找个文件要打开好几层文件夹，还不一定在；文件到底该放哪个文件夹，越来越随意了。是时候重新整理下混乱的文件了。&lt;/p&gt;
+&lt;h2 id=&quot;首先，分析文件来源&quot;&gt;&lt;a href=&quot;#首先，分析
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="文件管理" scheme="http://www.xiaocaoge.com/tag/%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86/"/>
+    
+      <category term="文件结构" scheme="http://www.xiaocaoge.com/tag/%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Sublime Text 2配置与使用</title>
+    <link href="http://www.xiaocaoge.com/sublime-text-2-settings-and-use.html"/>
+    <id>http://www.xiaocaoge.com/sublime-text-2-settings-and-use.html</id>
+    <published>2014-03-28T10:45:30.000Z</published>
+    <updated>2015-03-27T13:39:34.000Z</updated>
+    
+    <content type="html">&lt;p&gt;从notepad++切换到Sublime Text 2已经有两个月了，已经不习惯notepad++了。总得来说，Sublime比notepad++有很多功能方面的改进，使用体验非常好，又有丰富的插件，活跃的开发者氛围。当然，还是有个别地方不如notepad++的，比如重命名文件，所有的配置都是json格式，难免使得习惯图形界面的人头大。当时配置与上手练习花了大概5个小时，再加上解决一些插件等使用的问题，少说也有十多个小时，这还是有notepadd++的配置与使用基础。但我还是觉得十分划算，毕竟这个是天天用，也会用个几年的东西，最开始的十小时能带来很大的效率提升。&lt;/p&gt;
+&lt;h2 id=&quot;下载与安装&quot;&gt;&lt;a href=&quot;#下载与安装&quot; class=&quot;headerlink&quot; title=&quot;下载与安装&quot;&gt;&lt;/a&gt;下载与安装&lt;/h2&gt;&lt;p&gt;直接到&lt;a href=&quot;http://www.sublimetext.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;官网&lt;/a&gt;选择合适的版本下载即可，Windows、Mac和Linux系统都有。虽然Sublime是收费的，且70刀的价格对于我来说还是挺贵的，但是仔细想想，与买衣服的价格比起来也不算贵，这个要天天用，可能用好几年，又是工作必须的。之所以不买许可证，大概是因为它提供了不限期限不限功能的免费试用，与收费版本比起来，就是大概每个小时都会弹出一个让你购买许可证的窗口估计这个会让不少人去破解。要是衣服能像软件一样下载破解，还不吃官司，估计不少人都会尝试免费的衣服。&lt;/p&gt;
+&lt;h2 id=&quot;包管理器-插件管理器&quot;&gt;&lt;a href=&quot;#包管理器-插件管理器&quot; class=&quot;headerlink&quot; title=&quot;包管理器/插件管理器&quot;&gt;&lt;/a&gt;包管理器/插件管理器&lt;/h2&gt;&lt;p&gt;Sublime没有自带包管理器，所以得自己安装。安装方法：首先打开Sublime的控制台，快捷键&lt;code&gt;Ctrl+\``或&lt;/code&gt;View &amp;gt; Show Console`，然后到此网址&lt;a href=&quot;https://sublime.wbond.net/installation#st2&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://sublime.wbond.net/installation#st2&lt;/a&gt;复制文本框中的一段代码即可，注意复制对应版本。&lt;/p&gt;
+&lt;h2 id=&quot;包管理器的使用&quot;&gt;&lt;a href=&quot;#包管理器的使用&quot; class=&quot;headerlink&quot; title=&quot;包管理器的使用&quot;&gt;&lt;/a&gt;包管理器的使用&lt;/h2&gt;&lt;p&gt;快捷键&lt;code&gt;ctrl+shift+p&lt;/code&gt;可以打开万能的命令面板，然后输入Package Control会列出相关的命令，如Install Package、List Packages、Remove Package等。输入ip/lp/rp简写可直接出现Install Package/List Packages/Remove Package命令。&lt;/p&gt;
+&lt;p&gt;选择Install Package会列出&lt;a href=&quot;https://sublime.wbond.net/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://sublime.wbond.net/&lt;/a&gt;网站上的包列表，输入包名称，然后选择即可安装。有时候这个网站打不开，从而等好久都无法列出包列表，需要梯子翻过去。List Packages会列出目前安装的插件，Remove Package会列出当前安装的插件，选择即可删除。&lt;/p&gt;
+&lt;h2 id=&quot;配置&quot;&gt;&lt;a href=&quot;#配置&quot; class=&quot;headerlink&quot; title=&quot;配置&quot;&gt;&lt;/a&gt;配置&lt;/h2&gt;&lt;p&gt;Sublime的配置在&lt;code&gt;Preferences &amp;gt; Settings - *&lt;/code&gt;， 其中Default为默认配置，User为用户配置，一般不要更改Default，而将自己的配置写在User中，这样升级不会被覆盖，也方面多平台多设备同步配置。另外，对于插件的设置通常也分为Default与User。&lt;/p&gt;
+&lt;p&gt;常用配置项：字体大小，tab键转换成space，tab_size，auto_indent, auto_match_enabled等。具体的解释可以见Default文件中的注释说明，基本上不用设置太多。&lt;/p&gt;
+&lt;h2 id=&quot;快捷键设置&quot;&gt;&lt;a href=&quot;#快捷键设置&quot; class=&quot;headerlink&quot; title=&quot;快捷键设置&quot;&gt;&lt;/a&gt;快捷键设置&lt;/h2&gt;&lt;p&gt;首先应该熟悉编辑器常用的快捷键：&lt;/p&gt;
+&lt;p&gt;新建、打开、保存、另存为、复制、粘贴、剪切、全选、切换标签、关闭标签、查找、替换、块语句缩进、复制当前行、选择当前行、删除当前行等，这些都是通用的功能，快捷键大都一样，可能复制/选择/删除当前行不一样，在Sublime中分别是&lt;code&gt;Ctrl+Shift+D/Ctrl+L/Ctrl+Shift+L&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;光标控制快捷键的设置，我自己不习惯默认的光标键控制光标的移动，而且常常需要移动到行首、行尾、词首、词尾，因此设置了这几个快捷键：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;上: &lt;code&gt;Ctrl+I&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下：&lt;code&gt;Ctrl+M&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;左：&lt;code&gt;Ctrl+J&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;右：&lt;code&gt;Ctrl+O&lt;/code&gt; (本来想设置成K的，但是Sublime已经占用了，而且改不了，且还有其他重要的用途)&lt;/li&gt;
+&lt;li&gt;行首：&lt;code&gt;Ctrl+A&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;行尾：&lt;code&gt;Ctrl+E&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;词首：&lt;code&gt;Ctrl+/&lt;/code&gt; (这里是指英文单词)&lt;/li&gt;
+&lt;li&gt;词尾：&lt;code&gt;Ctrl+\&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件开头：&lt;code&gt;Ctrl+Home&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;文件结尾：&lt;code&gt;Ctrl+End&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里的一些快捷键我覆盖了默认的功能，将默认的快捷键改成其他的了，尤其是那些使用频率不高的，比如打开文件、全选文件等。能体现Sublime比Notepad++强大的一点就是这些光标快捷键可以在查找/替换框，智能提示，万能搜索框的提示列表，多光标点使用，非常方便。另外安装上Emmet插件之后还会附带两个可再html编辑点间移动的快捷键。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;前一个编辑点：&lt;code&gt;Ctrl+[&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;后一个编辑点：&lt;code&gt;Ctrl+]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其他常用的快捷键&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;选择当前单词：&lt;code&gt;Ctrl+D&lt;/code&gt; (重复按会添加选择下一个与当前所选相同的单词)&lt;/li&gt;
+&lt;li&gt;删除当前单词：&lt;code&gt;Ctrl+Backspace&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;光标下插入新行：&lt;code&gt;Ctrl+Enter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;光标上插入新行：&lt;code&gt;Ctrl+Shift+Enter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;选择文件内所有与当前选择单词相同的单词：&lt;code&gt;Alt+F3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;替换所有：&lt;code&gt;Ctrl+Alt+Enter&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;跳转到指定行：&lt;code&gt;Ctrl+G&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;跳转到指定的打开文件：&lt;code&gt;Ctrl+P&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;万能命令面板：&lt;code&gt;Ctrl+Shift+P&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;控制台：&lt;code&gt;Ctrl+&amp;#39;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;选择当前缩进块：&lt;code&gt;Ctrl+Shift+J&lt;/code&gt;(下面这几个是我重新设置的，与默认快捷键不同)&lt;/li&gt;
+&lt;li&gt;添加注释：&lt;code&gt;Ctrl+U&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;取消注释：&lt;code&gt;Ctrl+Shift+U&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;新建文件：&lt;code&gt;Ctrl+Shift+N&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;打开文件：&lt;code&gt;Ctrl+Alt+O&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;全选：&lt;code&gt;Ctrl+Q&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;几个前端常用插件&quot;&gt;&lt;a href=&quot;#几个前端常用插件&quot; class=&quot;headerlink&quot; title=&quot;几个前端常用插件&quot;&gt;&lt;/a&gt;几个前端常用插件&lt;/h2&gt;&lt;p&gt;Emmet&lt;/p&gt;
+&lt;p&gt;如果只让我选一个插件，就非它莫属了，它的前身是zencoding(其实我挺喜欢这个名字的),关于它的用法网上有很多，基本上与zencoding一致，可以参考&lt;a href=&quot;http://www.qianduan.net/zen-coding-a-new-way-to-write-html-code.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这篇博文&lt;/a&gt;。需要说明的是它的默认快捷键是&lt;code&gt;Ctrl+E&lt;/code&gt;，我觉得不方便，所以换成了&lt;code&gt;Ctrl+N&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Soda&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是一个主题插件，Sublime的主题是作为插件形式存在的，虽然我觉得默认的主题看起来比notepad++好看多了，但是这个会更好看一点&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ConvertToUTF8&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Sublime Text 2默认不支持GB2312/GBK编码，通过这个可以编辑这些编码的文件&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;View in Browser&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;设置快捷键在浏览器中打开当前文件。注意浏览器的路径设置正确，默认选择的浏览器是firefox，使用Chrome的童鞋记得改一下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SublimeCodeIntel&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;自动补全插件，十分强大，不必严格按顺序输入每个字母，只要候选项包含你输入的字母就会出现，另外已经定义过的变量、输入过的单词就可能出现在候选列表，输入的频率越高越靠前。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SideBarInhancements&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;可以增强侧边栏的插件，侧边栏的打开快捷键是Ctrl+K,B。默认的侧边栏文件右键菜单只有close选项，而这个可以添加诸如重命名、复制文件路径、删除、新建文件、新建文件夹等功能，但是必须先把文件所在的文件夹添加为Project，通过&lt;code&gt;Project &amp;gt; Add Folder to Project ...&lt;/code&gt;菜单添加。这是我觉得不如notepad++的地方，notepad++在标签页上右击就会出现这些选项。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;BracketHighlighter&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Sublime默认的成对括号匹配显示不明显，即光标位于两个括号之间时，两个括号的位置只用下划线表示，通过这个插件就能明显看到括号位于第几行。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Minifier&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;压缩JS与CSS的插件，但是将来使用Grunt之后，我很怀疑是否需要这个插件。&lt;/p&gt;
+&lt;p&gt;当然上面几个插件只是我自己常用的，针对不同语言，不同的需求还是有很多其他的插件，如SFTP、Git、Prefixr、HtmlTidy、CTags、SVN、gist等等，可以到&lt;a href=&quot;https://sublime.wbond.net/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://sublime.wbond.net/&lt;/a&gt;网站上寻找。&lt;/p&gt;
+&lt;h2 id=&quot;软件图标&quot;&gt;&lt;a href=&quot;#软件图标&quot; class=&quot;headerlink&quot; title=&quot;软件图标&quot;&gt;&lt;/a&gt;软件图标&lt;/h2&gt;&lt;p&gt;有人嫌默认的图标丑的可以更换一下，去dribbble上面搜索sublime text会出现一些好看的图标，我自己用的是这个&lt;a href=&quot;http://dribbble.com/shots/872166-Sublime-Text-2-Replacement-Icon#comments&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://dribbble.com/shots/872166-Sublime-Text-2-Replacement-Icon#comments&lt;/a&gt;。也可以从这里下载&lt;a href=&quot;http://www.xiaocaoge.com/demo/st2icon/st2.ico&quot;&gt;http://www.xiaocaoge.com/demo/st2icon/st2.ico&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;其他参考文章：&quot;&gt;&lt;a href=&quot;#其他参考文章：&quot; class=&quot;headerlink&quot; title=&quot;其他参考文章：&quot;&gt;&lt;/a&gt;其他参考文章：&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Sublime Text 2功能介绍：&lt;a href=&quot;http://www.iplaysoft.com/sublimetext.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.iplaysoft.com/sublimetext.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sublime配置全攻略：&lt;a href=&quot;http://cloudbbs.org/forum.php?mod=viewthread&amp;amp;tid=3620&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://cloudbbs.org/forum.php?mod=viewthread&amp;amp;tid=3620&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sublime基本快捷键：&lt;a href=&quot;https://gist.github.com/eteanga/1736542&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://gist.github.com/eteanga/1736542&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sublime Text 2 Tutorial：&lt;a href=&quot;http://leveluptuts.com/tutorials/sublime-text-2-tutorials&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://leveluptuts.com/tutorials/sublime-text-2-tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Essential Sublime Text 2 plugins and extensions：&lt;a href=&quot;http://code.tutsplus.com/tutorials/essential-sublime-text-2-plugins-and-extensions--net-24173&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://code.tutsplus.com/tutorials/essential-sublime-text-2-plugins-and-extensions–net-24173&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sublime Text unofficial documentation：&lt;a href=&quot;http://sublime-text-unofficial-documentation.readthedocs.org/en/sublime-text-2/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://sublime-text-unofficial-documentation.readthedocs.org/en/sublime-text-2/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;从notepad++切换到Sublime Text 2已经有两个月了，已经不习惯notepad++了。总得来说，Sublime比notepad++有很多功能方面的改进，使用体验非常好，又有丰富的插件，活跃的开发者氛围。当然，还是有个别地方不如notepad++的，比如重命名
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="Sublime" scheme="http://www.xiaocaoge.com/tag/Sublime/"/>
+    
+      <category term="Sublime Text 2" scheme="http://www.xiaocaoge.com/tag/Sublime-Text-2/"/>
+    
+      <category term="编辑器" scheme="http://www.xiaocaoge.com/tag/%E7%BC%96%E8%BE%91%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>跨浏览器透明解决方案</title>
+    <link href="http://www.xiaocaoge.com/cross-browser-transparency.html"/>
+    <id>http://www.xiaocaoge.com/cross-browser-transparency.html</id>
+    <published>2013-10-20T19:55:49.000Z</published>
+    <updated>2015-03-27T13:39:34.000Z</updated>
+    
+    <content type="html">&lt;p&gt;透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。&lt;/p&gt;
+&lt;h3 id=&quot;图片包含全透明像素时&quot;&gt;&lt;a href=&quot;#图片包含全透明像素时&quot; class=&quot;headerlink&quot; title=&quot;图片包含全透明像素时&quot;&gt;&lt;/a&gt;图片包含全透明像素时&lt;/h3&gt;&lt;p&gt;对于这种不包含半透明像素的图片，可以导出为GIF格式来支持IE6。但是只适用于图片包含少量颜色时，通常Logo、icons等颜色只包含几种。对于色彩丰富的图片，只能采用PNG图片，并通过一些方法解决IE6的PNG支持问题。&lt;/p&gt;
+&lt;h3 id=&quot;图片包含半透明像素时&quot;&gt;&lt;a href=&quot;#图片包含半透明像素时&quot; class=&quot;headerlink&quot; title=&quot;图片包含半透明像素时&quot;&gt;&lt;/a&gt;图片包含半透明像素时&lt;/h3&gt;&lt;p&gt;此时，只能使用PNG格式，IE7+及其他现代浏览器都很好地支持PNG格式，对于IE6必须采取某种方案支持，详见此篇文章总结的方案：&lt;a href=&quot;http://www.w3cfuns.com/thread-297-1-1.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;IE6 PNG透明终极解决方案&lt;/a&gt;。由于网站常采用CSS Sprite，所以我首选的方法是&lt;a href=&quot;http://www.cnblogs.com/blacksheep/archive/2011/04/12/2013316.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;DD_belatedPNG&lt;/a&gt;，不过此方法在某些情况下会出现bug。我在使用Slidesjs时，pagination的hover状态会失效；在使用其他js文件时也可能会失效。对于这种失效的情况，可以针对IE6放弃使用半透明像素，换用其他实色图片，或者设置元素的背景色来换一种风格。&lt;/p&gt;
+&lt;h3 id=&quot;背景色半透明&quot;&gt;&lt;a href=&quot;#背景色半透明&quot; class=&quot;headerlink&quot; title=&quot;背景色半透明&quot;&gt;&lt;/a&gt;背景色半透明&lt;/h3&gt;&lt;p&gt;这要分两种情况：一种是元素不包含任何内容，那么可以通过设置opacity属性，对于IE6-8可使用alpha滤镜，比如某些弹出层的半透明遮罩层；另一种是元素包含内容，由于使用opacity属性会使内容也变为半透明，因此不可行。此时，对于IE9+及其他现代浏览器可以使用RGBA或HSLA设置背景色，而对于IE6-8可以通过渐变滤镜来实现，可参考此文：&lt;a href=&quot;http://css-tricks.com/rgba-browser-support/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RGBa Browser Support&lt;/a&gt;。当然，还可以通过PNG图片来实现，不过有点麻烦，且需要加载图片。&lt;/p&gt;
+&lt;h3 id=&quot;前景色和边框色的半透明&quot;&gt;&lt;a href=&quot;#前景色和边框色的半透明&quot; class=&quot;headerlink&quot; title=&quot;前景色和边框色的半透明&quot;&gt;&lt;/a&gt;前景色和边框色的半透明&lt;/h3&gt;&lt;p&gt;前景色半透明，也即文字的半透明，IE9+及其他现代浏览器可以通过RGBA或HSLA设置。而对于IE6-8，只能通过PNG图片的方式来实现，也就回到图片半透明的问题。边框色的半透明同前景色半透明解决方法一样。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;透明主要指图片中包含的透明像素以及背景色、前景色和边框色的半透明。&lt;/p&gt;
+&lt;h3 id=&quot;图片包含全透明像素时&quot;&gt;&lt;a href=&quot;#图片包含全透明像素时&quot; class=&quot;headerlink&quot; title=&quot;图片包含全透明像素时&quot;&gt;&lt;/a&gt;图片包含全透明像素时&lt;/h3&gt;
+    
+    </summary>
+    
+      <category term="前端" scheme="http://www.xiaocaoge.com/category/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="透明图片" scheme="http://www.xiaocaoge.com/tag/%E9%80%8F%E6%98%8E%E5%9B%BE%E7%89%87/"/>
+    
+      <category term="透明背景" scheme="http://www.xiaocaoge.com/tag/%E9%80%8F%E6%98%8E%E8%83%8C%E6%99%AF/"/>
+    
+  </entry>
+  
+</feed>

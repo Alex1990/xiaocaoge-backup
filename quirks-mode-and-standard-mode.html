@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>浏览器渲染模式：Quirks Mode And Standard Mode | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css">
+  <script src="/js/modernizr-custom.min.js"></script>
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-quirks-mode-and-standard-mode" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-04-25T09:33:36.000Z" itemprop="datePublished">2013-4-25</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      浏览器渲染模式：Quirks Mode And Standard Mode
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>由于在写一个测试网页（中文）时，没有声明DOCTYPE，也没有用meta标签来指明使用何种字符编码方式，导致在除Chrome外的其他几大浏览器均出现乱码现象。只含有DOCTYPE而没有使用meta指明编码时，在FireFox中会出现乱码。然后经由百度和Google偶然间得知浏览器还有一种称为“Quirks”的模式，在未声明DOCTYPE时就是此模式。</p>
+<p>在W3C标准出台以前，浏览器对页面的渲染与标准不一致，比如IE6之前的版本与标准在盒模型方面的宽度定义不同。而在出台以后，各浏览器逐渐趋向支持标准，问题是之前产生的大量网站的网页已经不符合标准，因此从IE Mac开始，IE6，Mozilla，Safari以及Opera等相继支持两种模式——Quirks Mode和Standard Mode（也称为Strict Mode）。Quirks Mode来显示以前的页面，Standard Mode显示符合标准的页面。后来从FireFox开始，大部分现代浏览器(Opera,Chrome,Safari,IE8-10)，支持了一种称为”Almost Standard Mode“的模式，也就是接近标准的模式。</p>
+<p><strong>浏览器怎么决定采用那种模式呢？</strong>这也引出了DTD声明，浏览器通过在页面开始声明不同类型的DOCTYPE来选择使用哪种模式。没有DOCTYPE时，就像以前的网页，浏览器会选择Quirks模式。关于各个浏览器对不同的DOCTYPE来选择何种模式，可以参考此文：<a href="http://hsivonen.iki.fi/doctype/" target="_blank" rel="external">Activating Browser Modes with Doctype</a>底部的表格。</p>
+<p><strong>如何检测当前模式？</strong>通过在地址栏中输入以下代码：</p>
+<p>javascript:alert(document.compatMode)</p>
+<p>BackCompat：对应quirks mode<br>CSS1Compat：对应standard mode</p>
+<p><strong>两种模式有何区别？</strong>主要表现在盒模型的定义上不同：</p>
+<p>strict mode中，width不包括边框和内边距；quirks mode中，width包括边框和内边距。<br>在所有现代浏览器中可以通过box-sizing属性选择采用那种盒模型。</p>
+<p>两种模式的其他方面的不同可以参见这两篇文章：</p>
+<p><a href="http://www.cs.tut.fi/~jkorpela/quirks-mode.html" target="_blank" rel="external">What happens in Quirks Mode?</a></p>
+<p><a href="http://www.quirksmode.org/css/quirksmode.html" target="_blank" rel="external">Quirks mode and strict mode</a></p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/quirks/">quirks</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/quirks-mode/">quirks mode</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/strict-mode/">strict mode</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/quirks-mode-and-standard-mode.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-quirks-mode-and-standard-mode" data-title="浏览器渲染模式：Quirks Mode And Standard Mode" data-url="http://www.xiaocaoge.com/quirks-mode-and-standard-mode.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/Blog/" style="font-size: 12px;">Blog</a> <a href="/tag/CSS/" style="font-size: 20px;">CSS</a> <a href="/tag/CSS-Sprites/" style="font-size: 12px;">CSS Sprites</a> <a href="/tag/Class/" style="font-size: 12px;">Class</a> <a href="/tag/DOOM/" style="font-size: 12px;">DOOM</a> <a href="/tag/DataURI/" style="font-size: 12px;">DataURI</a> <a href="/tag/Github/" style="font-size: 12px;">Github</a> <a href="/tag/Hexo/" style="font-size: 12px;">Hexo</a> <a href="/tag/ID/" style="font-size: 12px;">ID</a> <a href="/tag/Image-Replacement/" style="font-size: 12px;">Image Replacement</a> <a href="/tag/Javascript/" style="font-size: 16px;">Javascript</a> <a href="/tag/Joel/" style="font-size: 12px;">Joel</a> <a href="/tag/Linux/" style="font-size: 12px;">Linux</a> <a href="/tag/MDN/" style="font-size: 12px;">MDN</a> <a href="/tag/Mac/" style="font-size: 12px;">Mac</a> <a href="/tag/Markdown/" style="font-size: 12px;">Markdown</a> <a href="/tag/Markdown语法/" style="font-size: 12px;">Markdown语法</a> <a href="/tag/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tag/OSX/" style="font-size: 12px;">OSX</a> <a href="/tag/PHP/" style="font-size: 16px;">PHP</a> <a href="/tag/PHP入门/" style="font-size: 12px;">PHP入门</a> <a href="/tag/Photoshop/" style="font-size: 12px;">Photoshop</a> <a href="/tag/PrintConductor/" style="font-size: 12px;">PrintConductor</a> <a href="/tag/Responsive/" style="font-size: 12px;">Responsive</a> <a href="/tag/SSE/" style="font-size: 12px;">SSE</a> <a href="/tag/Server-Push/" style="font-size: 12px;">Server Push</a> <a href="/tag/SlideJS/" style="font-size: 12px;">SlideJS</a> <a href="/tag/Sublime/" style="font-size: 12px;">Sublime</a> <a href="/tag/Sublime-Text-2/" style="font-size: 12px;">Sublime Text 2</a> <a href="/tag/Tab/" style="font-size: 12px;">Tab</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2016 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js"></script>
+</body>
+</html>

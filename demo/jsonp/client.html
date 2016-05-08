@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <script>
+        function jsonCallback(json) {
+            return json;
+        }
+
+        function getJSON(url) {
+            var script = document.createElement('script'),
+                head = document.getElementsByTagName('head')[0];
+
+            script.href = url;
+            head.appendChild(script);
+
+        }
+
+        console.log(getJSON('http://www.xiaocaoge.com/demo/jsonp/data.php'));
+    </script>
+</body>
+</html>

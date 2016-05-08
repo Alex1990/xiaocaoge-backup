@@ -1,0 +1,51 @@
+body,p {
+    margin:0;
+    padding:0;
+}
+.swipe {
+    overflow: hidden;
+    visibility: hidden;
+    position: relative;
+}
+.swipe-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+.swipe-wrapper > div {
+    float:left;
+    width:100%;
+    position: relative;
+}
+.swipe-wrapper a {
+    display:block;
+}
+.swipe-wrapper img {
+    width:100%;
+    border:none;
+}
+.swipe-nav {
+    position:relative;
+    top:-25px;
+    z-index:100;
+}
+.swipe-nav p {
+    width:108px;
+    margin:0 auto;
+    font-size:0;
+}
+.swipe-nav a {
+    display:inline-block;
+    margin:0 10px;
+    text-decoration:none;
+    width:12px;
+    height:12px;
+    text-indent:-999px;
+    overflow:hidden;
+    border-radius: 6px;
+    background: #777;
+    background: rgba(119, 119, 119, 0.6);
+}
+.swipe-nav a.cur {
+    background: #0ad;
+    background: rgba(0, 119, 208, 1);
+}

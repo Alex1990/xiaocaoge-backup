@@ -1,0 +1,148 @@
+/*
+ * jd-product-list.css
+ */
+
+/* reset */
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+body {
+    font-family: Arial, 微软雅黑, 宋体, sans-serif;
+    font-size: 12px;
+}
+ul {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    outline: none;
+}
+img {
+    border: none;
+}
+.cf:after {
+    content: '';
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+.cf {
+    zoom: 1;
+}
+/* product image icon */
+.pi2, .pi8, .pi22 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 52px;
+    height: 52px;
+    background: url(../images/201306.png) no-repeat;
+}
+.pi2 {
+    background-position: -53px 0;
+}
+.pi8 {
+    background-position: -53px -55px;
+}
+.pi22 {
+    background-position: right 0;
+}
+/* product list */
+#container {
+    width: 988px;
+    margin: 0 auto;
+}
+.plist li {
+    float: left;
+    width: 215px;
+    margin: 15px;
+    display: inline;
+}
+.plist .p-img {
+    position: relative;
+    text-align: center;
+}
+.plist .p-img a {
+    display: block;
+    border: 1px solid #fff;
+}
+.plist .p-img a:hover {
+    border-color:#ddd;
+}
+.plist .p-name {
+    height: 3em;
+    overflow: hidden;
+}
+.plist .p-name a {
+    color: #333;
+    line-height: 18px;
+}
+.plist .p-name a:hover {
+    color: #e6393c;
+    text-decoration: underline;
+}
+.plist .p-price {
+    margin-top: 5px;
+}
+.plist .p-price strong {
+    font-size: 20px;
+    line-height: 20px;
+    vertical-align: bottom;
+    color: #e6393c;
+}
+.plist .p-price span a{
+    display: inline-block;
+    color: #fff;
+    padding: 2px;
+    background: #e6393c;
+}
+.plist .p-extra {
+    margin-top: 10px;
+}
+.plist .evaluate  a {
+    color: #05a;
+    font-size: 14px;
+}
+.plist .evaluate a:hover {
+    text-decoration: underline;
+}
+.plist .reputation {
+    display: none;
+}
+.plist .btns {
+    margin-top: 20px;
+}
+.plist .btns  .btn-buy,
+.plist .btns .btn-coll,
+.plist .btns .btn-compare {
+    margin-right: 4px;
+    padding: 2px 5px;
+    font-size: 13px;
+    line-height: 19px;
+    color: #333;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.plist .btns a:hover {
+    border-color:#ccc;
+    background: #f8f8f8;
+}
+.plist .btns .btn-compare {
+    position: relative;
+    padding-left: 20px;
+}
+.plist .btns .btn-compare  span {
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+}

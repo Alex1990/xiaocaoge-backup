@@ -1,0 +1,200 @@
+/*
+ * water-health.html
+ */
+
+/* css reset */
+body,h1,h2,h3,p,a,img,
+div,span,ul,li {
+    margin:0;
+    padding:0;
+}
+body {
+    font-family:Arial, 微软雅黑, 黑体, 宋体, sans-serif;
+    font-size:100%;
+    line-height:1;
+}
+ul {
+    list-style:none;
+}
+a {
+    text-decoration:none;
+    outline:none;
+}
+/* layout */
+.cf:after {
+    content:'';
+    height:0;
+    visibility:hidden;
+    display:block;
+    clear:both;
+}
+.cf {
+    zoom:1;
+}
+body {
+    background:url(../images/bg.jpg) repeat-x;
+}
+#container {
+    background:url(../images/pbg.jpg) no-repeat;
+}
+#wrapper {
+    width:960px;
+    margin:0 auto;
+}
+
+/* header */
+#header {
+    padding-top:30px;
+}
+#header .logo {
+    width:139px;
+    float:left;
+}
+#header .hotline {
+    width:162px;
+    float:right;
+}
+#header .logo a {
+    display:block;
+    width:139px;
+    height:52px;
+    text-indent:-100%;
+    overflow:hidden;
+    background:url(../images/logo.gif) no-repeat;
+}
+.nav {
+    margin:15px 0;
+    background:#eee;
+}
+.nav li {
+    float:left;
+    border-left:1px solid #fff;
+    border-right:1px solid #ccc;
+}
+.nav .first {
+    border-left:none;
+}
+.nav .last {
+    border-right:none;
+}
+.nav a {
+    display:block;
+    padding:10px 40px 10px 30px;
+    text-align:center;
+    font-size:16px;
+    color:#333;
+}
+.nav a:hover {
+    color:#fff;
+    background:#e4007f;
+}
+
+/* content */
+.aside {
+    width:240px;
+    float:left;
+}
+.aside h3 {
+    height:58px;
+    text-indent:-100%;
+    overflow:hidden;
+    background:url(../images/t_wh.png) no-repeat;
+}
+.aside .side-nav {
+    width:230px;
+    margin:0 auto 20px;
+    background:#fff;
+}
+.aside .side-nav li {
+    border-top:1px dashed #ccc
+}
+.aside .side-nav .first {
+    border-top:none;
+}
+.aside .side-nav a {
+    display:block;
+    margin-left:10px;
+    padding:10px 0 10px 20px;
+    font-size:13px;
+    color:#555;
+    background:url(../images/ico3.gif) no-repeat left center;
+}
+.aside .side-nav a:hover {
+    color:#e4007f;
+}
+.maincontent {
+    margin-top:4px;
+    width:629px;
+    float:right;
+    position:relative;
+    padding:40px;
+    font-size:13px;
+    color:#666;
+    border:1px solid #aaa;
+    background:#fff;
+}
+.maincontent h2 {
+    height:34px;
+    text-indent:-100%;
+    overflow:hidden;
+    background:url(../images/title_wh.gif) no-repeat;
+}
+.maincontent .bread {
+    position:absolute;
+    top:45px;
+    right:40px;
+}
+.maincontent .bread a {
+    color:#666;
+}
+.maincontent .bread a:hover {
+    color:#000;
+}
+.maincontent .article-list {
+    margin-top:20px;
+}
+.maincontent .article-list li {
+    padding:15px 0;
+    font-size:13px;
+    border-top:1px dashed #ccc;
+}
+.maincontent .article-list .first {
+    border-top:none;
+}
+.maincontent .article-list a {
+    padding-left:10px;
+    color:#666;
+    background:url(../images/ico2.gif) no-repeat left center;
+}
+.maincontent .article-list a:hover {
+    color:#e4007f;
+}
+.maincontent .article-list span {
+    float:right;
+}
+.maincontent .page-num-info {
+    margin:20px 0;
+}
+.maincontent .page-nav {
+    float:right;
+}
+.maincontent .page-nav ul,
+.maincontent .page-nav span {
+    float:left;
+}
+.maincontent .page-nav ul {
+    padding:0 10px;
+}
+
+/* footer */
+#footer {
+    margin-top:50px;
+}
+#footer p {
+    text-align:center;
+    font-size:14px;
+    color:#1ad;
+}
+#footer a {
+    color:#1ad;
+}

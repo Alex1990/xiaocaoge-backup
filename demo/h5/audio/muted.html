@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <audio id="audio" src="7days.mp3" controls>Your browser does not support audio element</audio>
+    <button id="muted">muted</button>
+    <script>
+        var muted = document.getElementById('muted'),
+            audio = document.getElementById('audio');
+        muted.addEventListener('click', function() {
+            audio.muted = !audio.muted;
+            this.textContent = audio.muted ? 'unmuted' : 'muted';
+        });
+    </script>
+</body>
+</html>

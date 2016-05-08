@@ -1,0 +1,84 @@
+/* fixed position header bar */
+html {
+    background-image: url(about:blank);
+}
+#header {
+    position:absolute;
+    top: expression(0+((e=document.documentElement.scrollTop)?e:document.body.scrollTop)+'px');
+}
+
+/* Fix the z-index after using DD_deblatedPNG.js */
+#header .wrap {
+    position: relative;
+    z-index: 101;
+}
+
+/* The priority of a:hover in IE6 is about 21 greater than other's browser,
+   so we must override adding one id */
+#header .logo a {
+    color: #eb623a;
+}
+#header .logo a:active {
+    background: transparent;
+}
+#header .nav a {
+    font-size: 1.5em;
+    color: #aeab9d;
+    padding: 0 20px;
+}
+#header .nav a:hover,
+#header .nav a:focus {
+    color: #eb623a;
+}
+#header .nav a:active {
+    color: #f8f8f8;
+}
+#content .cate-item a {
+    color: #333;
+    font-size: 1.25em;
+    font-family: Times New Roman, 宋体, serif;
+}
+#content .cate-item a:hover {
+    color: #eb623a;
+}
+#content .cate-item a:active {
+    color: #f8f8f8;
+}
+#content .post-title a {
+    color: #222;
+    line-height: 1.5;
+}
+#content .post-title a:hover {
+    color: #eb623a;
+}
+#content .post-title a:active {
+    color: #f8f8f8;
+}
+#content .pagination a {
+    padding: 2px 7px;
+    color: #444;
+    border: 1px solid #ddd;
+    background: #eee;
+}
+#content .pagination a:hover {
+    color: #63aa9c;
+}
+#content .comment-edit a {
+    font-size: 0.875em;
+    color: #777;
+}
+#content .comment-edit a:hover {
+    color: #222;
+}
+#content .comment-edit a:active {
+    color: #f8f8f8;
+}
+#content .comment-reply a {
+    color: #777;
+}
+#content .comment-reply a:hover {
+    color: #222;
+}
+#content .comment-reply a:active {
+    color: #f8f8f8;
+}

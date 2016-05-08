@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN" manifest="dgss.appcache">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=0" />
+    <meta name="keywords" content="东莞搜索，便民工具，查询工具，天气，公交，火车票，飞机票，银行，彩票，股票" />
+    <title>东莞搜索</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="all" />
+    <script type="text/javascript" src="js/store.min.js"></script>
+    <script type="text/javascript" src="js/lazyload.min.js"></script>
+    <script type="text/javascript">
+        var vp = document.getElementsByClassName('bg-list')[0],
+            myLzld = lazyload({
+                container: vp,
+                offset: 400,
+                src: 'data-src'
+            });
+    </script>
+    <script type="text/javascript" src="js/script.js"></script>
+</head>
+<body>
+    <div id="page" class="page">
+        <div class="topbar">
+            <div class="con">
+                <h1 class="logo"><a href="">东莞搜索</a></h1>
+                <div class="weather">
+                    <div class="w-wrap">
+                        <!-- <script type="text/javascript" src="http://ext.weather.com.cn/60439.js"></script> -->
+                    </div>
+                </div>
+                <div class="skin-shift">
+                    <a class="skin-trigger" href="javascript:;" data-trigger="skin-set">换肤</a>
+                </div>
+            </div>
+        </div>
+        <div class="main">
+            <ul class="tab tab-1 cf">
+                <li>
+                    <a href="http://waptianqi.2345.com/">
+                        <span class="icon-wrap"><i class="icon icon-weather"></i></span>
+                        <span class="icon-title">天气</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://map.baidu.com/mobile/webapp/third/transit/force=superman">
+                        <span class="icon-wrap"><i class="icon icon-bus"></i></span>
+                        <span class="icon-title">公交</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://touch.qunar.com/h5/train/">
+                        <span class="icon-wrap"><i class="icon icon-train"></i></span>
+                        <span class="icon-title">火车票</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://touch.qunar.com/h5/flight/">
+                        <span class="icon-wrap"><i class="icon icon-plane"></i></span>
+                        <span class="icon-title">飞机票</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://touch.qunar.com/h5/hotel/">
+                        <span class="icon-wrap"><i class="icon icon-hotel"></i></span>
+                        <span class="icon-title">酒店</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://map.baidu.com/mobile/webapp/search/search/foo=bar&qt=s&wd=%E7%BE%8E%E9%A3%9F&c=119&searchFlag=sort&center_rank=1&nb_x=12663986.981575&nb_y=2616623.5823874/center_name=%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE">
+                        <span class="icon-wrap"><i class="icon icon-food"></i></span>
+                        <span class="icon-title">美食</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://m.58.com/dg/zufang/?from=index_house_a1">
+                        <span class="icon-wrap"><i class="icon icon-rent"></i></span>
+                        <span class="icon-title">租房</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://m.58.com/dg/job.shtml?from=home_job_new">
+                        <span class="icon-wrap"><i class="icon icon-job"></i></span>
+                        <span class="icon-title">求职</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://lady.3g.net.cn/astro/xzIndex.php?waped=9">
+                        <span class="icon-wrap"><i class="icon icon-star-sign"></i></span>
+                        <span class="icon-title">星座</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://m.kuaidi100.com/index_all.html">
+                        <span class="icon-wrap"><i class="icon icon-express"></i></span>
+                        <span class="icon-title">快递</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://touch.lecai.com/">
+                        <span class="icon-wrap"><i class="icon icon-lottery"></i></span>
+                        <span class="icon-title">彩票</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://finance.sina.cn/">
+                        <span class="icon-wrap"><i class="icon icon-stock"></i></span>
+                        <span class="icon-title">股票</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://map.baidu.com/mobile/webapp/index/index/foo=bar/vt=map&traffic=on">
+                        <span class="icon-wrap"><i class="icon icon-map"></i></span>
+                        <span class="icon-title">地图</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://map.baidu.com/mobile/webapp/search/search/qt=s&wd=%E9%93%B6%E8%A1%8C&searchFlag=more_cate&c=119&center_rank=1&nb_x=12663986.981575&nb_y=2616623.5823874/center_name=%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE">
+                        <span class="icon-wrap"><i class="icon icon-bank"></i></span>
+                        <span class="icon-title">银行</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://touch.piao.qunar.com/touch/index.htm">
+                        <span class="icon-wrap"><i class="icon icon-travel"></i></span>
+                        <span class="icon-title">景点</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="http://map.baidu.com/mobile/webapp/third/traffic/force=superman/traffic=on">
+                        <span class="icon-wrap"><i class="icon icon-road"></i></span>
+                        <span class="icon-title">路况</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-indicator"></div>
+        </div>
+        <div class="footer"></div>
+        <div class="skin-set">
+            <a href="javascript:;" class="fr skin-set-off">×</a>
+        <!-- <div class="theme-set">
+                <ul class="theme-list">
+                    <li data-theme-on="default">默认</li>
+                    <li data-theme-on="metro">Metro</li>
+                    <li data-theme-on="color-metro">Color Metro</li>
+                </ul>
+            </div> -->
+            <div class="color-set">
+                <h3>图标色调</h3>
+                <ul class="color-list cf">
+                    <li class="color-orange" data-color-on="orange">橙色(默认)<i class="selected"></i></li>
+                    <li class="color-blue" data-color-on="blue">蓝色<i class="selected"></i></li>
+                    <li class="color-green" data-color-on="green">绿色<i class="selected"></i></li>
+                    <li class="color-red" data-color-on="red">红色<i class="selected"></i></li>
+                    <li class="color-purple" data-color-on="purple">紫色<i class="selected"></i></li>
+                    <li class="color-cyan" data-color-on="cyan">青色<i class="selected"></i></li>
+                    <li class="color-yellow" data-color-on="yellow">黄色<i class="selected"></i></li>
+                    <li class="color-pink" data-color-on="pink">粉色<i class="selected"></i></li>
+                    <li class="color-black" data-color-on="black">黑色<i class="selected"></i></li>
+                    <li class="color-transparent" data-color-on="transparent">透明<i class="selected"></i></li>
+                </ul>
+            </div>
+            <div class="bg-set">
+                <h3>背景图片</h3>
+                <ul class="bg-list cf">
+                    <li data-bg-on="bg-01"><img src="img/b.gif" data-src="img/bg-01-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-02"><img src="img/b.gif" data-src="img/bg-02-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-03"><img src="img/b.gif" data-src="img/bg-03-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-04"><img src="img/b.gif" data-src="img/bg-04-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-05"><img src="img/b.gif" data-src="img/bg-05-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-06"><img src="img/b.gif" data-src="img/bg-06-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-07"><img src="img/b.gif" data-src="img/bg-07-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-08"><img src="img/b.gif" data-src="img/bg-08-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-09"><img src="img/b.gif" data-src="img/bg-09-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-10"><img src="img/b.gif" data-src="img/bg-10-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-11"><img src="img/b.gif" data-src="img/bg-11-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-12"><img src="img/b.gif" data-src="img/bg-12-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-13"><img src="img/b.gif" data-src="img/bg-13-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-14"><img src="img/b.gif" data-src="img/bg-14-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                    <li data-bg-on="bg-15"><img src="img/b.gif" data-src="img/bg-15-thumb.jpg" onload=lzld(this) /><i class="selected"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

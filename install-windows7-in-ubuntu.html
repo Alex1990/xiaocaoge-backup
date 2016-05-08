@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>Ubuntu 下安装 Windows 7 | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css">
+  <script src="/js/modernizr-custom.min.js"></script>
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-install-windows7-in-ubuntu" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2014-08-13T13:30:41.000Z" itemprop="datePublished">2014-8-13</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/后端/">后端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      Ubuntu 下安装 Windows 7
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>由于要学习 Flash 头像上传组件制作，所以必须切换到 Windows 系统，但是目前的系统是 Ubuntu。在 Windows 下安装 Ubuntu 有经验，比较容易，但是反过来就得网上查一下怎么弄了，主要是 Windows 安装时会把 Ubuntu 的引导系统 grub 给覆盖。</p>
+<p>系统现状：Debian 与 Ubuntu 14.04 双系统，Debian 是前一位离职人员使用的，我安装 Ubuntu 时没有把它删除。</p>
+<p>由于没有删除 Debian，所以 boot 分区是它所在的分区（/sda1），然后我怎么改 Ubuntu 里面的 grub 配置，都没办法使 Ubuntu 成为开机启动项的第一项，我觉得和 boot 分区是 Debian 所在分区有关。当然，这是我在直接格式化 Debian 所在的分区之后才反应过来的，因为删除之后，重启直接进入了 grub rescue 模式。至于我为什么去格式化 Debian 分区，因为我要装 Win7，我一直修改 Ubuntu 里面的 grub，总是无法让 Ubuntu 成为启动项第一，心里烦了，反正 Debian 里面有什么与我无关，反正我也不知道删除它会怎么样。</p>
+<p>至于如何从 grub rescue 模式正常进入系统，并修复 grub 引导，先把 Win7 装好再说，毕竟这是主要目的来着。</p>
+<p>用光盘或 U 盘启动盘安装 Win7，就像刚组装好机器安装 Win7 那样。首先应该建立 NTFS 分区，现在我该庆幸当初留着 Debian 了，这样就可以把 Win7 装到它所占的分区了，当然应该先利用分区工具把 ext4 格式分区删除，然后重新建立 Win7 要用的 NTFS 主分区。如果我当初删了 Debian 的话，估计安装 Ubuntu 时会占满这个硬盘，而且能不分区尽量不分区，现在我到觉得应该分几个区比较好，而且分区不一定非要把整个硬盘用完，反正不弄视频之类的也用不了多大容量。建立 NTFS 分区时会重写 MBR，因此就不能再进入到 grub 了。</p>
+<p>既然已经建立了 NTFS 分区，剩下就好办了，直接把 Win7 安装到里面就行了。安装完 Win7 之后使用 EasyBCD 工具给 Win7 的启动管理器（就是启动项菜单），添加进入到 Ubuntu 的选项，该工具很好用，直接“添加项目”，并选择 Linux 类型，找到 Ubuntu 所在的分区就可以了。然后重启，就会在 Win7 的启动项菜单里面看到新添加的进入到 Ubuntu 的条目，选择进入，然后就回到了 grub rescue 模式。</p>
+<p>如何从 grub rescue 模式进入到 Ubuntu 呢？详细可参考此文：<a href="http://blog.chinaunix.net/uid-22915173-id-229241.html" target="_blank" rel="external">grub rescue 救援模式的处理</a>。</p>
+<p>grub rescue 模式下，只有几个命令可用：<code>ls</code>、<code>set</code>、<code>insmod</code>、<code>root</code>、<code>prefix</code>。</p>
+<p>执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grub rescue&gt;set root=(hd0,msdos2) // 设定 grub 启动分区，Ubuntu 所在分区</span><br><span class="line">grub rescue&gt;set prefix=(hd0,msdos2)/boot/grub // 设定 grub 启动路径</span><br><span class="line">grub rescue&gt;set // 查看设置情况</span><br><span class="line">grub rescue&gt;insmod /boot/grub/i386-pc/normal.mod // 加载基本模块</span><br><span class="line">grub rescue&gt;normal // 进入正常模式，会出现 grub 的开机启动菜单，选择 ubuntu 进入</span><br></pre></td></tr></table></figure>
+<p>上面需要注意 normal.mod 模块位置，我的 Ubuntu 14.04 在 <code>grub/i386-pc/</code> 目录下，有些就在 <code>grub/</code> 目录下。</p>
+<p>进入到 Ubuntu 之后，还要重新安装 grub 引导，更新 grub 配置才可以。执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">grub-install /dev/sda</span><br><span class="line">update-grub</span><br></pre></td></tr></table></figure>
+<p>OK，再次开机时 grub 启动项就会多一个 Windows 7 的选项了。有趣的是 grub 启动菜单选择 windows 7 进入到 Windows 启动菜单，而 Windows 启动菜单里面有前面添加的 Ubuntu 选项，然后可以回到 grub 启动菜单，然会无限轮回。</p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/Ubuntu/">Ubuntu</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/grub-rescue/">grub rescue</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/windows7/">windows7</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/install-windows7-in-ubuntu.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-install-windows7-in-ubuntu" data-title="Ubuntu 下安装 Windows 7" data-url="http://www.xiaocaoge.com/install-windows7-in-ubuntu.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/Blog/" style="font-size: 12px;">Blog</a> <a href="/tag/CSS/" style="font-size: 20px;">CSS</a> <a href="/tag/CSS-Sprites/" style="font-size: 12px;">CSS Sprites</a> <a href="/tag/Class/" style="font-size: 12px;">Class</a> <a href="/tag/DOOM/" style="font-size: 12px;">DOOM</a> <a href="/tag/DataURI/" style="font-size: 12px;">DataURI</a> <a href="/tag/Github/" style="font-size: 12px;">Github</a> <a href="/tag/Hexo/" style="font-size: 12px;">Hexo</a> <a href="/tag/ID/" style="font-size: 12px;">ID</a> <a href="/tag/Image-Replacement/" style="font-size: 12px;">Image Replacement</a> <a href="/tag/Javascript/" style="font-size: 16px;">Javascript</a> <a href="/tag/Joel/" style="font-size: 12px;">Joel</a> <a href="/tag/Linux/" style="font-size: 12px;">Linux</a> <a href="/tag/MDN/" style="font-size: 12px;">MDN</a> <a href="/tag/Mac/" style="font-size: 12px;">Mac</a> <a href="/tag/Markdown/" style="font-size: 12px;">Markdown</a> <a href="/tag/Markdown语法/" style="font-size: 12px;">Markdown语法</a> <a href="/tag/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tag/OSX/" style="font-size: 12px;">OSX</a> <a href="/tag/PHP/" style="font-size: 16px;">PHP</a> <a href="/tag/PHP入门/" style="font-size: 12px;">PHP入门</a> <a href="/tag/Photoshop/" style="font-size: 12px;">Photoshop</a> <a href="/tag/PrintConductor/" style="font-size: 12px;">PrintConductor</a> <a href="/tag/Responsive/" style="font-size: 12px;">Responsive</a> <a href="/tag/SSE/" style="font-size: 12px;">SSE</a> <a href="/tag/Server-Push/" style="font-size: 12px;">Server Push</a> <a href="/tag/SlideJS/" style="font-size: 12px;">SlideJS</a> <a href="/tag/Sublime/" style="font-size: 12px;">Sublime</a> <a href="/tag/Sublime-Text-2/" style="font-size: 12px;">Sublime Text 2</a> <a href="/tag/Tab/" style="font-size: 12px;">Tab</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2016 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js"></script>
+</body>
+</html>

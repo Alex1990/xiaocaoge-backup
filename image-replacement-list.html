@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie lt-ie10 lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie10 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js lt-ie10"><![endif]-->
+<!--[if gt IE 9]<!--><html class="no-js gt-ie9"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <title>图像替换技术 | 小曹哥的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  
+    <link rel="shortcut icon" href="/favicon/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-touch-icon-152x152.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/favicon/win-8-icon-152x152.png">
+  
+
+  <link rel="stylesheet" href="/css/dist/style.min.css">
+  <script src="/js/modernizr-custom.min.js"></script>
+  
+</head>
+<body class="index">
+  <div class="page">
+    <div id="main" class="main">
+      <header class="header">
+  <div class="wrapper clearfix">
+    <div class="search-form-wrap fr">
+      <form action="//google.com/search" method="get" class="search-form">
+        <input type="input" name="q" results="0" id="keywords" class="search-form-input hidden" placeholder="Search">
+        <button id="search-btn" class="search-form-submit"><i class="icon icon-l icon-search" aria-hidden="true"></i><span class="visuallyhidden">Submit</span></button>
+        <input type="hidden" name="q" value="site:http://www.xiaocaoge.com">
+      </form>
+    </div>
+  </div>
+</header>
+
+      <div class="content">
+        <section class="wrapper"><article id="post-image-replacement-list" class="article article-type-post" itemprop="blogPost">
+  <div class="article-meta clearfix">
+    <div class="article-date fl">
+  <time datetime="2013-03-18T14:55:17.000Z" itemprop="datePublished">2013-3-18</time>
+</div>
+    
+  <div class="article-category fl">
+    <a class="article-category-link" href="/category/前端/">前端</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      图像替换技术
+    </h1>
+  
+
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>图像替换技术是一个很基础的CSS技术，主要应用在网站logo的替换上或图片导航。实现方法有很多，从最古老的Farhrner方法，到应用最广的Phark方法，以及JavaScript实现方法，并且还在不断的演进当中，一种完美的方法尚未出现。在选择实现方法时，主要考虑的就是可访问性问题（即屏幕阅读器、图片无效或CSS无效时仍能正常访问），还有对搜索引擎的友好度。</p>
+<p>一些相关文章链接：</p>
+<ol>
+<li><p><a href="http://css-tricks.com/css-image-replacement/" title="Nine Techniques For Image Replacement" target="_blank" rel="external">来自CSS-Trick的一篇文章，介绍了九种方法；</a></p>
+</li>
+<li><p><a href="http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/" title="一种替代text-indent:-9999px的方法" target="_blank" rel="external">一种替代text-indent:-9999px的方法；</a></p>
+</li>
+<li><p><a href="http://www.blueidea.com/tech/web/2009/6931.asp" title="图像替换——状态域方法" target="_blank" rel="external">一种js实现方法：状态域方法；</a></p>
+</li>
+</ol>
+<p>这里就先学习下前辈们的一些方法，名字就懒得写了。</p>
+<h3 id="Technique-1"><a href="#Technique-1" class="headerlink" title="Technique#1"></a>Technique#1</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-one"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-one</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif) no-repeat top left;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#technique-one</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 display:none 会使屏幕阅读器读不出文本， 搜索引擎通常不会去检索被隐藏的内容，图片无效，CSS有效时，看不到任何内容，且需额外的sapn标签，因此这种方法已经被抛弃了，毕竟是十年的前的方法了。</p>
+<h3 id="Technique-2"><a href="#Technique-2" class="headerlink" title="Technique#2"></a>Technique#2</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-two"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-two</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif) no-repeat top left;</span><br><span class="line">    <span class="attribute">margin-left</span>: -<span class="number">2000px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图像无效，CSS有效时将看不到任何东西，而且绘制大的框不高效。</p>
+<h3 id="Technique-3"><a href="#Technique-3" class="headerlink" title="Technique#3"></a>Technique#3</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-three"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">#technique-three &#123;</span><br><span class="line">    width: 117px;</span><br><span class="line">    height: 38px;&lt;/div&gt;</span><br><span class="line">    background: url(bd_logo.gif);</span><br><span class="line">    text-indent: -9999px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>应用广泛的一种技术，很简单，但图像无效、CSS有效时看不到任何东西，而且绘制9999px级别的框，造成低效。</p>
+<h3 id="Technique-4"><a href="#Technique-4" class="headerlink" title="Technique#4"></a>Technique#4</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-four"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"bd_logo.gif"</span> <span class="attr">alt</span>=<span class="string">"百度"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-four</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif);</span><br><span class="line">    <span class="attribute">text-indent</span>: -<span class="number">9999px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图像无效，CSS作用时无法显示文本，其他情况表现正常，对搜索引擎不友好。</p>
+<h3 id="Technique-5"><a href="#Technique-5" class="headerlink" title="Technique#5"></a>Technique#5</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-five"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"bd_logo.gif"</span> <span class="attr">alt</span>=<span class="string">"百度"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-five</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#technique-five</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图像无效，CSS有效时显示正常；但两者都无效时，显示双文本。</p>
+<p>###Technique#6</p>
+<p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-six"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-six</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">padding-top</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif) no-repeat;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可访问性好，高效，但图像无效、CSS有效时将会看不到任何东西。</p>
+<h3 id="Technique-7"><a href="#Technique-7" class="headerlink" title="Technique#7"></a>Technique#7</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-seven"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-seven</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#technique-seven</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图像无效，CSS有效时将看不到任何东西，且需要额外的标记。</p>
+<h3 id="Technique-8"><a href="#Technique-8" class="headerlink" title="Technique#8"></a>Technique#8</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-eight"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>百度</span><br><span class="line"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-eight</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#technique-eight</span> <span class="selector-tag">span</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif);</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图像无效，CSS有效时显示正常，但图像透明时，文本可能显示 出来，最好加上overflow:hidden设置，防止字体过大时显示出来。</p>
+<h3 id="Technique-9"><a href="#Technique-9" class="headerlink" title="Technique#9"></a>Technique#9</h3><p><strong>HTML</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span> <span class="attr">id</span>=<span class="string">"technique-nine"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>CSS</strong></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#technique-nine</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">117px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">38px</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">url</span>(bd_logo.gif);</span><br><span class="line">    <span class="attribute">text-indent</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>图像无效，CSS有效时无法显示，不过相比#3高效。</p>
+<p>当然，其实还有很多其他的方法，不过主要考虑的问题就是：可访问性、解析效率、对搜索引擎友好度、是否简单、兼容性等。</p>
+
+      
+    </div>
+    
+    <footer class="article-footer clearfix">
+      
+  <ul class="article-tag-list clearfix">
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/CSS/">CSS</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/Image-Replacement/">Image Replacement</a></li>
+    
+    <li class="article-tag-list-item"><a href="http://www.xiaocaoge.com/tag/图像替换/">图像替换</a></li>
+    
+  </ul>
+
+      
+        <!-- <a href="http://www.xiaocaoge.com/image-replacement-list.html#comments" class="article-comment-link"><i class="icon icon-comment"></i><span class="visuallyhidden">Comments</span></a> -->
+      
+    </footer>
+    
+  </div>
+  
+</article>
+
+
+  
+<section id="comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="post-image-replacement-list" data-title="图像替换技术" data-url="http://www.xiaocaoge.com/image-replacement-list.html"></div>
+  <!-- 多说评论框 end -->
+</section>
+  
+</section>
+      </div>
+    </div>
+    <aside class="sidebar">
+  <div class="top-btn-group fl clearfix">
+    <button id="sidebar-toggle" class="btn" type="button"><i class="icon icon-l icon-menu" aria-hidden="true"></i><span class="visuallyhidden">Menu</span></button>
+    <a href="http://www.xiaocaoge.com" class="btn"><i class="icon icon-l icon-home" aria-hidden="true"></i><span class="visuallyhidden">Home</span></a>
+</div>
+  
+    <div class="person-card">
+  <div class="avatar">
+    
+      <img src="/img/avatar.jpeg" alt="Avatar" width="128" height="128">
+    
+  </div>
+  
+  <h1 class="author">Alex Chao</h1>
+  
+  <p class="description">All about the Web techniques, such as HTML, CSS, JavaScript, jQuery and many others.</p>
+  
+</div>
+  
+  
+    <div class="social-list-wrap">
+  <ul class="social-list clearfix">
+  
+    <li class="social-list-item item-twitter">
+      <a href="https://twitter.com/AlexChaoHere" target="_blank">
+        <i class="icon icon-twitter"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Twitter</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-weibo">
+      <a href="http://weibo.com/u/1660160490" target="_blank">
+        <i class="icon icon-weibo"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Weibo</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-github">
+      <a href="https://github.com/Alex1990" target="_blank">
+        <i class="icon icon-github"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Github</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-email">
+      <a href="mailto:alexchao1990@gmail.com" target="_blank">
+        <i class="icon icon-email"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">Email</span>
+      </a>
+    </li>
+  
+    <li class="social-list-item item-rss">
+      <a href="/atom.xml" target="_blank">
+        <i class="icon icon-rss"></i>
+        
+        <span class="soical-list-item-text visuallyhidden">RSS</span>
+      </a>
+    </li>
+  
+  </ul>
+</div>
+  
+  
+  <div class="widgets">
+    
+      
+  <div class="widget-wrap widget-category">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/category/设计/">设计</a></li><li class="category-list-item"><a class="category-list-link" href="/category/后端/">后端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/前端/">前端</a></li><li class="category-list-item"><a class="category-list-link" href="/category/其他/">其他</a></li></ul>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget-wrap widget-tagcloud">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget widget-tagcloud-list">
+      <a href="/tag/Blog/" style="font-size: 12px;">Blog</a> <a href="/tag/CSS/" style="font-size: 20px;">CSS</a> <a href="/tag/CSS-Sprites/" style="font-size: 12px;">CSS Sprites</a> <a href="/tag/Class/" style="font-size: 12px;">Class</a> <a href="/tag/DOOM/" style="font-size: 12px;">DOOM</a> <a href="/tag/DataURI/" style="font-size: 12px;">DataURI</a> <a href="/tag/Github/" style="font-size: 12px;">Github</a> <a href="/tag/Hexo/" style="font-size: 12px;">Hexo</a> <a href="/tag/ID/" style="font-size: 12px;">ID</a> <a href="/tag/Image-Replacement/" style="font-size: 12px;">Image Replacement</a> <a href="/tag/Javascript/" style="font-size: 16px;">Javascript</a> <a href="/tag/Joel/" style="font-size: 12px;">Joel</a> <a href="/tag/Linux/" style="font-size: 12px;">Linux</a> <a href="/tag/MDN/" style="font-size: 12px;">MDN</a> <a href="/tag/Mac/" style="font-size: 12px;">Mac</a> <a href="/tag/Markdown/" style="font-size: 12px;">Markdown</a> <a href="/tag/Markdown语法/" style="font-size: 12px;">Markdown语法</a> <a href="/tag/MySQL/" style="font-size: 12px;">MySQL</a> <a href="/tag/OSX/" style="font-size: 12px;">OSX</a> <a href="/tag/PHP/" style="font-size: 16px;">PHP</a> <a href="/tag/PHP入门/" style="font-size: 12px;">PHP入门</a> <a href="/tag/Photoshop/" style="font-size: 12px;">Photoshop</a> <a href="/tag/PrintConductor/" style="font-size: 12px;">PrintConductor</a> <a href="/tag/Responsive/" style="font-size: 12px;">Responsive</a> <a href="/tag/SSE/" style="font-size: 12px;">SSE</a> <a href="/tag/Server-Push/" style="font-size: 12px;">Server Push</a> <a href="/tag/SlideJS/" style="font-size: 12px;">SlideJS</a> <a href="/tag/Sublime/" style="font-size: 12px;">Sublime</a> <a href="/tag/Sublime-Text-2/" style="font-size: 12px;">Sublime Text 2</a> <a href="/tag/Tab/" style="font-size: 12px;">Tab</a>
+    </div>
+  </div>
+
+    
+  </div>
+  
+</aside>
+    <footer class="footer">
+  <div class="wrapper">
+    <p class="site-footer">
+      <span>&copy; 2016 Alex Chao</span>
+      <span>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></span>
+      <span>Theme designed by <a href="http://www.xiaocaoge.com/" target="_blank">Alex Chao</a></span>
+    </p>
+  </div>
+</footer>
+    
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:'xiaocaoge'};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+  </div>
+  <script src="/js/main.min.js"></script>
+</body>
+</html>

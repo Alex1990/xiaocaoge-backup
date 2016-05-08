@@ -1,0 +1,151 @@
+/*
+ * Greeting Card
+ */
+
+body,h1,h2,h3,h4,h5,h6,p,img,
+form,input,textarea,select,button {
+    margin: 0;
+    padding: 0;
+}
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    background: url(../img/bg.png);
+}
+body.birthday {
+    background: #fff;
+}
+body,input,textarea {
+    font-size: 16px;
+    font-family: Arial, Microsoft Yahei, sans-serif;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.page {
+    width: 92%;
+    margin: 0 auto;
+}
+.page * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.hsdiv {
+    padding: 4em 0;
+}
+.card-tip {
+    padding: .5em 0;
+    text-align: center;
+    background-color: rgba(50, 80, 80, 0.5);
+    color: #fff;
+}
+.birthday .card-tip{
+    background-color: #555;
+}
+.banner,
+.banner {
+    font-size: 0;
+    text-align: center;
+}
+.banner img,
+.banner img {
+    width: 100%;
+}
+.card-con {
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #ffffb5;
+}
+.card-con input,
+.card-con textarea {
+    padding: .25em;
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+.card-con input:focus,
+.card-con textarea:focus {
+    outline: 1px solid #ddd;
+}
+.send-to input {
+    width: 10em;
+    font-size: 1.5em;
+    resize: none;
+}
+.send-con textarea {
+    width: 100%;
+    height: 16em;
+    line-height: 1.5;
+    resize: none;
+}
+.send-from {
+    text-align: right;
+}
+.send-from input {
+    width: 8em;
+    text-align: left;
+}
+.send-date {
+    text-align: right;
+}
+.send-date input {
+    width: 8em;
+    text-align: left;
+}
+.send-date input:focus {
+    outline: none;
+}
+.send-btn {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin: 2em auto;
+    text-decoration: none;
+    text-align: center;
+    padding: .5em 1em;
+    background-color: #eee;
+    color: #111;
+    background-image: -webkit-linear-gradient(#fff, #ddd);
+    background-image: -ms-linear-gradient(#fff, #ddd);
+    background-image: linear-gradient(#fff, #ddd);
+    box-shadow: 0 1px 4px #555;
+}
+.send-btn:active {
+    background-image: -webkit-linear-gradient(#ddd, #fff);
+    background-image: -ms-linear-gradient(#ddd, #fff);
+    background-image: linear-gradient(#ddd, #fff);
+}
+.guide {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    text-align: right;
+    background-color: rgba(30, 30, 30, 0.7);
+    opacity: 0;
+    -webkit-transition: background-color .25s ease-in;
+    -moz-transition: background-color .25s ease-in;
+    -ms-transition: background-color .25s ease-in;
+    -o-transition: background-color .25s ease-in;
+    transition: background-color .25s ease-in;
+}
+.guide.show {
+    opacity: 1;
+    z-index: 10;
+}
+.guide img {
+    width: 90%;
+}
+#cancel-share {
+    margin: 1em;
+    padding: .25em 1em;
+    font-size: 1em;
+    background-color: #fafafa;
+    color: #111;
+    border: 1px solid #ddd;
+}

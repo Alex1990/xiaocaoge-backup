@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status >= 200 && xhr.status <= 400) {
+                    console.log(xhr.responseText);
+                }
+            }
+        };
+        xhr.open('get', 'http://e.sn/xtest/cors/server.php', true);
+        xhr.send(null);
+    </script>
+</body>
+</html>

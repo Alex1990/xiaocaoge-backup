@@ -1,0 +1,544 @@
+/*
+ * About: DongGuanSouSuo
+ * Author: Alex Chao
+ * Date: 2013-12-20
+ */
+
+/* ==========================
+   Reset & Global
+   ==========================*/
+body,h1,p,span,a,ul,ol,img,table,th,td,
+form,label,input,select,textarea,button {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    font:1em Arial, Microsoft Yahei, sans-serif;
+    background-color: #eee;
+    background: url(../img/bg-01.jpg) 50% 50% no-repeat;
+    background-size: cover;
+}
+ul,ol {
+    list-style: none;
+}
+a, a:visited {
+    text-decoration: none;
+    color: #555;
+}
+a:hover {
+    color: #000;
+}
+img {
+    border: none;
+}
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.cf:after {
+    content: '.';
+    height: 0;
+    visibility: hidden;
+    display: block;
+    clear: both;
+}
+/* ==========================
+   Main
+   ==========================*/
+.page {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+.topbar {
+    width: 100%;
+    padding-bottom: 10%;
+    position: relative;
+    background-image: -webkit-linear-gradient(rgba(255, 140, 48, .8), rgba(236, 128, 32, .85) 33%, rgba(216, 80, 0, .9) 66%, rgba(180, 64, 0, .95));
+    background-image: linear-gradient(rgba(32, 32, 32, .7), rgba(32, 32, 32, .85) 33%, rgba(32, 32, 32, .9) 66%, rgba(32, 32, 32, .95));
+    box-shadow: 0 .0625em .25em rgba(32, 32, 32, .8);
+}
+.topbar .con {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.logo {
+    position: absolute;
+    left: 4%;
+    width: 30%;
+    height: 100%;
+    display: table;
+    padding-left: 40px;
+    background: url(../img/ansuo-logo.png) left center no-repeat;
+    -webkit-background-size: 32px 32px;
+    background-size: 32px 32px;
+}
+.logo a {
+    display: table-cell;
+    vertical-align: middle;
+    color: #fff;
+}
+.weather {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: table;
+}
+.weather .w-wrap {
+    display: table-cell;
+    padding-left: 20%;
+    text-align: center;
+    vertical-align: middle;
+}
+.skin-shift {
+    position: absolute;
+    top: 0;
+    right: 4%;
+    width: 2em;
+    height: 100%;
+    text-align: right;
+    display: table;
+}
+.skin-shift a {
+    display: table-cell;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position:50% 50%;
+    -webkit-background-size: 1em 1em;
+    background-size: 1em 1em;
+    background-image: url(data:image/png;base64,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);
+    color: rgba(0, 0, 0, 0);
+}
+.main {
+    width: 94%;
+    margin: 7% auto;
+}
+.tab li {
+    float: left;
+    width: 25%;
+    padding-bottom: 30%;
+    position: relative;
+    -webkit-transition: all .5s ease-in;
+    transition: all .5s ease-in;
+}
+.tab li a {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+.tab li a:active {
+    background-color: #fa4;
+}
+.tab li a:active .icon-title {
+    color: #fff;
+}
+.icon-wrap {
+    display: block;
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 10%;
+    padding-bottom: 50%;
+    position: relative;
+    background-color: #2ca00a;
+    background-image: -webkit-linear-gradient(-45deg, #2ca00a, #2ca00a 49%, #239500 50%, #239500);
+    background-image: linear-gradient(135deg, #2ca00a, #2ca00a 49%, #239500 50%, #239500);
+    border-radius: 15%;
+    box-shadow: 0 1px 2px rgba(64, 64, 64, .8), 0 0 4px rgba(32, 32, 32, .3) inset;
+}
+.icon-wrap .icon {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    -webkit-background-size: cover;
+    background-size: cover;
+    border-radius: 15%;
+    
+}
+.icon-weather {
+    background-image: url(../img/icon-weather.png);
+}
+.icon-bus {
+    background-image: url(../img/icon-bus.png);
+}
+.icon-train {
+    background-image: url(../img/icon-train.png);
+}
+.icon-plane {
+    background-image: url(../img/icon-plane.png);
+}
+.icon-hotel {
+    background-image: url(../img/icon-hotel.png);
+}
+.icon-food {
+    background-image: url(../img/icon-food.png);
+}
+.icon-rent {
+    background-image: url(../img/icon-rent.png);
+}
+.icon-job {
+    background-image: url(../img/icon-job.png);
+}
+.icon-star-sign {
+    background-image: url(../img/icon-star-sign.png);
+}
+.icon-express {
+    background-image: url(../img/icon-express.png);
+}
+.icon-lottery {
+    background-image: url(../img/icon-lottery.png);
+}
+.icon-stock {
+    background-image: url(../img/icon-stock.png);
+}
+.icon-bank {
+    background-image: url(../img/icon-bank.png);
+}
+.icon-map {
+    background-image: url(../img/icon-map.png);
+}
+.icon-travel {
+    background-image: url(../img/icon-travel.png);
+}
+.icon-road {
+    background-image: url(../img/icon-road.png);
+}
+.icon-title {
+    display: block;
+    margin-top: 4%;
+    font-size: .875em;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px 2px #000;
+}
+
+/* ==========================
+   Skins
+   ==========================*/
+/****** skin-set ******/
+.skin-set {
+    position: absolute;
+    top: 0;
+    right: -65%;
+    width: 60%;
+    padding-left: 5%;
+    height: 100%;
+    display: none;
+    background-color: #f4f4f4;
+    background-color: rgba(128, 128, 128, .75);
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+}
+.skin-set.show {
+    right: 0;
+    display: block;
+}
+.skin-set-off {
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    font-size: 3em;
+    text-align: center;
+    background-color: rgba(128, 128, 128, .8);
+    color: #555;
+}
+.skin-set-off:active {
+    color: #555;
+    background-color: #a00;
+}
+.skin-set h3 {
+    color: #333;
+}
+.color-set {
+    clear: both;
+}
+.color-list li {
+    float: left;
+    width: 12%;
+    margin: 4%;
+    height: 1.5em;
+    text-indent: -999px;
+    overflow: hidden;
+    border: 1px solid #fafafa;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+}
+.color-list .cur .selected {
+    position: absolute;
+    right: -.5em;
+    top: -.5em;
+    display: block;
+    width: 1em;
+    height: 1em;
+    background-color: #fafafa;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.color-orange {
+    background-color: #f50;
+}
+.color-blue {
+    background-color: #05a;
+}
+.color-green {
+    background-color: #2a0;
+}
+.color-red {
+    background-color: #c00;
+}
+.color-purple {
+    background-color: #80a;
+}
+.color-cyan {
+    background-color: #0aa;
+}
+.color-yellow {
+    background-color: #dd0;
+}
+.color-pink {
+    background-color: #faa;
+}
+.color-black {
+    background-color: #222;
+}
+.color-transparent {
+    background-color: transparent;
+}
+.bg-list {
+    height: 400px;
+    overflow: auto;
+}
+.bg-list li {
+    float: left;
+    width: 40%;
+    margin: 5%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 0;
+    border: 1px solid #fafafa;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+.bg-list li img {
+    width: 100%;
+}
+.bg-list .cur .selected {
+    position: absolute;
+    right: -.5em;
+    top: -.5em;
+    display: block;
+    width: 1em;
+    height: 1em;
+    font-size: 16px;
+    background-color: #fafafa;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    z-index: 1;
+}
+/****** Skin color set ******/
+/* red */
+.red .icon-wrap {
+    background-color: #d60022;
+    background-image: -webkit-linear-gradient(-45deg, #d03, #d03 49%, #d60022 50%, #d60022);
+    background-image: linear-gradient(135deg, #d03, #d03 49%, #d60022 50%, #d60022);
+}
+/* green */
+.green .icon-wrap {
+    background-color: #2a0;
+    background-image: -webkit-linear-gradient(-45deg, #2ca00a, #2ca00a 49%, #239500 50%, #239500);
+    background-image: linear-gradient(135deg, #2ca00a, #2ca00a 49%, #239500 50%, #239500);
+}
+/* cyan */
+.cyan .icon-wrap {
+    background-color: #0aa;
+    background-image: -webkit-linear-gradient(-45deg, #0aa, #0aa 49%, #00a0a0 50%, #00a0a0);
+    background-image: linear-gradient(135deg, #0aa, #0aa 49%, #00a0a0 50%, #00a0a0);
+}
+/* blue */
+.blue .icon-wrap {
+    background-color: #06e;
+    background-image: -webkit-linear-gradient(-45deg, #06c, #06c 49%, #0060c0 50%, #0060c0);
+    background-image: linear-gradient(135deg, #06c, #06c 49%, #0060c0 50%, #0060c0);
+}
+/* pink */
+.pink .icon-wrap {
+    background-color: #faa;
+    background-image: -webkit-linear-gradient(-45deg, #fbb, #fbb 49%, #fab5b5 50%, #fab5b5);
+    background-image: linear-gradient(135deg, #fbb, #fbb 49%, #fab5b5 50%, #fab5b5);
+}
+.pink .icon-wrap .icon {
+    opacity: .7;
+}
+/* orange */
+.orange .icon-wrap {
+    background-color: #f80;
+    background-image: -webkit-linear-gradient(-45deg, #f60, #f60 49%, #fa6000 50%, #fa6000);
+    background-image: linear-gradient(135deg, #f60, #f60 49%, #fa6000 50%, #fa6000);
+}
+/* yellow */
+.yellow .icon-wrap {
+    background-color: #e4e400;
+    background-image: -webkit-linear-gradient(-45deg, #eaea00, #eaea00 49%, #e4e400 50%, #e4e400);
+    background-image: linear-gradient(135deg, #eaea00, #eaea00 49%, #e4e400 50%, #e4e400);
+}
+/* purple */
+.purple .icon-wrap {
+    background-color: #aa33d0;
+    background-image: -webkit-linear-gradient(-45deg, #af35dd, #af35dd 49%, #aa33d0 50%, #aa33d0);
+    background-image: linear-gradient(135deg, #af35dd, #af35dd 49%, #aa33d0 50%, #aa33d0);
+}
+/* black */
+.black .icon-wrap {
+    background-color: #111;
+    background-image: -webkit-linear-gradient(-45deg, #383838, #383838 49%, #333 50%, #333);
+    background-image: linear-gradient(135deg, #383838, #383838 49%, #333 50%, #333);
+}
+/* transparent */
+.transparent .icon-wrap {
+    background-color: transparent;
+    background-image: none;
+    box-shadow: none;
+}
+/***** Skin bg set *****/
+.bg-01 body {
+    background-image: url(../img/bg-01.jpg);
+}
+.bg-02 body {
+    background-image: url(../img/bg-02.jpg);
+}
+.bg-03 body {
+    background-image: url(../img/bg-03.jpg);
+}
+.bg-04 body {
+    background-image: url(../img/bg-04.jpg);
+}
+.bg-05 body {
+    background-image: url(../img/bg-05.jpg);
+}
+.bg-06 body {
+    background-image: url(../img/bg-06.jpg);
+}
+.bg-07 body {
+    background-image: url(../img/bg-07.jpg);
+}
+.bg-08 body {
+    background-image: url(../img/bg-08.jpg);
+}
+.bg-09 body {
+    background-image: url(../img/bg-09.jpg);
+}
+.bg-10 body {
+    background-image: url(../img/bg-10.jpg);
+}
+.bg-11 body {
+    background-image: url(../img/bg-11.jpg);
+}
+.bg-12 body {
+    background-image: url(../img/bg-12.jpg);
+}
+.bg-13 body {
+    background-image: url(../img/bg-13.jpg);
+}
+.bg-14 body {
+    background-image: url(../img/bg-14.jpg);
+}
+.bg-15 body {
+    background-image: url(../img/bg-15.jpg);
+}
+.bg-16 body {
+    background-image: url(../img/bg-16.jpg);
+}
+.bg-17 body {
+    background-image: url(../img/bg-17.jpg);
+}
+.bg-18 body {
+    background-image: url(../img/bg-18.jpg);
+}
+.bg-19 body {
+    background-image: url(../img/bg-19.jpg);
+}
+.bg-20 body {
+    background-image: url(../img/bg-20.jpg);
+}
+/* ==========================
+   Responsive
+   ==========================*/
+@media (min-width: 641px) {
+    .bg-list li {
+        width: 29.333333%;
+        margin: 2%;
+    }
+}
+@media (min-width: 769px) {
+    body {
+        font-size: 1.25em;
+    }
+    .topbar {
+        padding-bottom: 8%;
+    }
+    .main {
+        margin: 5% auto;
+    }
+    .tab li {
+        width: 20%;
+        padding-bottom: 24%;
+    }
+    .color-list li {
+        width: 9.5%;
+        margin: 1.5%;
+    }
+    .bg-list li {
+        width: 21%;
+        margin: 2%;
+    }
+}
+@media (min-width: 1024px) {
+    body {
+        font-size: 1.5em;
+    }
+    .topbar {
+        padding-bottom: 5%;
+    }
+    .main {
+        margin: 3% auto;
+    }
+    .tab li {
+        width: 16.666666%;
+        padding-bottom: 20%;
+    }
+    .color-list li {
+        width: 8%;
+        margin: 1%;
+    }
+    .bg-list li {
+        width: 14.666666%;
+        margin: 1%;
+    }
+    .icon-wrap {
+        box-shadow: 0 1px 4px rgba(64, 64, 64, .5), 0 0 8px rgba(80, 80, 80, .2) inset;
+    }
+    .transparent .icon-wrap {
+        box-shadow: none;
+    }
+}

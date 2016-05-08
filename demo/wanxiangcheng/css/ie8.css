@@ -1,0 +1,21 @@
+/* ie5.5-8 background opacity */
+#header .subnav a {
+    background:#d1c4aa;
+    /* 使用滤镜会影响mouseout事件确定元素范围
+    background:transparent;
+    /* For IE 5.5 - 7 *\/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#d8d1c4aa, endColorstr=#d8d1c4aa);
+    /* IE 8 *\/
+    -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#d8d1c4aa, endColorstr=#d8d1c4aa);
+    */
+}
+#header .subnav a:hover {
+    background:#c6b599;
+    /*
+    background:transparent;
+    /* For IE 5.5 - 7 *\/
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#d8c6b599, endColorstr=#d8c6b599);
+    /* IE 8 *\/
+    -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#d8c6b599, endColorstr=#d8c6b599);
+    */
+}
